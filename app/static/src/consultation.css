@@ -1,0 +1,38 @@
+        #loader {
+            display: flex;
+        }
+        #loader .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .doctor-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .availability-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.75rem;
+        }
+        .specialty-tag {
+            display: inline-block;
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
