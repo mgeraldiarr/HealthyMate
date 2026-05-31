@@ -1,212 +1,555 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/png"
+    />
     <title>HealthyMate | Nutrition Companion</title>
-    <meta name="description" content="Professional nutrition calculator and meal recommendation system">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='src/home.css') }}">
+    <meta
+      name="description"
+      content="Professional nutrition calculator and meal recommendation system"
+    />
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='src/home.css') }}"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
 
-</head>
-<body class="min-h-screen flex flex-col font-sans bg-gray-50">
+      @keyframes fadeInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .animate-fade-in-left {
+        animation: fadeInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
 
-    <!-- Loader -->
-    <div id="loader" class="fixed inset-0 z-[9999] bg-white flex items-center justify-center transition-opacity duration-500">
-        <div class="spinner"></div>
-    </div>
+      @keyframes fadeInRight {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .animate-fade-in-right {
+        animation: fadeInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
 
-    <!-- Navigation -->
-    <nav class="shadow-sm py-4 px-6 sticky top-0 z-50 backdrop-blur-sm bg-white/80">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center animate-scale-in">
-                    <span class="text-emerald-600 text-xl">🍃</span>
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #0b3925;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Custom untuk overlap positioning */
+      .hero-container {
+        position: relative;
+      }
+
+      .stats-container {
+        position: absolute;
+        right: 50px;
+        top: 150px;
+        width: 170px;
+        z-index: 10;
+      }
+
+      /* Responsive: stats pindah ke bawah di mobile */
+      @media (max-width: 1023px) {
+        .stats-container {
+          position: relative;
+          width: 100%;
+          margin-top: 2rem;
+          right: 0;
+          top: 0;
+        }
+      }
+
+      /* Hover effect untuk cards */
+      .feature-card {
+        transition: all 0.3s ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-8px);
+      }
+    </style>
+  </head>
+
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow max-w-7xl w-full mx-auto pt-8 pb-16">
+      <!-- Hero Section dengan overlap positioning -->
+      <div class="hero-container relative mb-12">
+        <!-- Stats Container (Overlap di kanan) -->
+        <div class="stats-container">
+          <div class="flex flex-col sm:flex-row lg:flex-col gap-5">
+            <!-- Average Rating Card (atas) -->
+            <div
+              class="flex-1 flex flex-col justify-between relative overflow-hidden py-4"
+              style="
+                border-left: 2px solid #d1d5db;
+                border-top: 2px solid #d1d5db;
+                border-radius: 1.5rem 0 0 0;
+                transform: skewX(-10deg);
+              "
+            >
+              <div style="transform: skewX(10deg)" class="text-right">
+                <div
+                  class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1"
+                >
+                  Average Rating
                 </div>
-                <a href="{{ url_for('app_routes.home') }}" class="font-bold text-2xl hover:opacity-80 transition">
-                   <h1 class="text-xl font-bold text-gray-800">HealthyMate</h1>
-                </a>
+                <div
+                  class="text-3xl font-bold text-gray-900 flex items-baseline justify-end"
+                >
+                  4.9<span class="text-xl">★</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="{{ url_for('app_routes.calories') }}" class="nav-link text-gray-600 hover:text-emerald-600 font-medium">Calculator</a>
-                <a href="{{ url_for('app_routes.recommendations') }}" class="nav-link text-gray-600 hover:text-emerald-600 font-medium">service</a>
-                <a href="{{ url_for('app_routes.about') }}" class="nav-link text-gray-600 hover:text-emerald-600 font-medium">About</a>
+            <!-- Happy Clients Card (bawah - lebih ke kiri) -->
+            <div
+              class="flex-1 flex flex-col justify-between relative overflow-hidden py-4"
+              style="
+                border-left: 2px solid #d1d5db;
+                border-top: 2px solid #d1d5db;
+                border-radius: 1.5rem 0 0 0;
+                transform: skewX(-10deg) translateX(-32px);
+              "
+            >
+              <div style="transform: skewX(10deg)" class="text-right">
+                <div
+                  class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1"
+                >
+                  Happy Clients
+                </div>
+                <div class="text-3xl font-bold text-gray-900 text-right">
+                  600+
+                </div>
+              </div>
             </div>
-
-            <!-- Mobile Menu Button -->
-            <button id="mobileMenuButton" class="md:hidden text-gray-600 hover:text-emerald-600 transition-colors focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>   
+          </div>
         </div>
-    </nav>
 
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden md:hidden bg-white/95 shadow-lg py-2 w-full fixed top-16 left-0 z-40 backdrop-blur-sm transition-all duration-300">
-        <div class="flex flex-col divide-y divide-gray-100">
-            <a href="{{ url_for('app_routes.calories') }}" class="py-3 px-6 text-gray-700 hover:bg-emerald-50 transition-colors flex items-center space-x-2">
-                <i class="fas fa-calculator text-emerald-500 w-5"></i>
-                <span>Calculator</span>
+        <!-- Hero Content - Rata Tengah -->
+        <div class="text-center max-w-4xl mx-auto animate-fade-in-up pt-8">
+          <h1
+            class="text-[42px] md:text-[56px] lg:text-[64px] font-light text-gray-900 leading-[1.1] tracking-tight"
+          >
+            <span class="font-light">Transforming</span>
+            <span class="italic font-normal font-serif">Nutrition</span>
+            <span class="font-light">Through</span><br />
+            <span class="font-light">Smart & Lifestyle</span>
+          </h1>
+
+          <p
+            class="text-gray-500 max-w-2xl mx-auto mt-6 font-medium text-sm md:text-base leading-relaxed"
+          >
+            Discover how every meal and portion can guide you toward balance,
+            energy, and wellness.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+            <a
+              href="{{ url_for('app_routes.calculator') }}"
+              class="bg-[#cedfc9] hover:bg-[#b9cca5] border border-gray-400 text-gray-900 font-medium py-3 px-8 rounded-full transition-all text-sm"
+            >
+              Start Now
             </a>
-            <a href="{{ url_for('app_routes.recommendations') }}" class="py-3 px-6 text-gray-700 hover:bg-emerald-50 transition-colors flex items-center space-x-2">
-                <i class="fas fa-handshake-angle text-blue-500 w-5"></i>
-                <span>Service</span>
+            <a
+              href="{{ url_for('app_routes.about') }}"
+              class="border border-gray-400 hover:bg-gray-200/50 text-gray-900 font-medium py-3 px-8 rounded-full transition-all text-sm"
+            >
+              About Us
             </a>
-            <a href="{{ url_for('app_routes.about') }}" class="py-3 px-6 text-gray-700 hover:bg-emerald-50 transition-colors flex items-center space-x-2">
-                <i class="fas fa-info-circle text-indigo-500 w-5"></i>
-                <span>About</span>  
+          </div>
+        </div>
+      </div>
+
+      <!-- Quote & Image Section (Tetap di ATAS - LANGSUNG SETELAH HERO) -->
+      <div
+        class="bg-[#0b3925] rounded-[2.5rem] overflow-visible shadow-xl text-white relative animate-fade-in-up mb-16"
+        style="animation-delay: 0.1s"
+      >
+        <!-- Background box hijau -->
+        <div
+          class="bg-[#0b3925] rounded-[2.5rem] pl-8 pr-8 md:pl-12 md:pr-12 lg:pl-16 lg:pr-16"
+        >
+          <!-- Ubah items-center menjadi items-start -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <!-- Image Section dengan efek overflow keluar box -->
+            <div class="lg:col-span-5 w-full flex justify-center relative">
+              <div class="relative -mt-32 lg:-mt-38">
+                <div class="w-full">
+                  <img
+                    src="{{ url_for('static', filename='images/running-women-final.png') }}"
+                    alt="Healthy lifestyle"
+                    class="w-[450px] object-cover object-top transform hover:scale-105 transition duration-500 rounded-2xl"
+                    style="object-position: top 15% center"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-7 space-y-8 relative pt-24 pb-24 lg:pb-0">
+              <div class="space-y-2">
+                <p
+                  class="text-lg md:text-2xl italic font-thin font-serif leading-relaxed text-[#e2ede8] max-w-2xl"
+                >
+                  "True nutrition isn't just about hitting numbers. It's about
+                  understanding your body, listening to its cues, and feeding it
+                  what it truly needs to thrive. That's where real health
+                  begins."
+                </p>
+                <div class="text-gray-100 font-thin font-serif text-2xl">
+                  - Dr. Reza Ananda
+                </div>
+              </div>
+
+              <!-- Tags section -->
+              <div
+                class="absolute bottom-0 right-0 lg:relative lg:bottom-auto lg:right-auto flex flex-wrap gap-2 justify-end pt-6 max-w-xl ml-auto"
+              >
+                <div
+                  class="absolute bottom-0 right-0 lg:relative lg:bottom-auto lg:right-auto flex flex-wrap gap-2 justify-end pt-6 max-w-xl ml-auto mt-6"
+                >
+                  <div
+                    class="bg-white text-gray-900 px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2 shadow-sm"
+                  >
+                    <span class="text-emerald-700 text-[10px]">●</span>
+                    Purposeful Breathing
+                  </div>
+                  <div
+                    class="bg-[#e2ede8] text-gray-900 px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2 shadow-sm"
+                  >
+                    <span class="text-emerald-700 text-[10px]">●</span>
+                    Intentional Movement
+                  </div>
+                  <div
+                    class="bg-white text-gray-900 px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2 shadow-sm"
+                  >
+                    <span class="text-emerald-700 text-[10px]">●</span>
+                    Empowered Strength
+                  </div>
+                  <div
+                    class="bg-white text-gray-900 px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2 shadow-sm"
+                  >
+                    <span class="text-emerald-700 text-[10px]">●</span>
+                    Inner Harmony
+                  </div>
+                  <div
+                    class="bg-[#e2ede8] text-gray-900 px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2 shadow-sm"
+                  >
+                    <span class="text-emerald-700 text-[10px]">●</span>
+                    Smart Nutrition
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Section 1: Features / Layanan Unggulan -->
+      <div class="py-16 px-6">
+        <div class="text-center mb-12 animate-fade-in-up">
+          <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-4">
+            Why
+            <span class="italic font-serif font-medium">Choose</span>
+            HealthyMate?
+          </h2>
+          <p class="text-gray-500 max-w-2xl mx-auto">
+            Discover the features that make us your trusted nutrition companion
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            class="feature-card bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all animate-fade-in-up"
+            style="animation-delay: 0.1s"
+          >
+            <div
+              class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mb-5"
+            >
+              <i class="fas fa-calculator text-emerald-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Smart Calculator
+            </h3>
+            <p class="text-gray-600">
+              Accurate calorie & nutrition calculations based on your personal
+              metrics.
+            </p>
+          </div>
+
+          <div
+            class="feature-card bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all animate-fade-in-up"
+            style="animation-delay: 0.2s"
+          >
+            <div
+              class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mb-5"
+            >
+              <i class="fas fa-utensils text-emerald-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Meal Recommendations
+            </h3>
+            <p class="text-gray-600">
+              Personalized meal plans tailored to your goals and preferences.
+            </p>
+          </div>
+
+          <div
+            class="feature-card bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all animate-fade-in-up"
+            style="animation-delay: 0.3s"
+          >
+            <div
+              class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mb-5"
+            >
+              <i class="fas fa-chart-line text-emerald-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">
+              Progress Tracking
+            </h3>
+            <p class="text-gray-600">
+              Monitor your journey with intuitive dashboards and insights.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: How It Works -->
+      <div class="py-16 px-6 bg-white/50 rounded-3xl my-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-4">
+            How it <span class="italic font-serif font-normal">Works</span>
+          </h2>
+          <p class="text-gray-500 max-w-2xl mx-auto">
+            Three simple steps to start your wellness journey
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            class="text-center animate-fade-in-up"
+            style="animation-delay: 0.1s"
+          >
+            <div
+              class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl font-bold text-gray-800">1</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Sign Up</h3>
+            <p class="text-gray-500 text-sm">
+              Create your free account and tell us about your goals
+            </p>
+          </div>
+
+          <div
+            class="text-center animate-fade-in-up"
+            style="animation-delay: 0.2s"
+          >
+            <div
+              class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl font-bold text-gray-800">2</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">
+              Calculate Needs
+            </h3>
+            <p class="text-gray-500 text-sm">
+              Get your personalized calorie and nutrition recommendations
+            </p>
+          </div>
+
+          <div
+            class="text-center animate-fade-in-up"
+            style="animation-delay: 0.3s"
+          >
+            <div
+              class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl font-bold text-gray-800">3</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">
+              Start Transforming
+            </h3>
+            <p class="text-gray-500 text-sm">
+              Follow your plan and track your progress every day
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Testimonials -->
+      <div class="py-16 px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-4">
+            What
+            <span class="italic font-serif font-normal">Our Clients</span> Say
+          </h2>
+          <p class="text-gray-500 max-w-2xl mx-auto">
+            Real stories from real people who transformed their health
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <div
+            class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all animate-fade-in-left"
+          >
+            <div class="flex items-center gap-2 mb-4">
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+            </div>
+            <p class="text-gray-600 mb-4 italic">
+              "HealthyMate completely changed my relationship with food. The
+              personalized recommendations are spot-on!"
+            </p>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center"
+              >
+                <span class="text-emerald-600 text-sm">SD</span>
+              </div>
+              <div>
+                <div class="font-semibold text-gray-800">Sarah Dewi</div>
+                <div class="text-xs text-gray-500">Wellness Enthusiast</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all animate-fade-in-right"
+          >
+            <div class="flex items-center gap-2 mb-4">
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+            </div>
+            <p class="text-gray-600 mb-4 italic">
+              "Finally found an app that actually understands my needs. Lost
+              10kg in 3 months!"
+            </p>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center"
+              >
+                <span class="text-emerald-600 text-sm">MP</span>
+              </div>
+              <div>
+                <div class="font-semibold text-gray-800">Michael Pratama</div>
+                <div class="text-xs text-gray-500">Fitness Coach</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Call to Action Banner -->
+      <div class="py-16 px-6">
+        <div
+          class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] rounded-3xl p-12 text-center text-white"
+        >
+          <h2 class="text-3xl md:text-4xl font-light text-gray-100 mb-4">
+            Ready to
+            <span
+              class="italic font-serif font-normal text-gray-100"
+            >
+              Transform
+            </span>
+            Your Health?
+          </h2>
+          <p class="text-base text-emerald-200 mb-8 max-w-2xl mx-auto">
+            Join thousands of happy clients who have started their wellness
+            journey with HealthyMate
+          </p>
+          <div class="flex flex-wrap gap-4 justify-center">
+            <a
+              href="{{ url_for('app_routes.register') }}"
+              class="bg-white text-[#0b3925] hover:bg-gray-100 font-semibold py-3 px-8 rounded-full transition-all"
+            >
+              Get Started Free
             </a>
+            <a
+              href="{{ url_for('app_routes.about') }}"
+              class="border-2 border-white text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-full transition-all"
+            >
+              Learn More
+            </a>
+          </div>
         </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="gradient-bg">
-        <div class="max-w-7xl mx-auto px-6 py-16 md:py-24">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-                <div class="md:w-1/2 space-y-6 animate-fade-in-up">
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                        Your Personalized <span class="bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent">Nutrition</span> Companion
-                    </h1>
-                    <p class="text-lg text-gray-600 leading-relaxed">
-                        HealthyMate helps you understand your daily caloric needs and provides tailored meal recommendations to support your health goals.
-                    </p>
-                    <div class="flex flex-wrap gap-4">
-                        <a href="{{ url_for('app_routes.calories') }}" class="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            Calculate Your Needs <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <a href="{{ url_for('app_routes.about') }}" class="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-3 px-6 rounded-lg hover:shadow transition-all duration-300 transform hover:-translate-y-1">
-                            About us
-                        </a>
-                    </div>
-                </div>
-
-                <div class="md:w-1/2 animate-fade-in-up animation-delay-100">
-                    <div class="relative">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-2xl opacity-20 blur"></div>
-                        <img src="{{ url_for('static', filename='images/sayuran.jpg') }}" alt="Healthy food choices" class="relative rounded-2xl hero-image w-full h-auto max-h-[400px] object-cover">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section
-    <section id="features" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Key Features</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Discover how HealthyMate can help you achieve your nutrition goals</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-gray-50 p-8 rounded-2xl card-hover animate-fade-in-up animation-delay-100">
-                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                        <i class="fas fa-calculator text-blue-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Precision Calculator</h3>
-                    <p class="text-gray-600">Get accurate calorie calculations based on your personal metrics and activity levels using proven scientific formulas.</p>
-                </div>
-                
-                <div class="bg-gray-50 p-8 rounded-2xl card-hover animate-fade-in-up animation-delay-200">
-                    <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
-                        <i class="fas fa-utensils text-emerald-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Smart Recommendations</h3>
-                    <p class="text-gray-600">Receive personalized meal and snack recommendations tailored to your dietary needs and preferences.</p>
-                </div>
-                
-                <div class="bg-gray-50 p-8 rounded-2xl card-hover animate-fade-in-up animation-delay-300">
-                    <div class="w-14 h-14 bg-indigo-100 rounded-lg flex items-center justify-center mb-6">
-                        <i class="fas fa-chart-line text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Progress Tracking</h3>
-                    <p class="text-gray-600">Monitor your nutrition journey with intuitive tracking tools and visual progress reports.</p>
-                </div>
-            </div>
-        </div>
-    </section> -->
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-10">
-                <div>
-                    <div class="flex items-center space-x-3 mb-5">
-                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-                            <span class="text-emerald-600">🍃</span>
-                        </div>
-                        <h3 class="text-xl font-bold">HealthyMate</h3>
-                    </div>
-                    <p class="text-gray-400 mb-4">Your trusted nutrition companion for healthier living.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition transform hover:-translate-y-1">
-                            <i class="fab fa-twitter text-lg"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition transform hover:-translate-y-1">
-                            <i class="fab fa-instagram text-lg"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition transform hover:-translate-y-1">
-                            <i class="fab fa-facebook text-lg"></i>
-                        </a>
-                        <a href="https://github.com/mgeraldiar" target="_blank" class="text-gray-400 hover:text-white transition transform hover:-translate-y-1">
-                            <i class="fab fa-github text-lg"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-5">Resources</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>Blog</span></a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>Research</span></a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>FAQs</span></a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>Guides</span></a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-5">Company</h4>
-                    <ul class="space-y-3">
-                        <li><a href="{{ url_for('app_routes.about') }}" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>About Us</span></a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>Careers</span></a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>Contact</span></a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs text-emerald-500"></i><span>Press</span></a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-5">Newsletter</h4>
-                    <p class="text-gray-400 mb-4">Subscribe to get nutrition tips and special offers.</p>
-                    <form class="flex">
-                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 w-full">
-                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-r-lg transition transform hover:-translate-y-0.5">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-800 mt-12 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">&copy; 2025 HealthyMate. All rights reserved.</p>
-                    <div class="flex space-x-6">
-                        <a href="#" class="text-gray-500 hover:text-white text-sm transition">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 hover:text-white text-sm transition">Terms of Service</a>
-                        <a href="#" class="text-gray-500 hover:text-white text-sm transition">Cookies</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
+      </div>
+    </main>
+    {% include 'components/footer.html' %}
+  </body>
 </html>

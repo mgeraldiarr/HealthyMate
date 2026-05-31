@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/png"
+    />
+    <title>Dashboard | HealthyMate</title>
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+            colors: {
+              emerald: {
+                50: "#e2ede8",
+                100: "#cedfc9",
+                200: "#b9cca5",
+                300: "#a3b88c",
+                400: "#8ba472",
+                500: "#738f59",
+                600: "#0b3925",
+                700: "#0a2e1e",
+                800: "#082317",
+                900: "#06170f",
+              },
+              blue: {
+                50: "#e2ede8",
+                100: "#cedfc9",
+                200: "#b9cca5",
+                300: "#a3b88c",
+                400: "#8ba472",
+                500: "#738f59",
+                600: "#0b3925",
+                700: "#0a2e1e",
+                800: "#082317",
+                900: "#06170f",
+              },
+              indigo: {
+                50: "#e2ede8",
+                100: "#cedfc9",
+                200: "#b9cca5",
+                300: "#a3b88c",
+                400: "#8ba472",
+                500: "#738f59",
+                600: "#0b3925",
+                700: "#0a2e1e",
+                800: "#082317",
+                900: "#06170f",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #0b3925;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.4s;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
+    <!-- Navbar sementara di-comment -->
+    {% include 'components/navbar.html' %}
+
+    <!-- Hero Section - DI-COMMENT SEMUA -->
+    <!-- 
+    <section class="gradient-bg">
+      <div class="max-w-7xl mx-auto px-6 py-16 md:py-24">
+        <div
+          class="flex flex-col md:flex-row items-center justify-between gap-12"
+        >
+          <div class="md:w-1/2 space-y-6 animate-fade-in-up">
+            <h1
+              class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight"
+            >
+              Your Personalized
+              <span
+                class="bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent"
+                >Nutrition</span
+              >
+              Companion
+            </h1>
+            <p class="text-lg text-gray-600 leading-relaxed">
+              HealthyMate helps you understand your daily caloric needs and
+              provides tailored meal recommendations to support your health
+              goals.
+            </p>
+            <div class="flex flex-wrap gap-4">
+              <a
+                href="{{ url_for('app_routes.calculator') }}"
+                class="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              >
+                Calculate Your Needs <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+              <a
+                href="{{ url_for('app_routes.about') }}"
+                class="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-3 px-6 rounded-lg hover:shadow transition-all duration-300 transform hover:-translate-y-1"
+              >
+                About us
+              </a>
+            </div>
+          </div>
+
+          <div class="md:w-1/2 animate-fade-in-up animation-delay-100">
+            <div class="relative">
+              <div
+                class="absolute -inset-4 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-2xl opacity-20 blur"
+              ></div>
+              <img
+                src="{{ url_for('static', filename='images/sayuran.jpg') }}"
+                alt="Healthy food choices"
+                class="relative rounded-2xl hero-image w-full h-auto max-h-[400px] object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    -->
+
+    <!-- Features Section - DI-COMMENT JUGA -->
+    <!-- 
+    <section id="features" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Key Features</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Discover how HealthyMate can help you achieve your nutrition goals</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-8 rounded-2xl card-hover animate-fade-in-up animation-delay-100">
+                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-calculator text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Precision Calculator</h3>
+                    <p class="text-gray-600">Get accurate calorie calculations based on your personal metrics and activity levels using proven scientific formulas.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-2xl card-hover animate-fade-in-up animation-delay-200">
+                    <div class="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-utensils text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Smart Recommendations</h3>
+                    <p class="text-gray-600">Receive personalized meal and snack recommendations tailored to your dietary needs and preferences.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-2xl card-hover animate-fade-in-up animation-delay-300">
+                    <div class="w-14 h-14 bg-indigo-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-indigo-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Progress Tracking</h3>
+                    <p class="text-gray-600">Monitor your nutrition journey with intuitive tracking tools and visual progress reports.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    -->
+
+    <!-- UNDER MAINTENANCE MESSAGE -->
+    <div class="flex-grow flex items-center justify-center min-h-screen -mt-20">
+      <div class="text-center px-6">        
+        <!-- Title -->
+        <h1 class="text-3xl md:text-5xl font-light text-gray-900 mb-4">
+          Under 
+          <span class="italic font-serif font-normal text-gray-900">
+            Maintenance
+          </span>
+        </h1>
+        
+        <!-- Description -->
+        <p class="text-gray-500 max-w-md mx-auto mt-4 font-medium text-sm md:text-base">
+          We're currently performing some upgrades to improve your experience. 
+          Please check back soon!
+        </p>
+      </div>
+    </div>
+
+    <!-- <script src="{{ url_for('static', filename='js/main.js') }}"></script> -->
+  </body>
+</html>

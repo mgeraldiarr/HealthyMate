@@ -1,8 +1,13 @@
-from flask import Blueprint, render_template, request # request untuk mengakses data dari form (POST,GET) || renden_template unutk render HTML temlate
+from flask import Blueprint, render_template, request, redirect, url_for, flash # request untuk mengakses data dari form (POST,GET) || renden_template unutk render HTML temlate
 from services.meal_recommendation import MealRecommendation # mengimport mealrecommendation dari services.meal_recommendation
 from services.calorie_calculator import CalorieCalculator # mengimport caloriecalculator dari services.calorie_calculator
+from models import db, User, Progress
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, logout_user, login_required, current_user
 
 app_routes = Blueprint('app_routes', __name__)
+
+# == Rute Halaman Statis ==
 
 @app_routes.route('/')
 def home():
@@ -16,12 +21,65 @@ def about():
 def consultation():
     return render_template('consultation.html')
 
-@app_routes.route('/recommendations')
-def recommendations():
-    return render_template('recommendations.html')
+@app_routes.route('/services')
+def services():
+    return render_template('services.html')
 
-@app_routes.route('/calories', methods=['GET', 'POST'])
-def calories():
+# == Rute Otentikasi (Login/Register) ==
+
+@app_routes.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('app_routes.dashboard'))
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Cek apakah email atau username sudah ada
+        user_by_email = User.query.filter_by(email=email).first()
+        if user_by_email:
+            flash('Email address already exists.', 'danger')
+            return redirect(url_for('app_routes.register'))
+
+        # Buat user baru dengan password yang di-hash
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=username, email=email, password_hash=hashed_password)
+
+        # Simpan ke database
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Registration successful! Please log in.', 'success')
+        return redirect(url_for('app_routes.login'))
+
+    return render_template('auth/register.html')
+
+@app_routes.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('app_routes.dashboard'))
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+
+        # Cek user dan password
+        if not user or not check_password_hash(user.password_hash, password):
+            flash('Invalid email or password. Please try again.', 'danger')
+            return redirect(url_for('app_routes.login'))
+
+        login_user(user) # Daftarkan user ke session login
+        return redirect(url_for('app_routes.dashboard'))
+
+    return render_template('auth/login.html')
+
+
+# == Rute Kalkulator dan Dashboard ==
+
+@app_routes.route('/calculator', methods=['GET', 'POST'])
+@login_required
+def calculator():
     if request.method == 'POST':
         user_data = request.form
         try:
@@ -62,7 +120,7 @@ def calories():
                 'dinner': meal_plan.get('dinner', {})
             }
 
-            return render_template('calories.html',
+            return render_template('calculator.html',
                                    bmr=bmr,
                                    tdee=tdee,
                                    result=result,
@@ -71,16 +129,29 @@ def calories():
 
         except ValueError as e:  
             error = "All fields must be filled in correctly."
-            return render_template('calories.html',
+            return render_template('calculator.html',
                                     error=error,
                                     bmr=None,
                                     tdee=None,
                                     result=None,
                                     meal_type=None)
 
-    return render_template('calories.html',
+    return render_template('calculator.html',
                            error=None,
                            bmr=None,
                            tdee=None,
                            result=None,
                            meal_type=None)
+
+@app_routes.route('/dashboard')
+@login_required # Hanya user yang sudah login yang bisa akses
+def dashboard():
+    # Di sini nanti kita akan tambahkan logika untuk menampilkan data progress
+    return render_template('dashboard.html', name=current_user.username)
+
+@app_routes.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('app_routes.home'))

@@ -3,6 +3,10 @@
 #     id = db.Column(db.Integer, primary_key=True)
 #     name = db.Column(db.String(50))
 #     weight = db.Column(db.Float)
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
+from datetime import datetime
+
 
 # class User:
 #     def __init__(self, name, age, weight, height, activity_level):
@@ -12,11 +16,27 @@
 #         self.height = height
 #         self.activity_level = activity_level
 
+# Inisialisasi SQLAlchemy
+db = SQLAlchemy()
+
+
 # class Meal:
 #     def __init__(self, name, calories, ingredients):
 #         self.name = name
 #         self.calories = calories
 #         self.ingredients = ingredients
+
+# Tabel untuk menyimpan data akun pengguna
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    
+    # Relasi ke tabel Progress (1 User punya banyak Progress)
+    progress_history = db.relationship('Progress', backref='user', lazy=True, cascade="all, delete-orphan")
+
 
 # class MealRecommendation:
 #     def __init__(self):
@@ -48,3 +68,15 @@
 #             'super active': 1.9
 #         }
 #         return bmr * activity_multiplier.get(self.user.activity_level, 1.2)
+
+
+# Tabel untuk mencatat riwayat tracker pengguna di Dashboard
+class Progress(db.Model):
+    __tablename__ = 'progress'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+    weight = db.Column(db.Float, nullable=False)
+    height = db.Column(db.Float, nullable=False)
+    tdee_result = db.Column(db.Float)
+    tujuan = db.Column(db.String(20)) # misal: 'turun', 'naik', 'jaga'

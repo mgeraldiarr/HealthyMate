@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/png"
+    />
+    <title>HealthyMate | Calorie Calculator</title>
+    <meta
+      name="description"
+      content="Calculate your daily calorie needs with HealthyMate"
+    />
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='src/calculator.css') }}"
+    />
+    <style>
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #0b3925;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.4s;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .animation-delay-100 {
+        animation-delay: 0.1s;
+      }
+      .animation-delay-200 {
+        animation-delay: 0.2s;
+      }
+      .animation-delay-300 {
+        animation-delay: 0.3s;
+      }
+
+      .feature-card {
+        transition: all 0.3s ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow py-12 md:py-20">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Hero Section Calculator (Styling mirip homepage) -->
+        <div class="text-center mb-12 animate-fade-in-up">
+          <h1
+            class="text-[42px] md:text-[56px] lg:text-[64px] font-light text-gray-900 leading-[1.1] tracking-tight mx-auto max-w-4xl"
+          >
+            Calculate Your
+            <span class="italic font-serif font-normal"> Optimal </span>
+            Calorie Intake
+          </h1>
+          <p
+            class="text-gray-500 max-w-2xl mx-auto mt-6 font-medium text-sm md:text-base leading-relaxed"
+          >
+            Get accurate daily calorie recommendations tailored to your body
+            composition and fitness goals
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 items-start">
+          <!-- Calculator Form -->
+          <div
+            class="bg-white rounded-2xl shadow-xl animate-fade-in-up animation-delay-100 border border-gray-100 overflow-hidden"
+          >
+            <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-4">
+              <h3
+                class="text-xl font-semibold text-white flex items-center gap-2"
+              >
+                <i class="fas fa-calculator"></i>
+                Calorie Calculator
+              </h3>
+            </div>
+
+            <form
+              method="post"
+              action="{{ url_for('app_routes.calculator') }}"
+              class="p-6 space-y-6"
+            >
+              <!-- Personal Information Section -->
+              <div class="space-y-4">
+                <h4
+                  class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+                >
+                  <i class="fas fa-user text-emerald-600 text-sm"></i>
+                  Personal Information
+                </h4>
+
+                <div class="space-y-3">
+                  <label class="block text-gray-700 font-medium text-sm"
+                    >Gender</label
+                  >
+                  <select
+                    name="gender"
+                    required
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white text-gray-700"
+                  >
+                    <option value="">Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="space-y-3">
+                    <label class="block text-gray-700 font-medium text-sm"
+                      >Age (years)</label
+                    >
+                    <input
+                      type="number"
+                      name="usia"
+                      min="10"
+                      max="100"
+                      required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                      placeholder="e.g. 25"
+                    />
+                  </div>
+                  <div class="space-y-3">
+                    <label class="block text-gray-700 font-medium text-sm"
+                      >Weight (kg)</label
+                    >
+                    <input
+                      type="number"
+                      name="berat"
+                      min="20"
+                      max="200"
+                      required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                      placeholder="e.g. 68"
+                    />
+                  </div>
+                </div>
+
+                <div class="space-y-3">
+                  <label class="block text-gray-700 font-medium text-sm"
+                    >Height (cm)</label
+                  >
+                  <input
+                    type="number"
+                    name="tinggi"
+                    min="100"
+                    max="250"
+                    required
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                    placeholder="e.g. 175"
+                  />
+                </div>
+              </div>
+
+              <!-- Activity Level Section -->
+              <div class="space-y-4">
+                <h4
+                  class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+                >
+                  <i class="fas fa-bolt text-emerald-600 text-sm"></i>
+                  Activity Level
+                </h4>
+
+                <div class="space-y-3">
+                  <label class="block text-gray-700 font-medium text-sm"
+                    >Select your typical daily activity level</label
+                  >
+                  <select
+                    name="aktivitas"
+                    required
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-gray-700"
+                  >
+                    <option value="">Choose activity level</option>
+                    <option value="1.2">
+                      Sedentary: Little or no exercise (office job)
+                    </option>
+                    <option value="1.375">
+                      Lightly Active: Light exercise 1-2 days/week
+                    </option>
+                    <option value="1.55">
+                      Moderately Active: Moderate exercise 3-5 days/week
+                    </option>
+                    <option value="1.725">
+                      Very Active: Hard exercise 6-7 days/week
+                    </option>
+                    <option value="1.9">
+                      Extremely Active: Very hard exercise 2x a day/more
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Goal Section -->
+              <div class="space-y-4">
+                <h4
+                  class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+                >
+                  <i class="fas fa-bullseye text-emerald-600 text-sm"></i>
+                  Fitness Goal
+                </h4>
+
+                <div class="space-y-3">
+                  <label class="block text-gray-700 font-medium text-sm"
+                    >What is your primary goal?</label
+                  >
+                  <select
+                    name="tujuan"
+                    required
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-gray-700"
+                  >
+                    <option value="">Select your goal</option>
+                    <option value="turun">Weight Loss (calorie deficit)</option>
+                    <option value="jaga">Weight Maintenance</option>
+                    <option value="naik">Weight Gain (calorie surplus)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full py-3 bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+              >
+                Calculate My Calories
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Results Section dengan styling baru -->
+          <div class="sticky top-4 animate-fade-in-up animation-delay-200">
+            {% if result %}
+            <div
+              class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+            >
+              <div
+                class="bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-6 text-center border-b border-emerald-100"
+              >
+                <div
+                  class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-4 shadow-md"
+                >
+                  <i class="fas fa-chart-line text-emerald-700 text-3xl"></i>
+                </div>
+                <h3 class="text-4xl font-bold text-emerald-700 tracking-tight">
+                  {{ result }}
+                </h3>
+                <p class="text-gray-500 mt-2">
+                  Your personalized daily calorie recommendation
+                </p>
+              </div>
+
+              <div class="p-6 space-y-4">
+                <!-- BMR Card -->
+                <div
+                  class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center"
+                    >
+                      <i class="fas fa-heartbeat text-emerald-600 text-sm"></i>
+                    </div>
+                    <div>
+                      <span class="font-semibold text-gray-800 text-sm"
+                        >Basal Metabolic Rate (BMR)</span
+                      >
+                      <p class="text-xs text-gray-400">
+                        Calories at complete rest
+                      </p>
+                    </div>
+                  </div>
+                  <span class="font-bold text-emerald-700 text-lg"
+                    >{{ bmr|round }} kcal/day</span
+                  >
+                </div>
+
+                <!-- TDEE Card -->
+                <div
+                  class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center"
+                    >
+                      <i class="fas fa-fire text-emerald-600 text-sm"></i>
+                    </div>
+                    <div>
+                      <span class="font-semibold text-gray-800 text-sm"
+                        >Total Daily Energy Expenditure (TDEE)</span
+                      >
+                      <p class="text-xs text-gray-400">
+                        Calories with activity level
+                      </p>
+                    </div>
+                  </div>
+                  <span class="font-bold text-emerald-700 text-lg"
+                    >{{ tdee|round }} kcal/day</span
+                  >
+                </div>
+              </div>
+
+              {% if meal_type %}
+              <div class="border-t border-gray-100 p-6">
+                <h4
+                  class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
+                >
+                  <i class="fas fa-utensils text-emerald-600"></i>
+                  Daily Meal Plan Recommendation
+                </h4>
+
+                <div class="space-y-3">
+                  <!-- Breakfast -->
+                  <div
+                    class="flex items-center justify-between p-3 bg-yellow-50 rounded-xl"
+                  >
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-sun text-yellow-600 text-lg"></i>
+                      <span class="font-semibold text-gray-700">Breakfast</span>
+                      <p class="text-xs text-gray-500">
+                        {{ meal_type.breakfast.name }}
+                      </p>
+                    </div>
+                    <span class="font-semibold text-yellow-700"
+                      >{{ meal_type.breakfast.calories }} kcal</span
+                    >
+                  </div>
+                  <!-- Lunch -->
+                  <div
+                    class="flex items-center justify-between p-3 bg-orange-50 rounded-xl"
+                  >
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-cloud-sun text-orange-600 text-lg"></i>
+                      <span class="font-semibold text-gray-700">Lunch</span>
+                      <p class="text-xs text-gray-500">
+                        {{ meal_type.lunch.name }}
+                      </p>
+                    </div>
+                    <span class="font-semibold text-orange-700"
+                      >{{ meal_type.lunch.calories }} kcal</span
+                    >
+                  </div>
+                  <!-- Dinner -->
+                  <div
+                    class="flex items-center justify-between p-3 bg-indigo-50 rounded-xl"
+                  >
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-moon text-indigo-600 text-lg"></i>
+                      <span class="font-semibold text-gray-700">Dinner</span>
+                      <p class="text-xs text-gray-500">
+                        {{ meal_type.dinner.name }}
+                      </p>
+                    </div>
+                    <span class="font-semibold text-indigo-700"
+                      >{{ meal_type.dinner.calories }} kcal</span
+                    >
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            {% else %}
+            <div
+              class="bg-white rounded-2xl shadow-xl p-10 text-center border border-gray-100"
+            >
+              <div
+                class="w-24 h-24 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-6 shadow-md"
+              >
+                <i class="fas fa-calculator text-emerald-700 text-4xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                Your Results Will Appear Here
+              </h3>
+              <p class="text-gray-500 text-sm">
+                Complete the form with your personal details to receive your
+                customized calorie calculation and nutrition recommendations.
+              </p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Calorie Calculation Method Section -->
+    <section class="py-16 bg-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-4">
+            Calculation
+            <span class="italic font-serif font-normal text-gray-900">
+              Method
+            </span>
+          </h2>
+          <p
+            class="text-gray-500 max-w-2xl mx-auto mt-6 font-medium text-sm md:text-base leading-relaxed"
+          >
+            This calculator uses the proven accurate Mifflin St. Jeor formula to
+            estimate your daily calorie needs.
+          </p>
+        </div>
+
+        <div class="space-y-6">
+          <!-- BMR Card -->
+          <div
+            class="bg-[#f2f7f4] rounded-2xl p-6 border border-[#cedfc9] shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h3
+              class="text-xl font-semibold text-[#0b3925] mb-2 flex items-center gap-2"
+            >
+              <i class="fas fa-fire text-[#0b3925]"></i>
+              Basal Metabolic Rate (BMR)
+            </h3>
+            <p class="text-gray-600 mb-3 text-sm">
+              <span class="font-medium text-gray-800">BMR</span> is the amount
+              of calories the body needs to perform basic functions such as
+              breathing and metabolism at rest.
+            </p>
+            <div
+              class="bg-white rounded-xl p-4 border border-[#cedfc9] text-sm shadow-sm"
+            >
+              <p class="font-medium text-gray-800 mb-2">
+                Mifflin St. Jeor formula:
+              </p>
+              <p class="text-gray-600">
+                Men:
+                <code
+                  class="bg-[#cedfc9] px-2 py-0.5 rounded text-[#0b3925] font-medium"
+                  >BMR = 10 x weight + 6.25 x height - 5 x age + 5</code
+                >
+              </p>
+              <p class="text-gray-600 mt-1">
+                Women:
+                <code
+                  class="bg-[#cedfc9] px-2 py-0.5 rounded text-[#0b3925] font-medium"
+                  >BMR = 10 x weight + 6.25 x height - 5 x age - 161</code
+                >
+              </p>
+            </div>
+          </div>
+
+          <!-- TDEE Card -->
+          <div
+            class="bg-[#f2f7f4] rounded-2xl p-6 border border-[#cedfc9] shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h3
+              class="text-xl font-semibold text-[#0b3925] mb-2 flex items-center gap-2"
+            >
+              <i class="fas fa-bolt text-[#0b3925]"></i>
+              Total Daily Energy Expenditure (TDEE)
+            </h3>
+            <p class="text-gray-600 mb-3 text-sm">
+              <span class="font-medium text-gray-800">TDEE</span> is your total
+              daily calorie requirement based on your physical activity level.
+            </p>
+            <div
+              class="bg-white rounded-xl p-4 border border-[#cedfc9] text-sm shadow-sm"
+            >
+              <p class="font-medium text-gray-800 mb-2">
+                TDEE multiplier factor:
+              </p>
+              <ul class="space-y-1 text-gray-600">
+                <li>
+                  • <b>Sedentary:</b> Little or no exercise →
+                  <code
+                    class="bg-[#cedfc9] px-2 py-0.5 rounded text-[#0b3925] font-medium"
+                    >BMR x 1.2</code
+                  >
+                </li>
+                <li>
+                  • <b>Lightly Active:</b> Light exercise 1-2 days/week →
+                  <code
+                    class="bg-[#cedfc9] px-2 py-0.5 rounded text-[#0b3925] font-medium"
+                    >BMR x 1.375</code
+                  >
+                </li>
+                <li>
+                  • <b>Moderately Active:</b> Moderate exercise 3-5 days/week →
+                  <code
+                    class="bg-[#cedfc9] px-2 py-0.5 rounded text-[#0b3925] font-medium"
+                    >BMR x 1.55</code
+                  >
+                </li>
+                <li>
+                  • <b>Very Active:</b> Hard exercise 6-7 days/week →
+                  <code
+                    class="bg-[#cedfc9] px-2 py-0.5 rounded text-[#0b3925] font-medium"
+                    >BMR x 1.725</code
+                  >
+                </li>
+                <li>
+                  • <b>Extremely Active:</b> Very hard exercise 2x a day →
+                  <code
+                    class="bg-[#cedfc9] px-2 py-0.5 rounded text-[#0b3925] font-medium"
+                    >BMR x 1.9</code
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section (Styling baru) -->
+    <section class="py-16 bg-[#f2f7f4]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-4">
+            How
+            <span class="italic font-serif font-normal text-gray-900">
+              It
+            </span>
+            Works
+          </h2>
+          <p
+            class="text-gray-500 max-w-2xl mx-auto mt-6 font-medium text-sm md:text-base leading-relaxed"
+          >
+            We use scientifically validated formulas to provide accurate calorie
+            calculations
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            class="feature-card bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all animate-fade-in-up animation-delay-100"
+          >
+            <div
+              class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-4"
+            >
+              <i class="fas fa-user text-emerald-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">
+              Personalized Inputs
+            </h3>
+            <p class="text-gray-500 text-sm">
+              We consider your age, gender, weight, height and activity level.
+            </p>
+          </div>
+
+          <div
+            class="feature-card bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all animate-fade-in-up animation-delay-200"
+          >
+            <div
+              class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-4"
+            >
+              <i class="fas fa-calculator text-emerald-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">
+              Accurate Calculations
+            </h3>
+            <p class="text-gray-500 text-sm">
+              Using Mifflin-St Jeor Equation for precise TDEE calculation.
+            </p>
+          </div>
+
+          <div
+            class="feature-card bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all animate-fade-in-up animation-delay-300"
+          >
+            <div
+              class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-4"
+            >
+              <i class="fas fa-utensils text-emerald-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">
+              Smart Recommendations
+            </h3>
+            <p class="text-gray-500 text-sm">
+              Get personalized meal recommendations based on your needs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer Section -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div
+        class="bg-yellow-50 border-l-4 border-yellow-400 rounded-xl p-5 flex gap-4 items-start shadow-sm"
+      >
+        <i class="fas fa-exclamation-triangle text-yellow-500 text-xl"></i>
+        <div>
+          <h3 class="font-semibold text-yellow-700 text-sm mb-1">Disclaimer</h3>
+          <p class="text-gray-600 text-xs">
+            Individual calorie needs may vary based on body condition and
+            medical factors. Consult your doctor before making significant
+            dietary changes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {% include 'components/footer.html' %}
+  </body>
+</html>
