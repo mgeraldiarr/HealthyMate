@@ -3,14 +3,18 @@
     <div class="flex items-center space-x-2">
       <a
         href="{{ url_for('app_routes.home') }}"
-        class="flex items-center gap-2 opacity-90 hover:opacity-80 transition"
+        class="flex items-center gap-2 opacity-90 hover:opacity-80 transition group"
       >
         <img
           src="{{ url_for('static', filename='images/logo-hm.png') }}"
           alt="HealthyMate Logo"
-          class="w-9 h-9 object-contain"
+          class="w-9 h-9 object-contain transition-transform group-hover:scale-105"
         />
-        <h1 class="text-lg font-bold text-gray-900">HealthyMate.</h1>
+        <h1
+          class="text-lg font-bold text-gray-900 group-hover:text-[#0b3925] transition"
+        >
+          HealthyMate
+        </h1>
       </a>
     </div>
 
@@ -51,12 +55,24 @@
 
     <div class="hidden md:flex items-center space-x-3">
       {% if current_user.is_authenticated %}
-      <a
-        href="{{ url_for('app_routes.logout') }}"
-        class="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-full text-xs font-semibold transition"
-      >
-        Logout
-      </a>
+      <div class="flex items-center gap-2">
+        <a
+          href="{{ url_for('app_routes.profile') }}"
+          class="flex items-center gap-2 bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 px-4 py-2 rounded-full transition-all duration-200 group"
+        >
+          <div
+            class="w-6 h-6 bg-[#0b3925] text-white rounded-full flex items-center justify-center font-bold text-xs uppercase"
+          >
+            {{ current_user.username[0] if current_user.username else 'U' }}
+          </div>
+          <span class="text-sm font-medium group-hover:text-gray-900">
+            {{ current_user.name or current_user.username }}
+          </span>
+          <i
+            class="fas fa-chevron-down text-xs text-gray-600 group-hover:text-gray-900 transition"
+          ></i>
+        </a>
+      </div>
       {% else %}
       <a
         href="{{ url_for('app_routes.login') }}"
@@ -135,7 +151,28 @@
     </a>
     <hr class="border-gray-200" />
     {% if current_user.is_authenticated %}
-    <a href="{{ url_for('app_routes.logout') }}" class="text-red-600">Logout</a>
+    <div class="flex items-center justify-between pt-2">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 bg-[#cedfc9] rounded-full flex items-center justify-center font-bold text-sm uppercase"
+        >
+          {{ current_user.username[0] if current_user.username else 'U' }}
+        </div>
+        <div>
+          <p class="font-semibold text-gray-900">
+            {{ current_user.name or current_user.username }}
+          </p>
+          <p class="text-xs text-gray-500">{{ current_user.email }}</p>
+        </div>
+      </div>
+    </div>
+    <a
+      href="{{ url_for('app_routes.profile') }}"
+      class="text-emerald-600 font-semibold flex items-center gap-2"
+    >
+      <i class="fas fa-user-circle"></i>
+      Profil Saya
+    </a>
     {% else %}
     <a href="{{ url_for('app_routes.login') }}" class="text-gray-900">Log In</a>
     <a

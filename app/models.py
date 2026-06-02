@@ -34,6 +34,14 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     
+    # Data Profil Pengguna
+    name = db.Column(db.String(100))
+    age = db.Column(db.Integer)
+    weight = db.Column(db.Float)
+    height = db.Column(db.Float)
+    gender = db.Column(db.String(20))
+    activity_level = db.Column(db.String(50))
+
     # Relasi ke tabel Progress (1 User punya banyak Progress)
     progress_history = db.relationship('Progress', backref='user', lazy=True, cascade="all, delete-orphan")
 

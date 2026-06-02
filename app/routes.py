@@ -155,3 +155,26 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('app_routes.home'))
+
+@app_routes.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        current_user.name = request.form.get('name')
+        
+        # Mengambil data int/float dan mengubahnya jika ada nilainya
+        age_str = request.form.get('age')
+        weight_str = request.form.get('weight')
+        height_str = request.form.get('height')
+        
+        current_user.age = int(age_str) if age_str else None
+        current_user.weight = float(weight_str) if weight_str else None
+        current_user.height = float(height_str) if height_str else None
+        current_user.gender = request.form.get('gender')
+        current_user.activity_level = request.form.get('activity_level')
+        
+        db.session.commit()
+        flash('Profil berhasil diperbarui!', 'success')
+        return redirect(url_for('app_routes.profile'))
+        
+    return render_template('profile.html')

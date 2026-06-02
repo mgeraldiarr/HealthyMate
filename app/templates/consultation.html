@@ -163,6 +163,13 @@
             class="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-full text-xs font-semibold transition"
             >Logout</a
           >
+              <a 
+                href="{{ url_for('app_routes.profile') }}" 
+                class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-sm uppercase shadow-sm hover:shadow-md transition border-2 border-emerald-500"
+                title="Profil Saya"
+              >
+                {{ current_user.username[0] if current_user.username else 'U' }}
+              </a>
           {% else %}
           <a
             href="{{ url_for('app_routes.login') }}"
@@ -235,6 +242,9 @@
         {% if current_user.is_authenticated %}
         <a href="{{ url_for('app_routes.logout') }}" class="text-red-600"
           >Logout</a
+        >
+        <a href="{{ url_for('app_routes.profile') }}" class="text-emerald-600 font-bold"
+          >Profil Saya</a
         >
         {% else %}
         <a href="{{ url_for('app_routes.login') }}" class="text-gray-900"
