@@ -119,6 +119,16 @@ def calculator():
                 'lunch': meal_plan.get('lunch', {}),
                 'dinner': meal_plan.get('dinner', {})
             }
+            
+            new_progress = Progress(
+                user_id=current_user.id,
+                weight=weight,
+                height=height,
+                tdee_result=tdee,
+                tujuan=tujuan
+            )
+            db.session.add(new_progress)
+            db.session.commit()
 
             return render_template('calculator.html',
                                    bmr=bmr,
@@ -146,8 +156,16 @@ def calculator():
 @app_routes.route('/dashboard')
 @login_required # Hanya user yang sudah login yang bisa akses
 def dashboard():
-    # Di sini nanti kita akan tambahkan logika untuk menampilkan data progress
-    return render_template('dashboard.html', name=current_user.username)
+    bmr = None
+    tdee = None
+    if current_user.weight and current_user.height and current_user.age and current_user.gender and current_user.activity_level:
+        calorie_calculator = CalorieCalculator(current_user.weight, current_user.height, current_user.age, current_user.gender, current_user.activity_level)
+        bmr = calorie_calculator.calculate_bmr()
+        tdee = calorie_calculator.calculate_calories()
+
+    progress_records = Progress.query.filter_by(user_id=current_user.id).order_by(Progress.date.desc()).limit(5).all()
+    
+    return render_template('dashboard.html', bmr=bmr, tdee=tdee, progress_records=progress_records)
 
 @app_routes.route('/logout')
 @login_required
