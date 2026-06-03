@@ -100,7 +100,7 @@
   >
     {% include 'components/navbar.html' %}
 
-    <main class="flex-grow py-12 md:py-20">
+    <main class="flex-grow py-12 md:py-10">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Hero Section Calculator (Styling mirip homepage) -->
         <div class="text-center mb-12 animate-fade-in-up">
@@ -124,13 +124,8 @@
           <div
             class="bg-white rounded-2xl shadow-xl animate-fade-in-up animation-delay-100 border border-gray-100 overflow-hidden"
           >
-            <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-4">
-              <h3
-                class="text-xl font-semibold text-white flex items-center gap-2"
-              >
-                <i class="fas fa-calculator"></i>
-                Calorie Calculator
-              </h3>
+            <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-3">
+              
             </div>
 
             <form
@@ -141,21 +136,21 @@
               <!-- Personal Information Section -->
               <div class="space-y-4">
                 <h4
-                  class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+                  class="text-md font-semibold text-gray-800 flex items-center gap-2"
                 >
-                  <i class="fas fa-user text-emerald-600 text-sm"></i>
+                  <i class="fas fa-user text-emerald-600 text-xs"></i>
                   Personal Information
                 </h4>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="space-y-3">
-                    <label class="block text-gray-700 font-medium text-sm"
+                    <label class="block text-gray-700 font-medium text-xs"
                       >Gender</label
                     >
                     <select
                       name="gender"
                       required
-                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white text-gray-700"
+                      class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white text-sm text-gray-700"
                     >
                       {% set default_gender = request.form.get('gender') or current_user.gender %}
                       <option value="">Select your gender</option>
@@ -165,7 +160,7 @@
                   </div>
 
                   <div class="space-y-3">
-                      <label class="block text-gray-700 font-medium text-sm"
+                      <label class="block text-gray-700 font-medium text-xs"
                         >Age (years)</label
                       >
                       <input
@@ -174,7 +169,7 @@
                         min="10"
                         max="100"
                         required
-                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                        class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                         placeholder="e.g. 25"
                         value="{{ request.form.get('usia') or current_user.age or '' }}"
                       />
@@ -183,7 +178,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="space-y-3">
-                    <label class="block text-gray-700 font-medium text-sm"
+                    <label class="block text-gray-700 font-medium text-xs"
                       >Weight (kg)</label
                     >
                     <input
@@ -193,14 +188,14 @@
                       max="200"
                       step="0.1"
                       required
-                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                      class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                       placeholder="e.g. 68"
                       value="{{ request.form.get('berat') or current_user.weight or '' }}"
                     />
                   </div>
 
                   <div class="space-y-3">
-                    <label class="block text-gray-700 font-medium text-sm"
+                    <label class="block text-gray-700 font-medium text-xs"
                       >Height (cm)</label
                     >
                     <input
@@ -210,7 +205,7 @@
                     max="250"
                     step="0.1"
                     required
-                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                    class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     placeholder="e.g. 175"
                     value="{{ request.form.get('tinggi') or current_user.height or '' }}"
                     />
@@ -221,20 +216,20 @@
               <!-- Activity Level Section -->
               <div class="space-y-4">
                 <h4
-                  class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+                  class="text-md font-semibold text-gray-800 flex items-center gap-2"
                 >
                   <i class="fas fa-bolt text-emerald-600 text-sm"></i>
                   Activity Level
                 </h4>
 
                 <div class="space-y-3">
-                  <label class="block text-gray-700 font-medium text-sm"
+                  <label class="block text-gray-700 font-medium text-xs"
                     >Select your typical daily activity level</label
                   >
                   <select
                     name="aktivitas"
                     required
-                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-gray-700"
+                    class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-gray-700"
                   >
                     {% set default_act = request.form.get('aktivitas') or current_user.activity_level %}
                     <option value="">Choose activity level</option>
@@ -260,9 +255,9 @@
               <!-- Goal Section -->
               <div class="space-y-4">
                 <h4
-                  class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+                  class="text-md font-semibold text-gray-800 flex items-center gap-2"
                 >
-                  <i class="fas fa-bullseye text-emerald-600 text-sm"></i>
+                  <i class="fas fa-bullseye text-emerald-600 text-xs"></i>
                   Fitness Goal
                 </h4>
 
@@ -273,7 +268,7 @@
                   <select
                     name="tujuan"
                     required
-                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-gray-700"
+                    class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-gray-700"
                   >
                     {% set default_goal = request.form.get('tujuan') %}
                     <option value="">Select your goal</option>
@@ -297,150 +292,102 @@
           <!-- Results Section dengan styling baru -->
           <div class="sticky top-4 animate-fade-in-up animation-delay-200">
             {% if result %}
-            <div
-              class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
-            >
-              <div
-                class="bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-6 text-center border-b border-emerald-100"
-              >
-                <div
-                  class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-4 shadow-md"
-                >
-                  <i class="fas fa-chart-line text-emerald-700 text-3xl"></i>
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+              <div class="bg-gradient-to-r from-emerald-50 to-green-50 px-6 py-6 text-center border-b border-emerald-100">
+                <div class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                  <i class="fas fa-chart-line text-emerald-700 text-xl"></i>
                 </div>
-                <h3 class="text-4xl font-bold text-emerald-700 tracking-tight">
+                <h3 class="text-xl font-bold text-emerald-700 tracking-tight">
                   {{ result }}
                 </h3>
-                <p class="text-gray-500 mt-2">
+                <p class="text-gray-500 text-[13px] mt-2">
                   Your personalized daily calorie recommendation
                 </p>
               </div>
 
               <div class="p-6 space-y-4">
                 <!-- BMR Card -->
-                <div
-                  class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100"
-                >
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
                   <div class="flex items-center gap-3">
-                    <div
-                      class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center"
-                    >
+                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
                       <i class="fas fa-heartbeat text-emerald-600 text-sm"></i>
                     </div>
                     <div>
-                      <span class="font-semibold text-gray-800 text-sm"
-                        >Basal Metabolic Rate (BMR)</span
-                      >
-                      <p class="text-xs text-gray-400">
-                        Calories at complete rest
-                      </p>
+                      <span class="font-semibold text-gray-800 text-sm">Basal Metabolic Rate (BMR)</span>
+                      <p class="text-xs text-gray-400">Calories at complete rest</p>
                     </div>
                   </div>
-                  <span class="font-bold text-emerald-700 text-lg"
-                    >{{ bmr|round }} kcal/day</span
-                  >
+                  <span class="font-bold text-emerald-700 text-lg">{{ bmr|round }} kcal/day</span>
                 </div>
 
                 <!-- TDEE Card -->
-                <div
-                  class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100"
-                >
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
                   <div class="flex items-center gap-3">
-                    <div
-                      class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center"
-                    >
+                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
                       <i class="fas fa-fire text-emerald-600 text-sm"></i>
                     </div>
                     <div>
-                      <span class="font-semibold text-gray-800 text-sm"
-                        >Total Daily Energy Expenditure (TDEE)</span
-                      >
-                      <p class="text-xs text-gray-400">
-                        Calories with activity level
-                      </p>
+                      <span class="font-semibold text-gray-800 text-sm">Total Daily Energy Expenditure (TDEE)</span>
+                      <p class="text-xs text-gray-400">Calories with activity level</p>
                     </div>
                   </div>
-                  <span class="font-bold text-emerald-700 text-lg"
-                    >{{ tdee|round }} kcal/day</span
-                  >
+                  <span class="font-bold text-emerald-700 text-lg">{{ tdee|round }} kcal/day</span>
                 </div>
               </div>
 
               {% if meal_type %}
               <div class="border-t border-gray-100 p-6">
-                <h4
-                  class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
-                >
+                <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center gap-2">
                   <i class="fas fa-utensils text-emerald-600"></i>
                   Daily Meal Plan Recommendation
                 </h4>
 
                 <div class="space-y-3">
                   <!-- Breakfast -->
-                  <div
-                    class="flex items-center justify-between p-3 bg-yellow-50 rounded-xl"
-                  >
+                  <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-xl">
                     <div class="flex items-center gap-3">
-                      <i class="fas fa-sun text-yellow-600 text-lg"></i>
-                      <span class="font-semibold text-gray-700">Breakfast</span>
-                      <p class="text-xs text-gray-500">
-                        {{ meal_type.breakfast.name }}
-                      </p>
+                      <i class="fas fa-sun text-yellow-600 text-md"></i>
+                      <span class="font-semibold text-sm text-gray-700">Breakfast</span>
+                      <p class="text-xs text-gray-500">{{ meal_type.breakfast.name }}</p>
                     </div>
-                    <span class="font-semibold text-yellow-700"
-                      >{{ meal_type.breakfast.calories }} kcal</span
-                    >
+                    <span class="font-semibold text-yellow-700">{{ meal_type.breakfast.calories }} kcal</span>
                   </div>
                   <!-- Lunch -->
-                  <div
-                    class="flex items-center justify-between p-3 bg-orange-50 rounded-xl"
-                  >
+                  <div class="flex items-center justify-between p-3 bg-orange-50 rounded-xl">
                     <div class="flex items-center gap-3">
-                      <i class="fas fa-cloud-sun text-orange-600 text-lg"></i>
-                      <span class="font-semibold text-gray-700">Lunch</span>
-                      <p class="text-xs text-gray-500">
-                        {{ meal_type.lunch.name }}
-                      </p>
+                      <i class="fas fa-cloud-sun text-orange-600 text-md"></i>
+                      <span class="font-semibold text-sm text-gray-700">Lunch</span>
+                      <p class="text-xs text-gray-500">{{ meal_type.lunch.name }}</p>
                     </div>
-                    <span class="font-semibold text-orange-700"
-                      >{{ meal_type.lunch.calories }} kcal</span
-                    >
+                    <span class="font-semibold text-orange-700">{{ meal_type.lunch.calories }} kcal</span>
                   </div>
                   <!-- Dinner -->
-                  <div
-                    class="flex items-center justify-between p-3 bg-indigo-50 rounded-xl"
-                  >
+                  <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-xl">
                     <div class="flex items-center gap-3">
-                      <i class="fas fa-moon text-indigo-600 text-lg"></i>
-                      <span class="font-semibold text-gray-700">Dinner</span>
-                      <p class="text-xs text-gray-500">
-                        {{ meal_type.dinner.name }}
-                      </p>
+                      <i class="fas fa-moon text-indigo-600 text-md"></i>
+                      <span class="font-semibold text-sm text-gray-700">Dinner</span>
+                      <p class="text-xs text-gray-500">{{ meal_type.dinner.name }}</p>
                     </div>
-                    <span class="font-semibold text-indigo-700"
-                      >{{ meal_type.dinner.calories }} kcal</span
-                    >
+                    <span class="font-semibold text-indigo-700">{{ meal_type.dinner.calories }} kcal</span>
                   </div>
                 </div>
               </div>
               {% endif %}
             </div>
             {% else %}
-            <div
-              class="bg-white rounded-2xl shadow-xl p-10 text-center border border-gray-100"
-            >
-              <div
-                class="w-24 h-24 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-6 shadow-md"
-              >
-                <i class="fas fa-calculator text-[#0b3925] text-4xl"></i>
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden min-h-[600px] flex flex-col justify-center">
+              <div class="p-10 text-center">
+                <div class="w-24 h-24 bg-[#cedfc9] rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                  <i class="fas fa-calculator text-[#0b3925] text-4xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                  Your Results Will Appear Here
+                </h3>
+                <p class="text-gray-500 text-sm max-w-xs mx-auto">
+                  Complete the form with your personal details to receive your
+                  customized calorie calculation and nutrition recommendations.
+                </p>
               </div>
-              <h3 class="text-xl font-semibold text-gray-800 mb-3">
-                Your Results Will Appear Here
-              </h3>
-              <p class="text-gray-500 text-sm">
-                Complete the form with your personal details to receive your
-                customized calorie calculation and nutrition recommendations.
-              </p>
             </div>
             {% endif %}
           </div>
