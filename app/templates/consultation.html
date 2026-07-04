@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Konsultasi Dokter Gizi | HealthyMate</title>
+    <title>Consultation | HealthyMate</title>
     <link
       rel="icon"
-      href="{{ url_for('static', filename='images/logo-hm3.svg') }}"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
       type="image/svg+xml"
     />
     <meta
@@ -105,77 +105,102 @@
     {% include 'components/navbar.html' %}
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-blue-50 to-emerald-200 py-20">
-      <div class="max-w-5xl mx-auto px-6 text-center">
+    <section class="py-20">
+      <div class="max-w-4xl mx-auto text-center">
         <h1
-          class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight"
+          class="text-[42px] md:text-[56px] lg:text-[64px] font-light text-gray-900 leading-[1.1] tracking-tight"
         >
           Consultation with
-          <span class="text-emerald-600">Nutrition Specialist Doctor</span>
+          <span class="italic font-serif font-normal text-gray-900">
+            Nutrition Specialist
+          </span>
+          Doctor
         </h1>
-        <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p
+          class="text-gray-500 max-w-2xl mx-auto mt-6 font-medium text-sm md:text-base leading-relaxed"
+        >
           Get personalized nutrition recommendations from experienced clinical
           nutritionists. Online or face-to-face consultation with flexible
           schedule.
         </p>
-        <div class="flex justify-center gap-4">
+        <div
+          class="flex flex-wrap items-center justify-center gap-4 mt-8 animate-fade-in-up animation-delay-200"
+        >
           <a
             href="#doctors"
-            class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all"
+            class="bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 font-medium py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
           >
-            See Doctors <i class="fas fa-chevron-down ml-2"></i>
+            See Doctors <i class="fas fa-arrow-right"></i>
           </a>
           <a
             href="#how-it-works"
-            class="bg-white hover:bg-gray-100 text-gray-800 font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all border border-gray-200"
+            class="border border-gray-400 hover:bg-gray-200/50 text-gray-900 font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
           >
-            How to Consult <i class="fas fa-info-circle ml-2"></i>
+            How to Consult <i class="fas fa-info-circle"></i>
           </a>
         </div>
       </div>
     </section>
 
     <!-- How It Works -->
-    <section id="how-it-works" class="py-16 bg-white">
+    <section
+      id="how-it-works"
+      class="py-16 bg-white rounded-t-[3rem] relative z-10 pb-40"
+    >
       <div class="max-w-5xl mx-auto px-6">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">
-            Consultation Process
+          <h2
+            class="text-3xl md:text-5xl font-light text-gray-900 mb-4 animate-fade-in-up"
+          >
+            Consultation
+            <span
+              class="italic font-serif font-normal text-gray-900"
+            >
+              Process
+            </span>
           </h2>
-          <p class="text-gray-600 max-w-2xl mx-auto">
+          <p
+            class="text-gray-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed animate-fade-in-up animation-delay-100"
+          >
             Easy steps to nutrition consultation with our specialist
           </p>
         </div>
         <div class="grid md:grid-cols-3 gap-8">
-          <div class="text-center p-6 rounded-xl bg-gray-50">
+          <div
+            class="text-center p-6 rounded-xl bg-[#f2f7f4] hover:shadow-md transition-all duration-300"
+          >
             <div
-              class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 mx-auto"
+              class="w-16 h-16 bg-[#cedfc9] rounded-full flex items-center justify-center mb-4 mx-auto"
             >
-              <i class="fas fa-calendar-check text-blue-600 text-2xl"></i>
+              <i class="fas fa-calendar-check text-[#0b3925] text-2xl"></i>
             </div>
-            <h3 class="font-bold text-lg mb-2">1. Choose Doctor & Schedule</h3>
+            <h3 class="font-bold text-md mb-2">1. Choose Doctor & Schedule</h3>
             <p class="text-gray-600 text-sm">
               Decide on a doctor and available consultation time
             </p>
           </div>
-          <div class="text-center p-6 rounded-xl bg-gray-50">
+          <div
+            class="text-center p-6 rounded-xl bg-[#f2f7f4] hover:shadow-md transition-all duration-300"
+          >
             <div
-              class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4 mx-auto"
+              class="w-16 h-16 bg-[#cedfc9] rounded-full flex items-center justify-center mb-4 mx-auto"
             >
-              <i class="fas fa-comments text-purple-600 text-2xl"></i>
+              <i class="fas fa-comments text-[#0b3925] text-2xl"></i>
             </div>
-            <h3 class="font-bold text-lg mb-2">2. Confirmation via WhatsApp</h3>
+            <h3 class="font-bold text-md mb-2">2. Confirmation via WhatsApp</h3>
             <p class="text-gray-600 text-sm">
               Reservation and appointment confirmation via WhatsApp
             </p>
           </div>
-          <div class="text-center p-6 rounded-xl bg-gray-50">
+          <div
+            class="text-center p-6 rounded-xl bg-[#f2f7f4] hover:shadow-md transition-all duration-300"
+          >
             <div
-              class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4 mx-auto"
+              class="w-16 h-16 bg-[#cedfc9] rounded-full flex items-center justify-center mb-4 mx-auto"
             >
-              <i class="fas fa-user-md text-emerald-600 text-2xl"></i>
+              <i class="fas fa-user-md text-[#0b3925] text-2xl"></i>
             </div>
-            <h3 class="font-bold text-lg mb-2">3. Consultation</h3>
+            <h3 class="font-bold text-md mb-2">3. Consultation</h3>
             <p class="text-gray-600 text-sm">
               Conduct online or face-to-face consultations
             </p>
@@ -185,55 +210,71 @@
     </section>
 
     <!-- Doctors Section -->
-    <section id="doctors" class="py-16 bg-gray-50">
+    <section
+      id="doctors"
+      class="py-16 bg-[#f2f7f4] rounded-t-[3rem] relative -mt-24 z-20 pb-40"
+    >
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">
-            Our team of Nutrition Specialists
+          <h2
+            class="text-3xl md:text-5xl text-gray-900 mb-4 animate-fade-in-up"
+          >
+            <span
+              class="italic font-serif font-normal text-gray-900"
+              >Our team</span
+            >
+            <span class="font-light font-sans text-gray-900">
+              of Nutrition Specialists
+            </span>
           </h2>
-          <p class="text-gray-600 max-w-2xl mx-auto">
+          <p
+            class="text-gray-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed animate-fade-in-up animation-delay-100"
+          >
             Experienced in handling various clinical nutrition cases
           </p>
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Doctor 1 -->
-          <div class="doctor-card bg-white rounded-xl shadow-sm p-6 relative">
+          <div
+            class="doctor-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 relative border border-gray-100"
+          >
             <span
-              class="availability-badge bg-green-100 text-green-800 px-3 py-1 rounded-full"
+              class="availability-badge bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold inline-block mb-4"
               >Available</span
             >
             <div class="flex flex-col items-center text-center mb-4">
               <img
                 src="{{ url_for('static', filename='images/docter1.jpg') }}"
                 alt="dr. Andini Putri, Sp.GK"
-                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-emerald-100"
+                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#cedfc9]"
               />
               <h3 class="font-bold text-xl mb-1">dr. Andini Putri, Sp.GK</h3>
               <p class="text-gray-500 mb-3">Clinical Nutrition Specialist</p>
               <div class="flex flex-wrap justify-center gap-2 mb-4">
-                <span class="specialty-tag">Obesity</span>
-                <span class="specialty-tag">Diabetes</span>
-                <span class="specialty-tag">Child Nutrition</span>
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Obesity</span
+                >
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Diabetes</span
+                >
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Child Nutrition</span
+                >
               </div>
             </div>
             <div class="space-y-3 mb-6">
               <div class="flex items-start">
                 <i class="fas fa-calendar-alt text-emerald-500 mt-1 mr-3"></i>
                 <div>
-                  <h4 class="font-medium text-gray-700">Practice Schedule</h4>
+                  <h4 class="font-medium text-gray-700 text-sm">
+                    Practice Schedule
+                  </h4>
                   <p class="text-gray-600 text-sm">
                     Monday & Wednesday (09.00-12.00)<br />Saturday (13.00-15.00)
-                  </p>
-                </div>
-              </div>
-              <div class="flex items-start">
-                <i class="fas fa-graduation-cap text-emerald-500 mt-1 mr-3"></i>
-                <div>
-                  <h4 class="font-medium text-gray-700">Education</h4>
-                  <p class="text-gray-600 text-sm">
-                    Sp.GK - University of Indonesia<br />General Practitioner -
-                    Gadjah Mada University
                   </p>
                 </div>
               </div>
@@ -241,179 +282,147 @@
             <a
               href="https://wa.me/6281287258113?text=Halo%20dr.%20Andini,%20saya%20ingin%20konsultasi%20gizi"
               target="_blank"
-              class="w-full block text-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition"
+              class="w-full block text-center bg-[#0b3925] hover:bg-[#082a1a] text-gray-100 font-medium py-2.5 rounded-xl transition-all duration-300"
             >
               <i class="fab fa-whatsapp mr-2"></i> Make an Appointment
             </a>
           </div>
 
           <!-- Doctor 2 -->
-          <div class="doctor-card bg-white rounded-xl shadow-sm p-6 relative">
+          <div
+            class="doctor-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 relative border border-gray-100"
+          >
             <span
-              class="availability-badge bg-green-100 text-green-800 px-3 py-1 rounded-full"
+              class="availability-badge bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold inline-block mb-4"
               >Available</span
             >
             <div class="flex flex-col items-center text-center mb-4">
               <img
                 src="{{ url_for('static', filename='images/docter2.jpg') }}"
                 alt="dr. Budi Santoso, Sp.GK"
-                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-emerald-100"
+                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#cedfc9]"
               />
               <h3 class="font-bold text-xl mb-1">dr. Budi Santoso, Sp.GK</h3>
               <p class="text-gray-500 mb-3">Clinical Nutrition Specialist</p>
               <div class="flex flex-wrap justify-center gap-2 mb-4">
-                <span class="specialty-tag">Exercise</span>
-                <span class="specialty-tag">Body Recomp</span>
-                <span class="specialty-tag">Diet Vegan</span>
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Exercise</span
+                >
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Body Recomp</span
+                >
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Diet Vegan</span
+                >
               </div>
             </div>
             <div class="space-y-3 mb-6">
               <div class="flex items-start">
                 <i class="fas fa-calendar-alt text-emerald-500 mt-1 mr-3"></i>
                 <div>
-                  <h4 class="font-medium text-gray-700">Practice Schedule</h4>
+                  <h4 class="font-medium text-gray-700 text-sm">
+                    Practice Schedule
+                  </h4>
                   <p class="text-gray-600 text-sm">
                     Tuesday & Thursday (13.00-16.00)<br />Friday (10.00-12.00)
                   </p>
                 </div>
               </div>
-              <div class="flex items-start">
-                <i class="fas fa-graduation-cap text-emerald-500 mt-1 mr-3"></i>
-                <div>
-                  <h4 class="font-medium text-gray-700">Education</h4>
-                  <p class="text-gray-600 text-sm">
-                    Sp.GK - Airlangga University<br />General Practitioner -
-                    University of Indonesia
-                  </p>
-                </div>
-              </div>
             </div>
             <a
-              href="https://wa.me/621287258113?text=Halo%20dr.%20Budi,%20saya%20ingin%20konsultasi%20gizi"
+              href="https://wa.me/6281287258113?text=Halo%20dr.%20Budi,%20saya%20ingin%20konsultasi%20gizi"
               target="_blank"
-              class="w-full block text-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition"
+              class="w-full block text-center bg-[#0b3925] hover:bg-[#082a1a] text-gray-100 font-medium py-2.5 rounded-xl transition-all duration-300"
             >
               <i class="fab fa-whatsapp mr-2"></i> Make an Appointment
             </a>
           </div>
 
           <!-- Doctor 3 -->
-          <div class="doctor-card bg-white rounded-xl shadow-sm p-6 relative">
+          <div
+            class="doctor-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 relative border border-gray-100"
+          >
             <span
-              class="availability-badge bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full"
-              >vacation</span
+              class="availability-badge bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold inline-block mb-4"
+              >Vacation</span
             >
             <div class="flex flex-col items-center text-center mb-4">
               <img
                 src="{{ url_for('static', filename='images/docter3.jpg') }}"
                 alt="dr. Clara Wijaya, Sp.GK"
-                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-emerald-100"
+                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#cedfc9]"
               />
               <h3 class="font-bold text-xl mb-1">dr. Clara Wijaya, Sp.GK</h3>
               <p class="text-gray-500 mb-3">Clinical Nutrition Specialist</p>
               <div class="flex flex-wrap justify-center gap-2 mb-4">
-                <span class="specialty-tag">Pregnancy</span>
-                <span class="specialty-tag">Elderly</span>
-                <span class="specialty-tag">Gizi Medis</span>
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Pregnancy</span
+                >
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Elderly</span
+                >
+                <span
+                  class="bg-[#f2f7f4] text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >Gizi Medis</span
+                >
               </div>
             </div>
             <div class="space-y-3 mb-6">
               <div class="flex items-start">
                 <i class="fas fa-calendar-alt text-emerald-500 mt-1 mr-3"></i>
                 <div>
-                  <h4 class="font-medium text-gray-700">Jadwal Praktik</h4>
+                  <h4 class="font-medium text-gray-700 text-sm">
+                    Practice Schedule
+                  </h4>
                   <p class="text-gray-600 text-sm">
                     Thursday & Friday (10.00-14.00)<br />Saturday (09.00-11.00)
                   </p>
                 </div>
               </div>
-              <div class="flex items-start">
-                <i class="fas fa-graduation-cap text-emerald-500 mt-1 mr-3"></i>
-                <div>
-                  <h4 class="font-medium text-gray-700">Education</h4>
-                  <p class="text-gray-600 text-sm">
-                    Sp.GK - Padjadjaran University<br />General Practitioner -
-                    Diponegoro University
-                  </p>
-                </div>
-              </div>
             </div>
             <a
-              href="https://wa.me/621287258113?text=Halo%20dr.%20Clara,%20saya%20ingin%20konsultasi%20gizi"
+              href="https://wa.me/6281287258113?text=Halo%20dr.%20Clara,%20saya%20ingin%20konsultasi%20gizi"
               target="_blank"
-              class="w-full block text-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg transition"
+              class="w-full block text-center bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-500 font-medium py-2.5 rounded-xl transition-all duration-300"
             >
-              <i class="fab fa-whatsapp mr-2"></i> Make an Appointment
+              <i class="fab fa-whatsapp mr-2"></i> Not Available
             </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Testimonials
-    <section class="py-16 bg-white">
-        <div class="max-w-5xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Apa Kata Pasien Kami?</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Testimoni dari pasien yang telah berkonsultasi dengan dokter kami</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-gray-50 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <img src="{{ url_for('static', filename='img/testi1.jpg') }}" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <h4 class="font-bold">Sarah Wijaya</h4>
-                            <div class="flex text-amber-400">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 italic">"dr. Andini sangat membantu dalam menyusun program diet untuk kondisi PCOS saya. Hasilnya luar biasa, berat badan turun 8kg dalam 3 bulan dengan cara sehat."</p>
-                </div>
-                <div class="bg-gray-50 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <img src="{{ url_for('static', filename='img/testi2.jpg') }}" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <h4 class="font-bold">Budi Setiawan</h4>
-                            <div class="flex text-amber-400">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 italic">"Konsultasi dengan dr. Budi sangat menyenangkan. Beliau memberikan panduan gizi yang tepat untuk kebutuhan latihan fitness saya. Sekarang performa lebih baik."</p>
-                </div>
-            </div>
-        </div>
-    </section> -->
-
     <!-- CTA Section -->
-    <section class="py-16 bg-gradient-to-r from-blue-600 to-emerald-600">
+    <section class="py-16 bg-[#0b3925] rounded-t-[3rem] relative -mt-24 z-20 pb-40">
       <div class="max-w-5xl mx-auto px-6 text-center">
-        <h2 class="text-3xl font-bold text-white mb-4">
-          Ready to Start Your Nutrition Consultation?
+        <h2 class="text-3xl md:text-4xl font-light text-white mb-6">
+          Ready to
+          <span class="italic font-serif font-normal text-gray-100">
+            Start
+          </span>
+          Your Nutrition Consultation?
         </h2>
-        <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+        <p
+          class="text-sm md:text-base leading-relaxed text-emerald-200 max-w-2xl mx-auto mb-8"
+        >
           Our team of nutritionists are here to help you achieve your health
           goals.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
           <a
             href="#doctors"
-            class="bg-white hover:bg-gray-100 text-blue-600 font-medium py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all"
+            class="bg-white hover:bg-gray-100 text-[#0b3925] font-medium py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
           >
             Choose a Doctor <i class="fas fa-user-md ml-2"></i>
           </a>
           <a
             href="https://wa.me/6281287258113"
-            class="bg-transparent hover:bg-white/10 text-white font-medium py-3 px-8 rounded-lg border-2 border-white transition-all"
+            class="border-2 border-white hover:bg-white/10 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
           >
             <i class="fas fa-phone-alt mr-2"></i> Contact Us
           </a>
@@ -421,7 +430,10 @@
       </div>
     </section>
 
-    {% include 'components/footer.html' %}
+    <!-- Footer (tumpuk di atas CTA) -->
+    <div class="relative -mt-24 z-30">
+      {% include 'components/footer.html' %}
+    </div>
 
     <script src="{{ url_for('static', filename='js/consultation.js') }}"></script>
   </body>
