@@ -1,14 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | HealthyMate</title>
     <meta name="view-transition" content="same-origin" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -18,131 +24,287 @@
               sans: ["Plus Jakarta Sans", "sans-serif"],
             },
             colors: {
-              emerald: { 50: '#e2ede8', 100: '#cedfc9', 200: '#b9cca5', 300: '#a3b88c', 400: '#8ba472', 500: '#738f59', 600: '#0b3925', 700: '#0a2e1e', 800: '#082317', 900: '#06170f' },
-            }
+              emerald: {
+                50: "#e2ede8",
+                100: "#cedfc9",
+                200: "#b9cca5",
+                300: "#a3b88c",
+                400: "#8ba472",
+                500: "#738f59",
+                600: "#0b3925",
+                700: "#0a2e1e",
+                800: "#082317",
+                900: "#06170f",
+              },
+            },
           },
         },
       };
     </script>
     <style>
       @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .animate-fade-in-up {
         animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
-      ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.4s; }
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.4s;
+      }
+
+      .login-bg-pattern {
+        background: linear-gradient(135deg, #0b3925 0%, #1a5a3a 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      .login-bg-pattern::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.03) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
+      .login-bg-pattern::after {
+        content: "";
+        position: absolute;
+        bottom: -30%;
+        left: -30%;
+        width: 80%;
+        height: 80%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.05) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
     </style>
-</head>
-<body class="bg-[#f2f7f4] text-gray-800 font-sans flex items-center justify-center min-h-screen antialiased p-6">
+  </head>
+  <body
+    class="bg-[#f2f7f4] text-gray-800 font-sans flex items-center justify-center min-h-screen antialiased p-4 md:p-6"
+  >
+    <!-- Decorative background elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div
+        class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-100/20 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-100/20 rounded-full blur-3xl"
+      ></div>
+    </div>
 
-    <div class="w-full max-w-md animate-fade-in-up">
-        <!-- Logo/Brand Section -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-light text-gray-900">
-                Welcome 
-                <span class="italic font-serif font-normal text-gray-900">
-                    Back!
-                </span>
-            </h1>
-            <p class="text-gray-500 text-sm mt-2">Login to your HealthyMate account</p>
-        </div>
-
-        <!-- Main Card -->
-        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
-            <!-- Decorative top bar -->
-            <div class="h-1.5 bg-[#0b3925]"></div>
-            
-            <div class="p-8 md:p-10">
-                <!-- Flash Messages -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="mb-6 p-4 rounded-xl flex items-center gap-3 {% if category == 'danger' or category == 'error' %}bg-red-50 text-red-700 border-l-4 border-red-500{% else %}bg-emerald-50 text-emerald-700 border-l-4 border-emerald-500{% endif %}">
-                                <i class="fas {% if category == 'danger' or category == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
-                                <span class="text-sm">{{ message }}</span>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-
-                <form action="{{ url_for('app_routes.login') }}" method="POST" class="space-y-2">
-                    <!-- Email Field -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                            Email Address
-                        </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-400 text-sm"></i>
-                            </div>
-                            <input 
-                                id="email" 
-                                name="email" 
-                                type="email" 
-                                required 
-                                class="w-full pl-10 pr-4 py-3 text-sm border border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200 bg-gray-50/50"
-                                placeholder="you@example.com"
-                            >
-                        </div>
-                    </div>
-
-                    <!-- Password Field -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                            Password
-                        </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400 text-sm"></i>
-                            </div>
-                            <input 
-                                id="password" 
-                                name="password" 
-                                type="password" 
-                                required 
-                                class="w-full pl-10 pr-4 py-3 text-sm border border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200 bg-gray-50/50"
-                                placeholder="••••••••"
-                            >
-                        </div>
-                    </div>
-
-                    <!-- Forgot Password Link -->
-                    <div class="text-right">
-                        <a href="#" class="text-xs text-emerald-600 hover:text-emerald-700 hover:underline transition">
-                            Forgot password?
-                        </a>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button 
-                        type="submit" 
-                        class="w-full py-3 bg-[#0b3925] hover:bg-[#0a2f1f] text-white font-semibold rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-                    >
-                        <i class="fas fa-sign-in-alt"></i>
-                        Login
-                    </button>
-                </form>
+    <!-- Main Container - 2 Columns -->
+    <div class="w-full max-w-5xl animate-fade-in-up relative z-10">
+      <div
+        class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+      >
+        <!-- Left Column - Image / Branding -->
+        <div
+          class="login-bg-pattern w-full md:w-5/12 p-8 md:p-12 flex flex-col justify-between min-h-[250px] md:min-h-[500px] relative z-10"
+        >
+          <div class="relative z-10">
+            <div class="flex items-center gap-3 mb-8 cursor-pointer">
+              <div class="flex items-center gap-2 opacity-90">
+                <img
+                  src="{{ url_for('static', filename='images/logo-hm-white.svg') }}"
+                  alt="HealthyMate Logo"
+                  class="w-9 h-9 object-contain"
+                />
+                <h1 class="text-lg font-bold text-gray-100">HealthyMate</h1>
+              </div>
             </div>
+
+            <div class="space-y-4">
+              <h2
+                class="text-3xl md:text-4xl font-light text-gray-100 leading-tight"
+              >
+                Welcome Back to<br />
+                <span class="italic font-serif font-normal text-emerald-300">
+                  Healthy Living
+                </span>
+              </h2>
+              <p class="text-emerald-100/80 text-xs leading-relaxed max-w-xs">
+                Login to continue your journey toward better nutrition and a
+                healthier lifestyle.
+              </p>
+            </div>
+          </div>
+
+          <div class="relative z-10">
+            <div class="flex items-center gap-4 text-gray-100/60 text-xs">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-check-circle text-gray-100/60"></i>
+                <span>Secure Login</span>
+              </div>
+              <div class="w-px h-4 bg-gray-100/60"></div>
+              <div class="flex items-center gap-2">
+                <i class="fas fa-shield-alt text-gray-100/60"></i>
+                <span>Data Protected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decorative floating icons -->
+          <div class="absolute top-20 right-8 text-white/5 text-6xl z-0">
+            <i class="fas fa-apple-alt"></i>
+          </div>
+          <div class="absolute bottom-20 left-6 text-white/5 text-4xl z-0">
+            <i class="fas fa-heartbeat"></i>
+          </div>
         </div>
 
-        <!-- Register Link -->
-        <p class="text-center text-sm text-gray-500 mt-6">
-            Don't have an account? 
-            <a href="{{ url_for('app_routes.register') }}" class="font-medium text-emerald-600 hover:text-emerald-700 hover:underline transition">
+        <!-- Right Column - Login Form -->
+        <div class="w-full md:w-7/12 p-8 md:p-12 lg:p-14">
+          <div class="max-w-sm mx-auto w-full">
+            <!-- Logo Mobile (hidden on desktop) -->
+            <div class="text-center md:hidden mb-8">
+              <h1 class="text-3xl font-light text-gray-900">
+                Welcome
+                <span class="italic font-serif font-normal text-gray-900">
+                  Back!
+                </span>
+              </h1>
+              <p class="text-gray-500 text-sm mt-1">
+                Login to your HealthyMate account
+              </p>
+            </div>
+
+            <!-- Desktop Title (hidden on mobile) -->
+            <div class="hidden md:block mb-8">
+              <h1 class="text-3xl font-light text-gray-900">
+                Welcome
+                <span class="italic font-serif font-normal text-gray-900">
+                  Back!
+                </span>
+              </h1>
+              <p class="text-gray-500 text-sm mt-1">
+                Login to your HealthyMate account
+              </p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %} {% for category, message in messages %}
+            <div
+              class="mb-6 px-3 py-2 rounded-md flex items-center gap-3 text-xs {% if category == 'danger' or category == 'error' %}bg-red-50 text-red-700 border-l-4 border-red-500{% else %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% endif %}"
+            >
+              <i
+                class="fas {% if category == 'danger' or category == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"
+              ></i>
+              <span>{{ message }}</span>
+            </div>
+            {% endfor %} {% endif %} {% endwith %}
+
+            <form
+              action="{{ url_for('app_routes.login') }}"
+              method="POST"
+              class="space-y-5"
+            >
+              <!-- Email Field -->
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-gray-700 mb-1.5"
+                >
+                  <i class="fas fa-envelope text-[#0b3925] mr-2 text-xs"></i>
+                  Email Address
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  >
+                    <i class="fas fa-envelope text-gray-400 text-sm"></i>
+                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    class="w-full pl-10 pr-4 py-3 text-sm border border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200 bg-gray-50/50"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
+              <!-- Password Field -->
+              <div>
+                <div class="flex justify-between items-center mb-1.5">
+                  <label
+                    for="password"
+                    class="block text-sm font-medium text-gray-700"
+                  >
+                    <i class="fas fa-lock text-[#0b3925] mr-2 text-xs"></i>
+                    Password
+                  </label>
+                  <a
+                    href="#"
+                    class="text-xs text-emerald-600 hover:text-emerald-700 hover:underline transition"
+                  >
+                    Forgot Password?
+                  </a>
+                </div>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  >
+                    <i class="fas fa-lock text-gray-400 text-sm"></i>
+                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    class="w-full pl-10 pr-4 py-3 text-sm border border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200 bg-gray-50/50"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                class="w-full py-2.5 bg-[#0b3925] hover:bg-[#0a2f1f] text-gray-100 text-sm font-semibold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-2"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                Login
+              </button>
+            </form>
+
+            <!-- Register Link -->
+            <p class="text-center text-xs text-gray-500 mt-6">
+              Don't have an account?
+              <a
+                href="{{ url_for('app_routes.register') }}"
+                class="font-medium text-emerald-600 hover:text-emerald-700 hover:underline transition"
+              >
                 Create an account
-            </a>
-        </p>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-        // Optional: Toggle password visibility (add functionality if needed)
-        // This is just for UX enhancement
-        const passwordInput = document.getElementById('password');
-        if (passwordInput) {
-            // You can add show/hide password toggle here
-        }
+      const passwordInput = document.getElementById("password");
+      if (passwordInput) {
+        // You can add show/hide password toggle here
+      }
     </script>
-</body>
+  </body>
 </html>

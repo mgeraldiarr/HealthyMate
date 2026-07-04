@@ -21,9 +21,6 @@ def about():
 def consultation():
     return render_template('consultation.html')
 
-@app_routes.route('/services')
-def services():
-    return render_template('services.html')
 
 # == Rute Otentikasi (Login/Register) ==
 
@@ -166,6 +163,32 @@ def dashboard():
     progress_records = Progress.query.filter_by(user_id=current_user.id).order_by(Progress.date.desc()).limit(5).all()
     
     return render_template('dashboard.html', bmr=bmr, tdee=tdee, progress_records=progress_records)
+
+@app_routes.route('/history')
+@login_required
+def history():
+    # Ambil semua catatan progress untuk pengguna saat ini, diurutkan dari yang terbaru
+    all_progress = Progress.query.filter_by(user_id=current_user.id).order_by(Progress.date.desc()).all()
+    return render_template('history.html', progress_records=all_progress)
+
+@app_routes.route('/history/delete', methods=['POST'])
+@login_required
+def delete_history():
+    # Ambil daftar ID dari form yang dikirim
+    ids_to_delete = request.form.getlist('record_ids')
+    
+    if not ids_to_delete:
+        flash('No items selected for deletion.', 'warning')
+        return redirect(url_for('app_routes.history'))
+
+   # Hapus record yang dimiliki oleh user saat ini
+    Progress.query.filter(
+        Progress.id.in_(ids_to_delete),
+        Progress.user_id == current_user.id
+    ).delete(synchronize_session=False)
+    db.session.commit()
+    flash('Selected records have been removed.', 'success')
+    return redirect(url_for('app_routes.history'))
 
 @app_routes.route('/logout')
 @login_required

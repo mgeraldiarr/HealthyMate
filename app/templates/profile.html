@@ -68,17 +68,6 @@
         </div>
 
         <div class="p-8 md:p-10">
-          <!-- Flash Messages -->
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="mb-6 p-4 rounded-xl flex items-center gap-3 {% if category == 'success' %}bg-emerald-50 text-emerald-700 border-l-4 border-emerald-500{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}">
-                  <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
-                  <span>{{ message }}</span>
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
 
           <!-- Avatar Section -->
           <div class="flex flex-col items-center mb-8">
@@ -88,50 +77,96 @@
                   {{ current_user.username[0] if current_user.username else 'U' }}
                 </span>
               </div>
-              <div class="absolute bottom-2 right-1 bg-emerald-500 rounded-full px-1.5 py-1 shadow-md flex items-center justify-center">
-                <i class="fas fa-camera text-white text-xs"></i>
+              <div class="absolute bottom-2 right-1 bg-[#cedfc9] rounded-full px-1.5 py-1 shadow-md flex items-center justify-center">
+                <i class="fas fa-camera text-[#0b3925] text-xs"></i>
               </div>
             </div>
-            <h3 class="mt-4 text-xl font-semibold text-gray-800">{{ current_user.name or current_user.username }}</h3>
+            
+            <!-- USERNAME - Tetap ditampilkan di bawah avatar (tidak bisa diubah) -->
+            <h3 class="mt-4 text-xl font-semibold text-gray-800">
+              {{ current_user.username }}
+            </h3>
+            
+            <!-- Email - Tetap ditampilkan -->
             <p class="text-md text-gray-500">{{ current_user.email }}</p>
+            
           </div>
+
+          <!-- Flash Messages -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="mb-6 px-4 py-2 rounded-md text-sm flex items-center gap-3 {% if category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}">
+                  <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                  <span>{{ message }}</span>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
 
           <form action="{{ url_for('app_routes.profile') }}" method="POST" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <!-- Username - READONLY (tidak bisa diubah) -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <i class="fas fa-user-circle text-[#0b3925] mr-2 text-sm"></i>
+                  Username
+                </label>
+                <input type="text" value="{{ current_user.username }}" disabled
+                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed"
+                  placeholder="Username">
+                <p class="text-xs text-gray-400 mt-1 ml-2">Username cannot be changed</p>
+              </div>
+              
+              <!-- Email - READONLY -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <i class="fas fa-envelope text-[#0b3925] mr-2 text-sm"></i>
+                  Email Address
+                </label>
+                <input type="email" value="{{ current_user.email }}" disabled
+                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed"
+                  placeholder="Email Address">
+                <p class="text-xs text-gray-400 mt-1 ml-2">Email cannot be changed</p>
+              </div>
+
+              <!-- Nama Lengkap - EDITABLE -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   <i class="fas fa-user text-[#0b3925] mr-2 text-sm"></i>
-                  Nama Lengkap
+                  Full Name
                 </label>
                 <input type="text" name="name" value="{{ current_user.name or '' }}" 
-                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200"
-                  placeholder="Masukkan nama Anda">
+                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-[#cedfc9] focus:ring-1 focus:ring-[#cedfc9] transition-all duration-200"
+                  placeholder="Masukkan nama lengkap Anda">
               </div>
+              
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   <i class="fas fa-calendar-alt text-[#0b3925] mr-2 text-sm"></i>
-                  Umur (tahun)
+                  Age (years)
                 </label>
                 <input type="number" name="age" value="{{ current_user.age or '' }}" 
-                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200"
+                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-[#cedfc9] focus:ring-1 focus:ring-[#cedfc9] transition-all duration-200"
                   placeholder="ex: 25">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   <i class="fas fa-weight-scale text-[#0b3925] mr-2 text-sm"></i>
-                  Berat Badan (kg)
+                  Weight (kg)
                 </label>
                 <input type="number" step="0.1" name="weight" value="{{ current_user.weight or '' }}" 
-                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200"
+                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-[#cedfc9] focus:ring-1 focus:ring-[#cedfc9] transition-all duration-200"
                   placeholder="ex: 60.5">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   <i class="fas fa-ruler text-[#0b3925] mr-2 text-sm"></i>
-                  Tinggi Badan (cm)
+                  Height (cm)
                 </label>
                 <input type="number" step="0.1" name="height" value="{{ current_user.height or '' }}" 
-                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200"
+                  class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-[#cedfc9] focus:ring-1 focus:ring-[#cedfc9] transition-all duration-200"
                   placeholder="ex: 165">
               </div>
               <div>
@@ -139,30 +174,30 @@
                   <i class="fas fa-venus-mars text-[#0b3925] mr-2 text-sm"></i>
                   Gender
                 </label>
-                <select name="gender" class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200">
-                  <option value="male" {% if current_user.gender == 'male' %}selected{% endif %}>Laki-laki</option>
-                  <option value="female" {% if current_user.gender == 'female' %}selected{% endif %}>Perempuan</option>
+                <select name="gender" class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-[#cedfc9] focus:ring-1 focus:ring-[#cedfc9] transition-all duration-200">
+                  <option value="male" {% if current_user.gender == 'male' %}selected{% endif %}>Male</option>
+                  <option value="female" {% if current_user.gender == 'female' %}selected{% endif %}>Female</option>
                 </select>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   <i class="fas fa-bolt text-[#0b3925] mr-2 text-sm"></i>
-                  Level Aktivitas
+                  Activity Level
                 </label>
-                <select name="activity_level" class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all duration-200">
-                  <option value="sedentary" {% if current_user.activity_level == 'sedentary' %}selected{% endif %}>Sedentary (Jarang bergerak)</option>
-                  <option value="light" {% if current_user.activity_level == 'light' %}selected{% endif %}>Light (Ringan)</option>
-                  <option value="moderate" {% if current_user.activity_level == 'moderate' %}selected{% endif %}>Moderate (Sedang)</option>
-                  <option value="high" {% if current_user.activity_level == 'high' %}selected{% endif %}>High (Berat)</option>
-                  <option value="extreme" {% if current_user.activity_level == 'extreme' %}selected{% endif %}>Extreme (Sangat Berat)</option>
+                <select name="activity_level" class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-[#cedfc9] focus:ring-1 focus:ring-[#cedfc9] transition-all duration-200">
+                  <option value="sedentary" {% if current_user.activity_level == 'sedentary' %}selected{% endif %}>Sedentary (Rarely Active)</option>
+                  <option value="light" {% if current_user.activity_level == 'light' %}selected{% endif %}>Light (Lightly Active)</option>
+                  <option value="moderate" {% if current_user.activity_level == 'moderate' %}selected{% endif %}>Moderate (Moderately Active)</option>
+                  <option value="high" {% if current_user.activity_level == 'high' %}selected{% endif %}>High (Very Active)</option>
+                  <option value="extreme" {% if current_user.activity_level == 'extreme' %}selected{% endif %}>Extreme (Extremely Active)</option>
                 </select>
               </div>
             </div>
             
             <div class="pt-6 flex gap-4">
-              <button type="submit" class="flex-1 bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+              <button type="submit" class="flex-1 bg-[#0b3925] hover:bg-[#1a5a3a] text-sm text-gray-100 font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
                 <i class="fas fa-save"></i>
-                Simpan Perubahan
+                Save Changes
               </button>
             </div>
           </form>
@@ -184,14 +219,14 @@
         <div class="p-8 md:p-10">
           <div class="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h3 class="text-lg font-semibold text-gray-800">Keluar dari Akun</h3>
-              <p class="text-sm text-gray-500 mt-1">Anda akan diarahkan ke halaman login setelah keluar.</p>
+              <h3 class="text-lg font-semibold text-gray-800">Logout From Account</h3>
+              <p class="text-sm text-gray-500 mt-1">You will be redirected to the login page after logging out.</p>
             </div>
             <a 
               href="{{ url_for('app_routes.logout') }}" 
               class="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center gap-2"
             >
-              <i class="fas fa-sign-out-alt text-md"></i>
+              <i class="fas fa-sign-out-alt text-sm"></i>
               Logout
             </a>
           </div>
