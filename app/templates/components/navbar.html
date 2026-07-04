@@ -1,0 +1,198 @@
+<nav class="py-5 px-8 sticky top-0 z-50 backdrop-blur-md bg-[#f2f7f4]/80">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <a
+        href="{{ url_for('app_routes.home') }}"
+        class="flex items-center gap-2 opacity-90 hover:opacity-80 transition group"
+      >
+        <img
+          src="{{ url_for('static', filename='images/logo-hm.png') }}"
+          alt="HealthyMate Logo"
+          class="w-9 h-9 object-contain transition-transform group-hover:scale-105"
+        />
+        <h1
+          class="text-lg font-bold text-gray-900 group-hover:text-[#0b3925] transition"
+        >
+          HealthyMate
+        </h1>
+      </a>
+    </div>
+
+    <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+      <a
+        href="{{ url_for('app_routes.home') }}"
+        class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
+      >
+        Home
+      </a>
+      {% if current_user.is_authenticated %}
+      <a
+        href="{{ url_for('app_routes.dashboard') }}"
+        class="{% if request.endpoint == 'app_routes.dashboard' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
+      >
+        Dashboard
+      </a>
+      <a
+        href="{{ url_for('app_routes.calculator') }}"
+        class="{% if request.endpoint == 'app_routes.calculator' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
+      >
+        Calculator
+      </a>
+      {% endif %}
+      <a
+        href="{{ url_for('app_routes.services') }}"
+        class="{% if request.endpoint == 'app_routes.services' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition capitalize"
+      >
+        Services
+      </a>
+      <a
+        href="{{ url_for('app_routes.about') }}"
+        class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
+      >
+        About Us
+      </a>
+    </div>
+
+    <div class="hidden md:flex items-center space-x-3">
+      {% if current_user.is_authenticated %}
+      <div class="flex items-center gap-2">
+        <a
+          href="{{ url_for('app_routes.profile') }}"
+          class="flex items-center gap-2 bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 px-4 py-2 rounded-full transition-all duration-200 group"
+        >
+          <div
+            class="w-6 h-6 bg-[#0b3925] text-white rounded-full flex items-center justify-center font-bold text-xs uppercase"
+          >
+            {{ current_user.username[0] if current_user.username else 'U' }}
+          </div>
+          <span class="text-sm font-medium group-hover:text-gray-900">
+            {{ current_user.name or current_user.username }}
+          </span>
+          <i
+            class="fas fa-chevron-down text-xs text-gray-600 group-hover:text-gray-900 transition"
+          ></i>
+        </a>
+      </div>
+      {% else %}
+      <a
+        href="{{ url_for('app_routes.login') }}"
+        class="text-sm font-medium text-gray-900 px-5 py-2 rounded-full border border-gray-300 hover:bg-gray-100/50 transition"
+      >
+        Log In
+      </a>
+      <a
+        href="{{ url_for('app_routes.register') }}"
+        class="text-sm font-medium bg-[#cedfc9] text-gray-900 px-5 py-2 rounded-full hover:bg-[#b9cca5] transition"
+      >
+        Sign Up
+      </a>
+      {% endif %}
+    </div>
+
+    <button
+      id="mobileMenuButton"
+      class="md:hidden text-gray-900 focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div
+  id="mobileMenu"
+  class="hidden md:hidden bg-[#f2f7f4] shadow-inner py-4 w-full fixed top-16 left-0 z-40 backdrop-blur-sm transition-all duration-300 border-b border-gray-200"
+>
+  <div class="flex flex-col space-y-4 px-8 text-sm font-medium">
+    <a
+      href="{{ url_for('app_routes.home') }}"
+      class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
+    >
+      Home
+    </a>
+    {% if current_user.is_authenticated %}
+    <a
+      href="{{ url_for('app_routes.calculator') }}"
+      class="{% if request.endpoint == 'app_routes.calculator' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
+    >
+      Calculator
+    </a>
+    <a
+      href="{{ url_for('app_routes.dashboard') }}"
+      class="{% if request.endpoint == 'app_routes.dashboard' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
+    >
+      Dashboard
+    </a>
+    {% endif %}
+    <a
+      href="{{ url_for('app_routes.services') }}"
+      class="{% if request.endpoint == 'app_routes.services' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
+    >
+      Services
+    </a>
+    <a
+      href="{{ url_for('app_routes.about') }}"
+      class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
+    >
+      About Us
+    </a>
+    <hr class="border-gray-200" />
+    {% if current_user.is_authenticated %}
+    <div class="flex items-center justify-between pt-2">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 bg-[#cedfc9] rounded-full flex items-center justify-center font-bold text-sm uppercase"
+        >
+          {{ current_user.username[0] if current_user.username else 'U' }}
+        </div>
+        <div>
+          <p class="font-semibold text-gray-900">
+            {{ current_user.name or current_user.username }}
+          </p>
+          <p class="text-xs text-gray-500">{{ current_user.email }}</p>
+        </div>
+      </div>
+    </div>
+    <a
+      href="{{ url_for('app_routes.profile') }}"
+      class="text-emerald-600 font-semibold flex items-center gap-2"
+    >
+      <i class="fas fa-user-circle"></i>
+      Profil Saya
+    </a>
+    {% else %}
+    <a href="{{ url_for('app_routes.login') }}" class="text-gray-900">Log In</a>
+    <a
+      href="{{ url_for('app_routes.register') }}"
+      class="inline-block bg-[#cedfc9] text-gray-900 px-4 py-2 rounded-full text-center"
+    >
+      Sign Up
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // Mobile menu toggle
+  const mobileMenuButton = document.getElementById("mobileMenuButton");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  }
+</script>

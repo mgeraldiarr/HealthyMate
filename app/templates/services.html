@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/svg+xml"
+    />
+    <title>Our Services | HealthyMate</title>
+    <meta
+      name="description"
+      content="Discover our comprehensive nutrition services to support your health journey"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='src/recommendations.css') }}"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .animation-delay-100 { animation-delay: 0.1s; }
+      .animation-delay-200 { animation-delay: 0.2s; }
+      .animation-delay-300 { animation-delay: 0.3s; }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #0b3925;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .service-card {
+        transition: all 0.3s ease;
+      }
+      .service-card:hover {
+        transform: translateY(-8px);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased">
+    
+    {% include 'components/navbar.html' %}
+
+    <!-- Hero Section (Styling baru seperti homepage) -->
+    <section class="hero-gradient-bg">
+      <div class="max-w-7xl mx-auto px-6 py-20 md:py-28 text-center">
+        <div class="max-w-4xl mx-auto">
+          <h1
+            class="text-[42px] md:text-[56px] lg:text-[64px] font-light text-gray-900 leading-[1.1] tracking-tight"
+          >
+            Our 
+            <span class="italic font-serif font-normal text-gray-900">
+              Specialties
+            </span>
+          </h1>
+          <p
+            class="text-gray-500 max-w-2xl mx-auto mt-6 font-medium text-sm md:text-base leading-relaxed mb-8 max-w-3xl"
+          >
+            HealthyMate helps you calculate your calorie needs (BMR & TDEE) and
+            provides practical daily meal recommendations according to your
+            needs. Start your healthy journey today!
+          </p>
+          <div class="animate-fade-in-up animation-delay-200">
+            <a
+              href="{{ url_for('app_routes.consultation') }}"
+              class="bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 font-medium py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
+            >
+              Consultation <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section (Putih) -->
+    <section id="services" class="py-16 bg-white rounded-t-[3rem] relative z-10 pb-32 mb-20">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+          <span
+            class="inline-block bg-[#cedfc9] text-gray-700 px-4 py-2 rounded-full text-xs uppercase tracking-wider font-medium mb-4 animate-fade-in-up"
+          >
+            What We Offer
+          </span>
+          <h2
+            class="text-3xl md:text-5xl font-light text-gray-900 mb-4 animate-fade-in-up"
+          >
+            Our Professional 
+            <span class="italic font-serif font-normal text-gray-900">
+              Nutrition
+            </span> 
+            Services
+          </h2>
+          <p
+            class="text-gray-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed animate-fade-in-up animation-delay-100"
+          >
+            Tailored solutions to meet your unique nutritional needs and health
+            objectives.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Service 1 -->
+          <div
+            class="bg-[#f2f7f4] rounded-2xl p-8 service-card transition-all duration-300 hover:shadow-xl animate-fade-in-up animation-delay-100 border border-gray-100"
+          >
+            <div
+              class="w-16 h-16 bg-[#cedfc9] rounded-full flex items-center justify-center mb-6 mx-auto"
+            >
+              <i class="fas fa-calculator text-[#0b3925] text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3 text-center">
+              Personalized Calorie Analysis
+            </h3>
+            <p class="text-gray-500 text-center mb-4 text-sm">
+              Get precise calculations of your daily caloric needs based on your
+              body metrics, activity level, and health goals.
+            </p>
+            <ul class="space-y-2 text-gray-600 text-sm">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-[#0b3925] mt-1 mr-2 text-xs"></i>
+                <span>Mifflin-St Jeor formulas</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-[#0b3925] mt-1 mr-2 text-xs"></i>
+                <span>Automatic calculation of calorie needs</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-[#0b3925] mt-1 mr-2 text-xs"></i>
+                <span>Personalized results based on your profile</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Service 2 -->
+          <div
+            class="bg-[#f2f7f4] rounded-2xl p-8 service-card transition-all duration-300 hover:shadow-xl animate-fade-in-up animation-delay-200 border border-gray-100"
+          >
+            <div
+              class="w-16 h-16 bg-[#cedfc9] rounded-full flex items-center justify-center mb-6 mx-auto"
+            >
+              <i class="fas fa-utensils text-[#0b3925] text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3 text-center">
+              Daily Meal Plan Recommendations
+            </h3>
+            <p class="text-gray-500 text-center mb-4 text-sm">
+              Customized meal plans designed by nutrition experts to fit your
+              preferences and dietary requirements.
+            </p>
+            <ul class="space-y-2 text-gray-600 text-sm">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-[#0b3925] mt-1 mr-2 text-xs"></i>
+                <span>Personalized to your calorie needs</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-[#0b3925] mt-1 mr-2 text-xs"></i>
+                <span>Practical and easy to follow</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section (Hijau - tumpuk di atas putih) -->
+    <section class="py-16 bg-[#0b3925] rounded-t-[3rem] relative -mt-24 z-20 pb-32">
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <h2 class="text-3xl md:text-4xl font-light text-gray-100 mb-6">
+          Ready to 
+          <span class="italic font-serif font-normal text-gray-100">
+            Transform
+          </span> 
+          Your Nutrition?
+        </h2>
+        <p class="text-sm md:text-base leading-relaxed text-emerald-200 max-w-2xl mx-auto mb-8">
+          Get started with our professional nutrition services today and take
+          the first step toward better health.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a
+            href="{{ url_for('app_routes.calculator') }}"
+            class="bg-white hover:bg-gray-100 text-[#0b3925] font-medium py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
+          >
+            Calculate Your Needs <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer (tumpuk di atas CTA) -->
+    <div class="relative -mt-24 z-30">
+      {% include 'components/footer.html' %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/services.js') }}"></script>
+  </body>
+</html>
