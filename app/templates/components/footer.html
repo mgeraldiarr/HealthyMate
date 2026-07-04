@@ -19,79 +19,87 @@
         <div class="flex space-x-4 pt-3">
           <a
             href="#"
-            class="w-8 h-8 rounded-full bg-gray-800 hover:bg-emerald-600 text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
+            class="w-8 h-8 rounded-full bg-gray-800 hover:bg-[#1a5a3a] text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
           >
             <i class="fab fa-twitter text-xs"></i>
           </a>
           <a
             href="#"
-            class="w-8 h-8 rounded-full bg-gray-800 hover:bg-emerald-600 text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
+            class="w-8 h-8 rounded-full bg-gray-800 hover:bg-[#1a5a3a] text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
           >
             <i class="fab fa-instagram text-xs"></i>
           </a>
           <a
             href="#"
-            class="w-8 h-8 rounded-full bg-gray-800 hover:bg-emerald-600 text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
+            class="w-8 h-8 rounded-full bg-gray-800 hover:bg-[#1a5a3a] text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
           >
             <i class="fab fa-facebook-f text-xs"></i>
-          </a>
-          <a
-            href="https://github.com/mgeraldiar"
-            target="_blank"
-            class="w-8 h-8 rounded-full bg-gray-800 hover:bg-emerald-600 text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1"
-          >
-            <i class="fab fa-github text-xs"></i>
           </a>
         </div>
       </div>
 
-      <!-- Resources Column -->
+      <!-- Navigation Column -->
       <div>
         <h4
           class="text-xs border-l-2 border-[#cedfc9] pl-3 font-semibold text-[#cedfc9] uppercase tracking-wider mb-4"
         >
-          Resources
+          Navigation
         </h4>
         <ul class="space-y-3">
           <li>
             <a
-              href="#"
+              href="{{ url_for('app_routes.home') }}"
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i
-                class="fas fa-chevron-right text-emerald-500 text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
               ></i>
               <span class="group-hover:translate-x-1 transition-transform"
-                >Blog</span
+                >Home</span
+              >
+            </a>
+          </li>
+          {% if current_user.is_authenticated %}
+          <li>
+            <a
+              href="{{ url_for('app_routes.dashboard') }}"
+              class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
+            >
+              <i
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+              ></i>
+              <span class="group-hover:translate-x-1 transition-transform"
+                >Dashboard</span
               >
             </a>
           </li>
           <li>
             <a
-              href="#"
+              href="{{ url_for('app_routes.calculator') }}"
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i
-                class="fas fa-chevron-right text-emerald-500 text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
               ></i>
               <span class="group-hover:translate-x-1 transition-transform"
-                >Research</span
+                >Calculator</span
               >
             </a>
           </li>
           <li>
             <a
-              href="#"
+              href="{{ url_for('app_routes.consultation') }}"
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i
-                class="fas fa-chevron-right text-emerald-500 text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
               ></i>
               <span class="group-hover:translate-x-1 transition-transform"
-                >FAQs</span
+                >Consultation</span
               >
             </a>
           </li>
+          {% endif %}
         </ul>
       </div>
 
@@ -109,7 +117,7 @@
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i
-                class="fas fa-chevron-right text-emerald-500 text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
               ></i>
               <span class="group-hover:translate-x-1 transition-transform"
                 >About Us</span
@@ -122,10 +130,10 @@
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i
-                class="fas fa-chevron-right text-emerald-500 text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
               ></i>
               <span class="group-hover:translate-x-1 transition-transform"
-                >Careers</span
+                >Terms of Service</span
               >
             </a>
           </li>
@@ -135,10 +143,10 @@
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i
-                class="fas fa-chevron-right text-emerald-500 text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
               ></i>
               <span class="group-hover:translate-x-1 transition-transform"
-                >Contact</span
+                >Contact Us</span
               >
             </a>
           </li>
@@ -160,7 +168,7 @@
             <input
               type="email"
               placeholder="Your email address"
-              class="w-full px-4 py-2.5 bg-gray-800 text-white rounded-l-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm border border-gray-700 border-r-0 placeholder-gray-500"
+              class="w-full px-4 py-2.5 bg-gray-800 text-white rounded-l-xl focus:outline-none focus:ring-1 focus:ring-[#1a5a3a] text-sm border border-gray-700 border-r-0 placeholder-gray-500"
             />
           </div>
           <button
@@ -180,7 +188,7 @@
       class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
     >
       <p class="text-xs text-gray-500">
-        &copy; 2025 HealthyMate. All rights reserved.
+        &copy; 2026 HealthyMate. All rights reserved.
       </p>
       <div class="flex space-x-6">
         <a
