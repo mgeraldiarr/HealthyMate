@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/svg+xml"
+    />
+    <title>Terms of Service | HealthyMate</title>
+    <meta
+      name="description"
+      content="Terms of Service for HealthyMate application."
+    />
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .prose h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0b3925;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .prose h2::before {
+        content: "●";
+        color: #cedfc9;
+        font-size: 0.6rem;
+      }
+      .prose h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a5a3a;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .prose p {
+        color: #4b5563;
+        line-height: 1.8;
+        font-size: 0.95rem;
+      }
+      .prose ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0.75rem 0;
+      }
+      .prose ul li {
+        color: #4b5563;
+        padding: 0.5rem 0 0.5rem 2rem;
+        position: relative;
+        font-size: 0.95rem;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .prose ul li:last-child {
+        border-bottom: none;
+      }
+      .prose ul li::before {
+        content: "✕";
+        position: absolute;
+        left: 0;
+        top: 0.5rem;
+        color: #0b3925;
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+      .prose a {
+        color: #0b3925;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        text-decoration-color: #cedfc9;
+        font-weight: 500;
+      }
+      .prose a:hover {
+        color: #1a5a3a;
+        text-decoration-color: #0b3925;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow max-w-4xl w-full mx-auto pt-12 pb-20 px-6">
+      <!-- Hero Section -->
+      <div class="text-center mb-12 animate-fade-in-up">
+        <h1 class="text-4xl md:text-5xl font-light text-gray-900">
+          Terms of
+          <span class="italic font-serif font-normal text-gray-900">
+            Service
+          </span>
+        </h1>
+        <div class="flex items-center justify-center gap-2 mt-3">
+          <i class="fas fa-calendar-alt text-gray-400 text-xs"></i>
+          <p class="text-gray-400 text-sm">Last updated: October 26, 2026</p>
+        </div>
+        <div class="w-16 h-1 bg-[#cedfc9] mx-auto mt-4 rounded-full"></div>
+      </div>
+
+      <!-- Content -->
+      <div
+        class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up"
+        style="animation-delay: 0.1s"
+      >
+        <!-- Decorative top bar -->
+        <div class="h-5 bg-gradient-to-r from-[#0b3925] to-[#1a5a3a]"></div>
+
+        <div class="p-8 md:p-12 prose max-w-none">
+          <!-- Intro -->
+          <div
+            class="bg-[#f2f7f4] rounded-2xl p-6 mb-8 border border-[#cedfc9]"
+          >
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-[#cedfc9] rounded-full flex items-center justify-center flex-shrink-0 mt-1"
+              >
+                <i class="fas fa-info-circle text-[#0b3925]"></i>
+              </div>
+              <div>
+                <p class="text-gray-600 !text-sm leading-relaxed">
+                  Welcome to <strong>HealthyMate</strong>! These terms and
+                  conditions outline the rules and regulations for the use of
+                  HealthyMate's Website, located at
+                  <a href="#">healthymate.com</a>. By accessing this website we
+                  assume you accept these terms and conditions. Do not continue
+                  to use HealthyMate if you do not agree to take all of the
+                  terms and conditions stated on this page.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1 -->
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-1">
+              <span
+                class="mt-5 w-8 h-8 bg-[#0b3925] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                >1</span
+              >
+              <h2>Intellectual Property Rights</h2>
+            </div>
+            <p class="!text-sm ml-14">
+              Other than the content you own, under these Terms, HealthyMate
+              and/or its licensors own all the intellectual property rights and
+              materials contained in this Website. You are granted a limited
+              license only for purposes of viewing the material contained on
+              this Website.
+            </p>
+          </div>
+
+          <!-- Section 2 -->
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-1">
+              <span
+                class="mt-5 w-8 h-8 bg-[#0b3925] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                >2</span
+              >
+              <h2>Restrictions</h2>
+            </div>
+            <p class="!text-sm ml-14 mb-2">
+              You are specifically restricted from all of the following:
+            </p>
+            <ul class="!text-sm ml-14">
+              <li class="!text-sm ml-14">
+                Publishing any Website material in any other media.
+              </li>
+              <li class="!text-sm ml-14">
+                Selling, sublicensing and/or otherwise commercializing any
+                Website material.
+              </li>
+              <li class="!text-sm ml-14">
+                Publicly performing and/or showing any Website material.
+              </li>
+              <li class="!text-sm ml-14">
+                Using this Website in any way that is or may be damaging to this
+                Website.
+              </li>
+              <li class="!text-sm ml-14">
+                Using this Website contrary to applicable laws and regulations,
+                or in any way may cause harm to the Website, or to any person or
+                business entity.
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section 3 -->
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-1">
+              <span
+                class="mt-5 w-8 h-8 bg-[#0b3925] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                >3</span
+              >
+              <h2>Your Content</h2>
+            </div>
+            <p class="!text-sm ml-14">
+              In these Website Standard Terms and Conditions, “Your Content”
+              shall mean any audio, video text, images or other material you
+              choose to display on this Website. By displaying Your Content, you
+              grant HealthyMate a non-exclusive, worldwide irrevocable,
+              sub-licensable license to use, reproduce, adapt, publish,
+              translate and distribute it in any and all media.
+            </p>
+          </div>
+
+          <!-- Section 4 -->
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-1">
+              <span
+                class="mt-5 w-8 h-8 bg-[#0b3925] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                >4</span
+              >
+              <h2>No Warranties</h2>
+            </div>
+            <div
+              class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-xl mb-3 ml-14"
+            >
+              <div class="flex items-start gap-3">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mt-1"></i>
+                <p class="!text-sm text-gray-600">
+                  This Website is provided <strong>“as is,”</strong> with all
+                  faults, and HealthyMate express no representations or
+                  warranties, of any kind related to this Website or the
+                  materials contained on this Website. Also, nothing contained
+                  on this Website shall be interpreted as advising you. The
+                  information provided by our calculator is for informational
+                  purposes only and is not a substitute for professional medical
+                  advice.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5 -->
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-1">
+              <span
+                class="mt-5 w-8 h-8 bg-[#0b3925] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                >5</span
+              >
+              <h2>Limitation of Liability</h2>
+            </div>
+            <p class="!text-sm ml-14">
+              In no event shall HealthyMate, nor any of its officers, directors
+              and employees, shall be held liable for anything arising out of or
+              in any way connected with your use of this Website whether such
+              liability is under contract. HealthyMate, including its officers,
+              directors and employees shall not be held liable for any indirect,
+              consequential or special liability arising out of or in any way
+              related to your use of this Website.
+            </p>
+          </div>
+
+          <!-- Section 6 -->
+          <div class="mb-0">
+            <div class="flex items-center gap-3 mb-1">
+              <span
+                class="mt-5 w-8 h-8 bg-[#0b3925] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                >6</span
+              >
+              <h2>Governing Law & Jurisdiction</h2>
+            </div>
+            <p class="!text-sm ml-14">
+              These Terms will be governed by and interpreted in accordance with
+              the laws of the State of Country, and you submit to the
+              non-exclusive jurisdiction of the state and federal courts located
+              in Country for the resolution of any disputes.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer note -->
+      <div
+        class="mt-8 text-center animate-fade-in-up"
+        style="animation-delay: 0.2s"
+      >
+        <p class="text-sm text-gray-400">
+          <i class="fas fa-shield-alt mr-1"></i>
+          By using HealthyMate, you agree to these Terms of Service.
+        </p>
+        <div class="flex justify-center gap-6 mt-3">
+          <a
+            href="{{ url_for('app_routes.contact_us') }}"
+            class="text-sm text-[#0b3925] hover:underline"
+            >Contact Us</a
+          >
+          <span class="text-gray-300 text-xs">|</span>
+          <a
+            href="{{ url_for('app_routes.home') }}"
+            class="text-sm text-[#0b3925] hover:underline"
+            >Back to Home</a
+          >
+        </div>
+      </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+  </body>
+</html>

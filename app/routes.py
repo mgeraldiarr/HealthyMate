@@ -21,6 +21,14 @@ def about():
 def consultation():
     return render_template('consultation.html')
 
+@app_routes.route('/terms-of-service')
+def terms_of_service():
+    return render_template('terms_of_service.html')
+
+@app_routes.route('/contact-us')
+def contact_us():
+    return render_template('contact_us.html')
+
 
 # == Rute Otentikasi (Login/Register) ==
 
@@ -71,6 +79,50 @@ def login():
 
     return render_template('auth/login.html')
 
+@app_routes.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            # Email ditemukan, lanjut ke langkah 2
+            return redirect(url_for('app_routes.reset_password_step2', email=email))
+        else:
+            flash('Email address not found. Please check and try again.', 'danger')
+            return redirect(url_for('app_routes.forgot_password'))
+    return render_template('auth/forgot_password_step1.html')
+
+@app_routes.route('/reset-password-step2/<email>', methods=['GET', 'POST'])
+def reset_password_step2(email):
+    user = User.query.filter_by(email=email).first_or_404()
+    if request.method == 'POST':
+        username = request.form.get('username')
+        if user.username == username:
+            # Username cocok, lanjut ke langkah 3
+            return redirect(url_for('app_routes.reset_password_step3', user_id=user.id))
+        else:
+            flash('Username does not match the provided email.', 'danger')
+            return redirect(url_for('app_routes.reset_password_step2', email=email))
+    return render_template('auth/forgot_password_step2.html', email=email)
+
+@app_routes.route('/reset-password-step3/<int:user_id>', methods=['GET', 'POST'])
+def reset_password_step3(user_id):
+    user = User.query.get_or_404(user_id)
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        if password != confirm_password:
+            flash('Passwords do not match. Please try again.', 'danger')
+            return redirect(url_for('app_routes.reset_password_step3', user_id=user_id))
+
+        # Update password
+        user.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
+        db.session.commit()
+
+        flash('Your password has been successfully updated! Please log in.', 'success')
+        return redirect(url_for('app_routes.login'))
+    return render_template('auth/forgot_password_step3.html', user_id=user_id)
 
 # == Rute Kalkulator dan Dashboard ==
 

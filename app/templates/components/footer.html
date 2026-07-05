@@ -5,14 +5,17 @@
     <div class="grid md:grid-cols-4 gap-10 lg:gap-12">
       <!-- Brand Column -->
       <div class="space-y-4">
-          <a href="{{ url_for('app_routes.home') }}" class="flex items-center gap-2 hover:opacity-80 transition">
-            <img
-              src="{{ url_for('static', filename='images/logo-hm-white.svg') }}"
-              alt="HealthyMate Logo"
-              class="w-8 h-8 object-contain"
-            />
-            <h1 class="text-lg font-bold text-gray-100">HealthyMate.</h1>
-          </a>
+        <a
+          href="{{ url_for('app_routes.home') }}"
+          class="flex items-center gap-2 hover:opacity-80 transition"
+        >
+          <img
+            src="{{ url_for('static', filename='images/logo-hm-white.svg') }}"
+            alt="HealthyMate Logo"
+            class="w-8 h-8 object-contain"
+          />
+          <h1 class="text-lg font-bold text-gray-100">HealthyMate.</h1>
+        </a>
         <p class="text-gray-400 text-sm leading-relaxed">
           Your trusted nutrition companion for healthier living.
         </p>
@@ -59,6 +62,19 @@
               >
             </a>
           </li>
+          <li>
+            <a
+              href="{{ url_for('app_routes.consultation') }}"
+              class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
+            >
+              <i
+                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+              ></i>
+              <span class="group-hover:translate-x-1 transition-transform"
+                >Consultation</span
+              >
+            </a>
+          </li>
           {% if current_user.is_authenticated %}
           <li>
             <a
@@ -83,19 +99,6 @@
               ></i>
               <span class="group-hover:translate-x-1 transition-transform"
                 >Calculator</span
-              >
-            </a>
-          </li>
-          <li>
-            <a
-              href="{{ url_for('app_routes.consultation') }}"
-              class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
-            >
-              <i
-                class="fas fa-chevron-right text-[#cedfc9] text-[10px] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
-              ></i>
-              <span class="group-hover:translate-x-1 transition-transform"
-                >Consultation</span
               >
             </a>
           </li>
@@ -126,7 +129,7 @@
           </li>
           <li>
             <a
-              href="#"
+              href="{{ url_for('app_routes.terms_of_service') }}"
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i
@@ -139,7 +142,7 @@
           </li>
           <li>
             <a
-              href="#"
+              href="{{ url_for('app_routes.contact_us') }}"
               class="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
             >
               <i

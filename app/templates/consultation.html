@@ -47,36 +47,28 @@
                 800: "#082317",
                 900: "#06170f",
               },
-              blue: {
-                50: "#e2ede8",
-                100: "#cedfc9",
-                200: "#b9cca5",
-                300: "#a3b88c",
-                400: "#8ba472",
-                500: "#738f59",
-                600: "#0b3925",
-                700: "#0a2e1e",
-                800: "#082317",
-                900: "#06170f",
-              },
-              indigo: {
-                50: "#e2ede8",
-                100: "#cedfc9",
-                200: "#b9cca5",
-                300: "#a3b88c",
-                400: "#8ba472",
-                500: "#738f59",
-                600: "#0b3925",
-                700: "#0a2e1e",
-                800: "#082317",
-                900: "#06170f",
-              },
             },
           },
         },
       };
     </script>
     <style>
+      /* ===== SMOOTH SCROLL ===== */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* ===== ANIMASI ===== */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .animation-delay-100 { animation-delay: 0.1s; }
+      .animation-delay-200 { animation-delay: 0.2s; }
+
       .spinner {
         width: 40px;
         height: 40px;
@@ -86,15 +78,10 @@
         animation: spin 0.8s linear infinite;
       }
       @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
-      ::view-transition-old(root),
-      ::view-transition-new(root) {
+      ::view-transition-old(root), ::view-transition-new(root) {
         animation-duration: 0.4s;
       }
     </style>
@@ -145,7 +132,7 @@
     <!-- How It Works -->
     <section
       id="how-it-works"
-      class="py-16 bg-white rounded-t-[3rem] relative z-10 pb-40"
+      class="py-16 bg-white rounded-t-[3rem] relative z-10 pb-40 scroll-mt-20"
     >
       <div class="max-w-5xl mx-auto px-6">
         <div class="text-center mb-12">
@@ -212,7 +199,7 @@
     <!-- Doctors Section -->
     <section
       id="doctors"
-      class="py-16 bg-[#f2f7f4] rounded-t-[3rem] relative -mt-24 z-20 pb-40"
+      class="py-16 bg-[#f2f7f4] rounded-t-[3rem] relative -mt-24 z-20 pb-40 scroll-mt-20"
     >
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-12">
@@ -247,7 +234,7 @@
               <img
                 src="{{ url_for('static', filename='images/docter1.jpg') }}"
                 alt="dr. Andini Putri, Sp.GK"
-                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#cedfc9]"
+                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#0b3925]"
               />
               <h3 class="font-bold text-xl mb-1">dr. Andini Putri, Sp.GK</h3>
               <p class="text-gray-500 mb-3">Clinical Nutrition Specialist</p>
@@ -300,7 +287,7 @@
               <img
                 src="{{ url_for('static', filename='images/docter2.jpg') }}"
                 alt="dr. Budi Santoso, Sp.GK"
-                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#cedfc9]"
+                class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#0b3925]"
               />
               <h3 class="font-bold text-xl mb-1">dr. Budi Santoso, Sp.GK</h3>
               <p class="text-gray-500 mb-3">Clinical Nutrition Specialist</p>
@@ -422,6 +409,7 @@
           </a>
           <a
             href="https://wa.me/6281287258113"
+            target="_blank"
             class="border-2 border-white hover:bg-white/10 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
           >
             <i class="fas fa-phone-alt mr-2"></i> Contact Us
