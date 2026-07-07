@@ -20,12 +20,13 @@ HealthyMate adalah aplikasi web berbasis Flask yang digunakan untuk mengelola fi
 
 ```bash
 HealthyMate/
-├── app/
-│   ├── app.py
-│   ├── routes/
-│   ├── models/
+├── app/               # Folder utama aplikasi (Python Package)
+│   ├── __init__.py    # Titik masuk package, membuat instance Flask
+│   ├── routes.py      # Definisi semua URL/endpoint
+│   ├── models.py      # Definisi tabel database
 │   ├── templates/
 │   └── static/
+├── run.py             # File untuk menjalankan server
 ├── venv/
 ├── requirements.txt
 └── README.md
@@ -126,16 +127,12 @@ mysql+pymysql://root:@localhost/healthymate_db
 
 ## 6. Jalankan Project Flask
 
-Masuk ke folder `app`:
+Pastikan Anda berada di direktori **root** project (`HealthyMate/`), bukan di dalam folder `app/`.
+
+Lalu jalankan aplikasi menggunakan file `run.py`:
 
 ```bash
-cd app
-```
-
-Lalu jalankan aplikasi:
-
-```bash
-python3 app.py
+python3 run.py
 ```
 
 Jika berhasil, terminal akan menampilkan pesan seperti:

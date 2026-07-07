@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/svg+xml"
+    />
+    <title>Consultation Room | HealthyMate</title>
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased">
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow max-w-4xl w-full mx-auto pt-10 pb-16 px-6">
+      <!-- Header -->
+      <div class="animate-fade-in-up mb-8">
+        <a href="{{ url_for('app_routes.my_appointments') }}" class="text-sm text-gray-500 hover:text-gray-800 transition-colors mb-2 inline-block">
+          <i class="fas fa-arrow-left mr-2"></i>Back to My Appointments
+        </a>
+        <h1 class="text-4xl md:text-5xl font-light text-gray-900">
+          Consultation with 
+          <span class="italic font-serif font-normal text-gray-900">
+            Dr. {{ appointment.doctor.name }}
+          </span>
+        </h1>
+        <p class="text-gray-500 text-sm md:text-base mt-2">
+          Scheduled for {{ appointment.appointment_time.strftime('%A, %d %B %Y at %H:%M') }}.
+        </p>
+      </div>
+
+      <!-- Chat Room Placeholder -->
+      <div class="animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100" style="animation-delay: 0.1s;">
+        <div class="p-6 h-[500px] flex flex-col items-center justify-center text-center">
+          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-5">
+            <i class="fas fa-comments text-gray-400 text-4xl"></i>
+          </div>
+          <h2 class="text-2xl font-semibold text-gray-700">Chat Room</h2>
+          <p class="text-gray-500 mt-2 max-w-sm">
+            The real-time chat feature is under construction. This is where you will communicate with your doctor.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+  </body>
+</html>

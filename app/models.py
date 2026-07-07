@@ -34,6 +34,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     
+    role = db.Column(db.String(20), nullable=False, default='user') # 'user', 'doctor', 'admin'
     # Data Profil Pengguna
     name = db.Column(db.String(100))
     age = db.Column(db.Integer)
@@ -44,6 +45,8 @@ class User(UserMixin, db.Model):
 
     # Relasi ke tabel Progress (1 User punya banyak Progress)
     progress_history = db.relationship('Progress', backref='user', lazy=True, cascade="all, delete-orphan")
+    # Relasi untuk appointment
+    appointments = db.relationship('Appointment', foreign_keys='Appointment.user_id', backref='patient', lazy=True)
 
 
 # class MealRecommendation:
@@ -88,3 +91,30 @@ class Progress(db.Model):
     height = db.Column(db.Float, nullable=False)
     tdee_result = db.Column(db.Float)
     tujuan = db.Column(db.String(20)) # misal: 'turun', 'naik', 'jaga'
+
+# Tabel untuk menyimpan data appointment
+class Appointment(db.Model):
+    __tablename__ = 'appointments'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    appointment_time = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending')  # pending, approved, rejected, completed, expired
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    phone_number = db.Column(db.String(20), nullable=True)
+    complaint = db.Column(db.Text, nullable=True)
+
+    doctor = db.relationship('User', foreign_keys=[doctor_id])
+
+# Tabel untuk menyimpan pesan chat
+class Message(db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    appointment_id = db.Column(db.Integer, db.ForeignKey('appointments.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    is_whatsapp_button = db.Column(db.Boolean, default=False) # Flag untuk pesan khusus tombol WA
+
+    sender = db.relationship('User', foreign_keys=[sender_id])
+    appointment = db.relationship('Appointment', backref='messages', lazy=True)

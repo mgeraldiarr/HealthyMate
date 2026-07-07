@@ -267,11 +267,12 @@
               </div>
             </div>
             <a
-              href="https://wa.me/6281287258113?text=Halo%20dr.%20Andini,%20saya%20ingin%20konsultasi%20gizi"
-              target="_blank"
+              href="{{ url_for('app_routes.make_appointment', doctor_id=1) }}"
+              data-doctor-id="1"
               class="w-full block text-center bg-[#0b3925] hover:bg-[#082a1a] text-sm text-gray-100 font-medium py-2.5 rounded-xl transition-all duration-300"
             >
-              <i class="fab fa-whatsapp mr-2"></i> Make an Appointment
+              <i class="fas fa-calendar-plus mr-2"></i>
+              Make Appointment
             </a>
           </div>
 
@@ -320,11 +321,12 @@
               </div>
             </div>
             <a
-              href="https://wa.me/6281287258113?text=Halo%20dr.%20Budi,%20saya%20ingin%20konsultasi%20gizi"
-              target="_blank"
+              href="{{ url_for('app_routes.make_appointment', doctor_id=2) }}"
+              data-doctor-id="2"
               class="w-full block text-center bg-[#0b3925] hover:bg-[#082a1a] text-sm text-gray-100 font-medium py-2.5 rounded-xl transition-all duration-300"
             >
-              <i class="fab fa-whatsapp mr-2"></i> Make an Appointment
+              <i class="fas fa-calendar-plus mr-2"></i>
+              Make Appointment
             </a>
           </div>
 
@@ -373,11 +375,10 @@
               </div>
             </div>
             <a
-              href="https://wa.me/6281287258113?text=Halo%20dr.%20Clara,%20saya%20ingin%20konsultasi%20gizi"
-              target="_blank"
-              class="w-full block text-center bg-[#cedfc9] hover:bg-[#b9cca5] text-sm text-gray-500 font-medium py-2.5 rounded-xl transition-all duration-300"
+              href="#"
+              class="w-full block text-center bg-gray-300 text-sm text-gray-500 font-medium py-2.5 rounded-xl cursor-not-allowed"
             >
-              <i class="fab fa-whatsapp mr-2"></i> Not Available
+              <i class="fas fa-calendar-times mr-2"></i> Not Available
             </a>
           </div>
         </div>
