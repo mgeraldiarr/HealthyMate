@@ -5,7 +5,8 @@ from sqlalchemy.orm import joinedload
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import db, User, Progress, Appointment, Message
 from flask_login import login_user, logout_user, login_required, current_user
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import pytz
 
 # Buat Blueprint
 app_routes = Blueprint('app_routes', __name__)
@@ -183,7 +184,11 @@ def make_appointment(doctor_id):
     doctor_schedule = schedules.get(doctor.id, {})
 
     # Ambil appointment yang sudah di-approve untuk 7 hari ke depan
-    today = datetime.utcnow().date()
+    # Gunakan zona waktu Asia/Jakarta untuk perbandingan yang akurat
+    jakarta_tz = pytz.timezone('Asia/Jakarta')
+    now = datetime.now(jakarta_tz)
+
+    today = now.date() # Gunakan tanggal dari waktu lokal yang sudah ditentukan
     next_week = today + timedelta(days=7)
     booked_slots = {apt.appointment_time for apt in Appointment.query.filter(
         Appointment.doctor_id == doctor.id,
@@ -201,12 +206,18 @@ def make_appointment(doctor_id):
             start_hour, end_hour = doctor_schedule[day_name]
             day_slots = []
             for hour in range(start_hour, end_hour):
-                slot_time = datetime(current_day.year, current_day.month, current_day.day, hour)
-                day_slots.append({
-                    'iso_format': slot_time.isoformat(),
-                    'time': slot_time.strftime('%H:%M'),
-                    'available': slot_time not in booked_slots
-                })
+                # Buat slot time dengan timezone yang sama untuk perbandingan
+                # Kita asumsikan jadwal dokter juga dalam waktu lokal (WIB)
+                slot_time_naive = datetime(current_day.year, current_day.month, current_day.day, hour)
+                slot_time = jakarta_tz.localize(slot_time_naive)
+                
+                # Hanya tampilkan slot jika waktunya di masa depan
+                if slot_time > now:
+                    day_slots.append({
+                        'iso_format': slot_time.isoformat(),
+                        'time': slot_time.strftime('%H:%M'),
+                        'available': slot_time not in booked_slots
+                    })
             if day_slots:
                 available_slots[current_day.strftime('%A, %d %b %Y')] = day_slots
 
@@ -302,7 +313,9 @@ def dashboard():
         tdee = calorie_calculator.calculate_calories()
 
     # Ambil appointment yang akan datang atau sedang berlangsung
-    now = datetime.utcnow()
+    jakarta_tz = pytz.timezone('Asia/Jakarta')
+    now = datetime.now(jakarta_tz)
+
     user_appointments = (
     Appointment.query
     .options(joinedload(Appointment.doctor))
@@ -318,7 +331,15 @@ def dashboard():
 
     progress_records = Progress.query.filter_by(user_id=current_user.id).order_by(Progress.date.desc()).limit(5).all()
     
-    return render_template('dashboard.html', bmr=bmr, tdee=tdee, progress_records=progress_records, appointments=user_appointments, now=now)
+    return render_template(
+        'dashboard.html', 
+        bmr=bmr, 
+        tdee=tdee, 
+        progress_records=progress_records, 
+        appointments=user_appointments, 
+        now=now,
+        timedelta=timedelta
+    )
 
 @app_routes.route('/history')
 @login_required
@@ -330,7 +351,8 @@ def history():
 @app_routes.route('/my-appointments')
 @login_required
 def my_appointments():
-    now = datetime.utcnow()
+    jakarta_tz = pytz.timezone('Asia/Jakarta')
+    now = datetime.now(jakarta_tz)
 
     appointments = (
         Appointment.query
