@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/svg+xml"
+    />
+    <title>Admin Dashboard | HealthyMate</title>
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased">
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow max-w-7xl w-full mx-auto pt-10 pb-16 px-6">
+      <!-- Header -->
+      <div class="animate-fade-in-up mb-8">
+        <h1 class="text-4xl md:text-5xl font-light text-gray-900">
+          Admin Dashboard
+        </h1>
+        <p class="text-gray-500 text-sm md:text-base mt-2">
+          Manage pending appointment requests.
+        </p>
+      </div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.05s;">
+            {% for category, message in messages %}
+              <div class="px-4 py-3 rounded-md text-sm flex items-center gap-3 {% if category == 'info' %}bg-blue-50 text-blue-700 border-l-4 border-blue-500{% elif category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}">
+                <i class="fas {% if category == 'info' %}fa-info-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Pending Appointments Table -->
+      <div class="animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden" style="animation-delay: 0.1s;">
+        <div class="p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Pending Requests</h2>
+          {% if pending_appointments %}
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b">
+                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Patient</th>
+                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Doctor</th>
+                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Requested Time</th>
+                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  {% for appt in pending_appointments %}
+                    <tr class="hover:bg-gray-50">
+                      <td class="py-4 px-4 font-medium">{{ appt.patient.name or appt.patient.username }}</td>
+                      <td class="py-4 px-4 text-gray-600">Dr. {{ appt.doctor.name }}</td>
+                      <td class="py-4 px-4 text-gray-600">{{ appt.appointment_time.strftime('%d %b %Y, %H:%M') }}</td>
+                      <td class="py-4 px-4">
+                        <div class="flex gap-2">
+                          <form action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}" method="POST">
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" class="text-xs bg-green-100 text-green-700 hover:bg-green-200 font-bold py-1.5 px-3 rounded-md transition-colors">Approve</button>
+                          </form>
+                          <form action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}" method="POST">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="text-xs bg-red-100 text-red-700 hover:bg-red-200 font-bold py-1.5 px-3 rounded-md transition-colors">Reject</button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-center py-16">
+              <i class="fas fa-inbox text-gray-300 text-4xl mb-3"></i>
+              <p class="text-gray-500">No pending appointment requests.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+  </body>
+</html>

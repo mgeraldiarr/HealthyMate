@@ -19,40 +19,39 @@
     </div>
 
     <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-      <a
-        href="{{ url_for('app_routes.home') }}"
-        class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
-      >
-        Home
-      </a>
       {% if current_user.is_authenticated %}
-      <a
-        href="{{ url_for('app_routes.dashboard') }}"
-        class="{% if request.endpoint == 'app_routes.dashboard' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
-      >
-        Dashboard
-      </a>
-      <a
-        href="{{ url_for('app_routes.calculator') }}"
-        class="{% if request.endpoint == 'app_routes.calculator' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
-      >
-        Calculator
-      </a>
+        {% if current_user.role == 'admin' %}
+          <!-- Menu untuk Admin -->
+          <a
+            href="{{ url_for('app_routes.admin_dashboard') }}"
+            class="{% if request.endpoint == 'app_routes.admin_dashboard' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
+          >
+            Dashboard
+          </a>
+        {% elif current_user.role == 'doctor' %}
+          <!-- Menu untuk Dokter -->
+          <a href="{{ url_for('app_routes.home') }}" class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">Home</a>
+          <a
+            href="{{ url_for('app_routes.doctor_dashboard') }}"
+            class="{% if request.endpoint == 'app_routes.doctor_dashboard' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
+          >
+            Dashboard
+          </a>
+          <a href="{{ url_for('app_routes.about') }}" class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">About Us</a>
+        {% else %}
+          <!-- Menu untuk User Biasa -->
+          <a href="{{ url_for('app_routes.home') }}" class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">Home</a>
+          <a href="{{ url_for('app_routes.dashboard') }}" class="{% if request.endpoint == 'app_routes.dashboard' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">Dashboard</a>
+          <a href="{{ url_for('app_routes.calculator') }}" class="{% if request.endpoint == 'app_routes.calculator' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">Calculator</a>
+          <a href="{{ url_for('app_routes.consultation') }}" class="{% if request.endpoint == 'app_routes.consultation' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">Consultation</a>
+          <a href="{{ url_for('app_routes.about') }}" class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">About Us</a>
+        {% endif %}
+      {% else %}
+        <!-- Menu untuk Guest -->
+        <a href="{{ url_for('app_routes.home') }}" class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">Home</a>
+        <a href="{{ url_for('app_routes.consultation') }}" class="{% if request.endpoint == 'app_routes.consultation' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">Consultation</a>
+        <a href="{{ url_for('app_routes.about') }}" class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition">About Us</a>
       {% endif %}
-      
-      <a
-        href="{{ url_for('app_routes.consultation') }}"
-        class="{% if request.endpoint == 'app_routes.consultation' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
-      >
-        Consultation
-      </a>
-
-      <a
-        href="{{ url_for('app_routes.about') }}"
-        class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 border-b border-gray-900 pb-0.5{% else %}text-gray-500 hover:text-gray-900{% endif %} transition"
-      >
-        About Us
-      </a>
     </div>
 
     <div class="hidden md:flex items-center space-x-3">
@@ -119,41 +118,30 @@
   class="hidden md:hidden bg-[#f2f7f4] shadow-inner py-4 w-full fixed top-16 left-0 z-40 backdrop-blur-sm transition-all duration-300 border-b border-gray-200"
 >
   <div class="flex flex-col space-y-4 px-8 text-sm font-medium">
-    <a
-      href="{{ url_for('app_routes.home') }}"
-      class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
-    >
-      Home
-    </a>
     {% if current_user.is_authenticated %}
-    <a
-      href="{{ url_for('app_routes.calculator') }}"
-      class="{% if request.endpoint == 'app_routes.calculator' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
-    >
-      Calculator
-    </a>
-    <a
-      href="{{ url_for('app_routes.dashboard') }}"
-      class="{% if request.endpoint == 'app_routes.dashboard' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
-    >
-      Dashboard
-    </a>
+      {% if current_user.role == 'admin' %}
+        <!-- Mobile Menu untuk Admin -->
+        <a href="{{ url_for('app_routes.admin_dashboard') }}" class="{% if request.endpoint == 'app_routes.admin_dashboard' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Dashboard</a>
+      {% elif current_user.role == 'doctor' %}
+        <!-- Mobile Menu untuk Dokter -->
+        <a href="{{ url_for('app_routes.home') }}" class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Home</a>
+        <a href="{{ url_for('app_routes.doctor_dashboard') }}" class="{% if request.endpoint == 'app_routes.doctor_dashboard' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Dashboard</a>
+        <a href="{{ url_for('app_routes.about') }}" class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">About Us</a>
+      {% else %}
+        <!-- Mobile Menu untuk User Biasa -->
+        <a href="{{ url_for('app_routes.home') }}" class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Home</a>
+        <a href="{{ url_for('app_routes.dashboard') }}" class="{% if request.endpoint == 'app_routes.dashboard' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Dashboard</a>
+        <a href="{{ url_for('app_routes.calculator') }}" class="{% if request.endpoint == 'app_routes.calculator' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Calculator</a>
+        <a href="{{ url_for('app_routes.my_appointments') }}" class="{% if request.endpoint == 'app_routes.my_appointments' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">My Appointments</a>
+        <a href="{{ url_for('app_routes.consultation') }}" class="{% if request.endpoint == 'app_routes.consultation' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Consultation</a>
+        <a href="{{ url_for('app_routes.about') }}" class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">About Us</a>
+      {% endif %}
+    {% else %}
+      <!-- Mobile Menu untuk Guest -->
+      <a href="{{ url_for('app_routes.home') }}" class="{% if request.endpoint == 'app_routes.home' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Home</a>
+      <a href="{{ url_for('app_routes.consultation') }}" class="{% if request.endpoint == 'app_routes.consultation' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">Consultation</a>
+      <a href="{{ url_for('app_routes.about') }}" class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900">About Us</a>
     {% endif %}
-    
-    <a
-      href="{{ url_for('app_routes.consultation') }}"
-      class="{% if request.endpoint == 'app_routes.consultation' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
-    >
-      <i class="fas fa-user-md text-emerald-500 w-4 text-xs"></i>
-      Consultation
-    </a>
-
-    <a
-      href="{{ url_for('app_routes.about') }}"
-      class="{% if request.endpoint == 'app_routes.about' %}text-gray-900 font-semibold{% else %}text-gray-700{% endif %} hover:text-gray-900"
-    >
-      About Us
-    </a>
     <hr class="border-gray-200" />
     {% if current_user.is_authenticated %}
     <div class="flex items-center justify-between pt-2">
