@@ -1,27 +1,43 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash # request untuk mengakses data dari form (POST,GET) || renden_template unutk render HTML temlate
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, abort # request untuk mengakses data dari form (POST,GET) || renden_template unutk render HTML temlate
 from .services.meal_recommendation import MealRecommendation # mengimport mealrecommendation dari services.meal_recommendation
 from .services.calorie_calculator import CalorieCalculator # mengimport caloriecalculator dari services.calorie_calculator
+from collections import defaultdict
 from sqlalchemy.orm import joinedload
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import db, User, Progress, Appointment, Message
 from flask_login import login_user, logout_user, login_required, current_user
+from functools import wraps
 from datetime import datetime, timedelta, timezone
 import pytz
 
 # Buat Blueprint
 app_routes = Blueprint('app_routes', __name__)
 
+# --- Decorator untuk Role-based Access ---
+def role_forbidden(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if current_user.is_authenticated and current_user.role == role:
+                abort(403)  # Forbidden for this specific role
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
 # == Rute Halaman Statis ==
 
 @app_routes.route('/')
+@role_forbidden('admin')
 def home():
     return render_template('home.html')
 
 @app_routes.route('/about')
+@role_forbidden('admin')
 def about():
     return render_template('about.html')
 
 @app_routes.route('/consultation')
+@role_forbidden('doctor')
 def consultation():
     return render_template('consultation.html')
 
@@ -79,7 +95,13 @@ def login():
             return redirect(url_for('app_routes.login'))
 
         login_user(user) # Daftarkan user ke session login
-        return redirect(url_for('app_routes.dashboard'))
+
+        if user.role == 'admin':
+            return redirect(url_for('app_routes.admin_dashboard'))
+        elif user.role == 'doctor':
+            return redirect(url_for('app_routes.doctor_dashboard'))
+        else:
+            return redirect(url_for('app_routes.dashboard'))
 
     return render_template('auth/login.html')
 
@@ -178,15 +200,20 @@ def make_appointment(doctor_id):
     # Simulasi jadwal dokter (nantinya bisa disimpan di database)
     # Format: {hari_dalam_bahasa_inggris: [jam_mulai, jam_selesai]}
     schedules = {
-        1: {'Monday': [9, 12], 'Wednesday': [9, 12], 'Saturday': [13, 15]},
-        2: {'Tuesday': [13, 16], 'Thursday': [13, 16], 'Friday': [10, 12]}
+    1: {
+        'Monday': ['09:00', '10:00', '11:05'],
+        'Wednesday': ['09:00', '13:30'],
+        'Saturday': ['13:00', '14:30']
+    },
+    2: {
+        'Tuesday': ['13:00', '14:00', '15:30'],
+        'Thursday': ['13:00', '14:00', '15:00'],
+        'Friday': ['10:00', '11:05']
     }
+}
     doctor_schedule = schedules.get(doctor.id, {})
 
-    # Ambil appointment yang sudah di-approve untuk 7 hari ke depan
-    # Gunakan zona waktu Asia/Jakarta untuk perbandingan yang akurat
-    jakarta_tz = pytz.timezone('Asia/Jakarta')
-    now = datetime.now(jakarta_tz)
+    now = datetime.now()
 
     today = now.date() # Gunakan tanggal dari waktu lokal yang sudah ditentukan
     next_week = today + timedelta(days=7)
@@ -201,33 +228,96 @@ def make_appointment(doctor_id):
     available_slots = {}
     for i in range(7):
         current_day = today + timedelta(days=i)
-        day_name = current_day.strftime('%A')
+        day_name = current_day.strftime("%A")
+
         if day_name in doctor_schedule:
-            start_hour, end_hour = doctor_schedule[day_name]
             day_slots = []
-            for hour in range(start_hour, end_hour):
-                # Buat slot time dengan timezone yang sama untuk perbandingan
-                # Kita asumsikan jadwal dokter juga dalam waktu lokal (WIB)
-                slot_time_naive = datetime(current_day.year, current_day.month, current_day.day, hour)
-                slot_time = jakarta_tz.localize(slot_time_naive)
-                
-                # Hanya tampilkan slot jika waktunya di masa depan
+
+            for time_str in doctor_schedule[day_name]:
+                hour, minute = map(int, time_str.split(":"))
+
+                slot_time = datetime(
+                    current_day.year,
+                    current_day.month,
+                    current_day.day,
+                    hour,
+                    minute
+                )
+
                 if slot_time > now:
                     day_slots.append({
-                        'iso_format': slot_time.isoformat(),
-                        'time': slot_time.strftime('%H:%M'),
-                        'available': slot_time not in booked_slots
+                        "iso_format": slot_time.isoformat(),
+                        "time": slot_time.strftime("%H:%M"),
+                        "available": slot_time not in booked_slots
                     })
+
             if day_slots:
-                available_slots[current_day.strftime('%A, %d %b %Y')] = day_slots
+                available_slots[current_day.strftime("%A, %d %b %Y")] = day_slots
 
     return render_template('make_appointment.html', doctor=doctor, available_slots=available_slots, existing_pending_appointment=None)
 
 
 # == Rute Kalkulator dan Dashboard ==
 
+@app_routes.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    if current_user.role != 'admin':
+        abort(403)
+
+    # Ambil semua appointment yang masih pending dari semua dokter
+    pending_appointments = Appointment.query.options(joinedload(Appointment.patient), joinedload(Appointment.doctor)).filter(Appointment.status == 'pending').order_by(Appointment.created_at.asc()).all()
+    return render_template('admin_dashboard.html', pending_appointments=pending_appointments)
+
+@app_routes.route('/doctor/dashboard')
+@login_required
+def doctor_dashboard():
+    if current_user.role != 'doctor':
+        abort(403)
+
+    # Jadwal dokter yang di-hardcode (sama seperti di make_appointment)
+    schedules = {
+        1: {'Monday', 'Wednesday', 'Saturday'},
+        2: {'Tuesday', 'Thursday', 'Friday'}
+    }
+    doctor_schedule_days = schedules.get(current_user.id, set())
+
+    now = datetime.now()
+    today = now.date()
+    
+    # Ambil janji temu yang akan datang dan yang masih pending untuk dokter ini
+    upcoming_appointments_list = Appointment.query.options(joinedload(Appointment.patient)).filter(Appointment.doctor_id == current_user.id, Appointment.status == 'approved', Appointment.appointment_time >= now).order_by(Appointment.appointment_time.asc()).all()
+
+    # Kelompokkan janji temu yang akan datang berdasarkan tanggal untuk pencarian cepat
+    appointments_by_date = defaultdict(list)
+    for appt in upcoming_appointments_list:
+        appointments_by_date[appt.appointment_time.date()].append(appt)
+
+    # Tentukan awal minggu (Senin)
+    start_of_week = today - timedelta(days=today.weekday())
+    
+    # Siapkan data untuk hari-hari dalam minggu ini yang sesuai dengan jadwal dokter
+    days_to_show = []
+    for i in range(7): # Loop untuk 7 hari dalam seminggu
+        current_day_date = start_of_week + timedelta(days=i)
+        day_name = current_day_date.strftime("%A")
+
+        # Hanya tampilkan hari jika ada dalam jadwal dokter DAN hari itu adalah hari ini atau di masa depan
+        if day_name in doctor_schedule_days and current_day_date >= today:
+            appointments_on_day = appointments_by_date.get(current_day_date, [])
+            days_to_show.append((current_day_date, appointments_on_day))
+
+    return render_template(
+        'doctor_dashboard.html', 
+        days_to_show=days_to_show,
+        timedelta=timedelta,
+        now=datetime.now
+    )
+
+
 @app_routes.route('/calculator', methods=['GET', 'POST'])
 @login_required
+@role_forbidden('doctor')
 def calculator():
     if request.method == 'POST':
         user_data = request.form
@@ -305,6 +395,9 @@ def calculator():
 @app_routes.route('/dashboard')
 @login_required # Hanya user yang sudah login yang bisa akses
 def dashboard():
+    if current_user.role == 'doctor':
+        return redirect(url_for('app_routes.doctor_dashboard'))
+
     bmr = None
     tdee = None
     if current_user.weight and current_user.height and current_user.age and current_user.gender and current_user.activity_level:
@@ -312,9 +405,7 @@ def dashboard():
         bmr = calorie_calculator.calculate_bmr()
         tdee = calorie_calculator.calculate_calories()
 
-    # Ambil appointment yang akan datang atau sedang berlangsung
-    jakarta_tz = pytz.timezone('Asia/Jakarta')
-    now = datetime.now(jakarta_tz)
+    now = datetime.now()
 
     user_appointments = (
     Appointment.query
@@ -343,16 +434,32 @@ def dashboard():
 
 @app_routes.route('/history')
 @login_required
+@role_forbidden('doctor')
 def history():
     # Ambil semua catatan progress untuk pengguna saat ini, diurutkan dari yang terbaru
     all_progress = Progress.query.filter_by(user_id=current_user.id).order_by(Progress.date.desc()).all()
     return render_template('history.html', progress_records=all_progress)
 
+@role_forbidden('doctor')
 @app_routes.route('/my-appointments')
 @login_required
 def my_appointments():
-    jakarta_tz = pytz.timezone('Asia/Jakarta')
-    now = datetime.now(jakarta_tz)
+    now = datetime.now()
+
+    # Logika untuk mengubah status appointment yang sudah lewat menjadi 'expired'
+    # Hanya periksa appointment milik user yang sedang login
+    expired_appointments = Appointment.query.filter(
+        Appointment.user_id == current_user.id,
+        Appointment.status == 'approved',
+        Appointment.appointment_time < now
+    ).all()
+
+    if expired_appointments:
+        for appt in expired_appointments:
+            appt.status = 'expired'
+        db.session.commit()
+        flash('Beberapa janji temu yang telah lewat ditandai sebagai kedaluwarsa.', 'info')
+
 
     appointments = (
         Appointment.query
@@ -369,18 +476,113 @@ def my_appointments():
         timedelta=timedelta
     )
 
+@app_routes.route('/appointment/handle/<int:appointment_id>', methods=['POST'])
+@login_required
+def handle_appointment(appointment_id):
+    if current_user.role != 'admin':
+        abort(403)
+
+    appointment = Appointment.query.options(joinedload(Appointment.patient)).filter_by(id=appointment_id).first_or_404()
+    action = request.form.get('action')
+
+    if action == 'approve':
+        appointment.status = 'approved'
+        flash(f'Appointment with {appointment.patient.name or appointment.patient.username} has been approved.', 'success')
+    elif action == 'reject':
+        appointment.status = 'rejected'
+        flash(f'Appointment with {appointment.patient.name or appointment.patient.username} has been rejected.', 'info')
+    
+    db.session.commit()
+    return redirect(url_for('app_routes.admin_dashboard'))
+
 @app_routes.route('/appointment/chat/<int:appointment_id>')
 @login_required
 def chat_room(appointment_id):
     # Gunakan joinedload untuk memuat data dokter secara efisien bersamaan dengan appointment
     appointment = Appointment.query.options(
         joinedload(Appointment.doctor)
-    ).filter_by(id=appointment_id, user_id=current_user.id).first_or_404()
-    
-    return render_template('chat_room.html', appointment=appointment)
+    ).filter(
+        Appointment.id == appointment_id,
+        (Appointment.user_id == current_user.id) | (Appointment.doctor_id == current_user.id)
+    ).first_or_404()
 
+    now = datetime.now()
+    # Tentukan apakah chat aktif: status 'approved' dan waktu sekarang berada dalam rentang 1 jam dari jadwal
+    is_chat_active = (
+        appointment.status == 'approved' and
+        now >= appointment.appointment_time and
+        now < appointment.appointment_time + timedelta(hours=1)
+    )
+
+    # Ambil semua pesan untuk appointment ini
+    messages = Message.query.filter_by(appointment_id=appointment.id).order_by(Message.timestamp.asc()).all()
+    
+    return render_template('chat_room.html', 
+                           appointment=appointment, 
+                           messages=messages, 
+                           is_chat_active=is_chat_active)
+
+@app_routes.route('/appointment/chat/<int:appointment_id>/read', methods=['POST'])
+@login_required
+def read_messages(appointment_id):
+    # Tandai semua pesan yang diterima oleh current_user di chat ini sebagai 'read'
+    messages_to_read = Message.query.filter(
+        Message.appointment_id == appointment_id,
+        Message.sender_id != current_user.id, # Hanya pesan dari orang lain
+        Message.is_read == False
+    ).all()
+
+    for msg in messages_to_read:
+        msg.is_read = True
+    
+    db.session.commit()
+
+    return jsonify({'status': 'success', 'message': f'{len(messages_to_read)} messages marked as read.'})
+
+@app_routes.route('/appointment/chat/<int:appointment_id>/send', methods=['POST'])
+@login_required
+def send_message(appointment_id):
+    # Pastikan user adalah bagian dari appointment ini (pasien atau dokter)
+    appointment = Appointment.query.filter(
+        Appointment.id == appointment_id,
+        ((Appointment.user_id == current_user.id) | (Appointment.doctor_id == current_user.id))
+    ).first_or_404()
+
+    # Tambahan: Pastikan pesan hanya bisa dikirim selama sesi chat aktif
+    now = datetime.now()
+    is_chat_active = (
+        appointment.status == 'approved' and
+        now >= appointment.appointment_time and
+        now < appointment.appointment_time + timedelta(hours=1)
+    )
+    if not is_chat_active:
+        return jsonify({'status': 'error', 'message': 'Chat session is not active.'}), 403
+
+    content = request.form.get('content')
+    if not content:
+        return jsonify({'status': 'error', 'message': 'Message cannot be empty.'}), 400
+
+    new_message = Message(
+        appointment_id=appointment_id,
+        sender_id=current_user.id,
+        content=content
+    )
+    db.session.add(new_message)
+    db.session.commit()
+
+    # Kembalikan data pesan yang baru dibuat dalam format JSON
+    return jsonify({
+        'status': 'success',
+        'message': {
+            'sender_id': new_message.sender_id,
+            'content': new_message.content,
+            'timestamp': new_message.timestamp.strftime('%H:%M'),
+            'is_read': False # Pesan baru defaultnya belum dibaca
+        }
+    })
 @app_routes.route('/history/delete', methods=['POST'])
 @login_required
+@role_forbidden('doctor')
 def delete_history():
     # Ambil daftar ID dari form yang dikirim
     ids_to_delete = request.form.getlist('record_ids')
@@ -409,18 +611,20 @@ def logout():
 @login_required
 def profile():
     if request.method == 'POST':
-        current_user.name = request.form.get('name')
-        
-        # Mengambil data int/float dan mengubahnya jika ada nilainya
-        age_str = request.form.get('age')
-        weight_str = request.form.get('weight')
-        height_str = request.form.get('height')
-        
-        current_user.age = int(age_str) if age_str else None
-        current_user.weight = float(weight_str) if weight_str else None
-        current_user.height = float(height_str) if height_str else None
+        # Common fields for all roles
+        current_user.name = request.form.get('name') or current_user.name
         current_user.gender = request.form.get('gender')
-        current_user.activity_level = request.form.get('activity_level')
+
+        # Fields specific to 'user' role
+        if current_user.role == 'user':
+            age_str = request.form.get('age')
+            weight_str = request.form.get('weight')
+            height_str = request.form.get('height')
+            
+            current_user.age = int(age_str) if age_str else None
+            current_user.weight = float(weight_str) if weight_str else None
+            current_user.height = float(height_str) if height_str else None
+            current_user.activity_level = request.form.get('activity_level')
         
         db.session.commit()
         flash('Profil berhasil diperbarui!', 'success')

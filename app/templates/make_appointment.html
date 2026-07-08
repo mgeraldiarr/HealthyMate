@@ -81,18 +81,6 @@
         <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-8 py-4"></div>
 
         <div class="p-8 md:p-10">
-          <!-- Flash Messages -->
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="mb-6 px-4 py-2 rounded-md text-sm flex items-center gap-3 {% if category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}">
-                  <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
-                  <span>{{ message }}</span>
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-
           {% if existing_pending_appointment %}
           <!-- Pesan untuk Appointment yang Sedang Pending -->
           <div class="text-center py-8 px-4">
@@ -119,6 +107,18 @@
 
           {% else %}
           <form action="{{ url_for('app_routes.make_appointment', doctor_id=doctor.id) }}" method="POST" class="space-y-6">
+            
+            <!-- Flash Messages Specific to this Form -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="px-4 py-2 rounded-md text-sm flex items-center gap-3 {% if category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}">
+                    <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
             
             <!-- Patient Name (Read-only) -->
             <div>

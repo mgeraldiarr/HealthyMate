@@ -32,48 +32,343 @@
     </script>
     <style>
       @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .animate-fade-in-up {
         animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
+      /* Custom scrollbar */
+      .scrollbar-thin::-webkit-scrollbar {
+        width: 6px;
+      }
+      .scrollbar-thin::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 6px;
+      }
+      .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+      }
     </style>
   </head>
-  <body class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased">
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
     {% include 'components/navbar.html' %}
 
     <main class="flex-grow max-w-4xl w-full mx-auto pt-10 pb-16 px-6">
       <!-- Header -->
-      <div class="animate-fade-in-up mb-8">
-        <a href="{{ url_for('app_routes.my_appointments') }}" class="text-sm text-gray-500 hover:text-gray-800 transition-colors mb-2 inline-block">
+      <div class="animate-fade-in-up mb-4">
+        {% if current_user.role == 'doctor' %}
+        <a
+          href="{{ url_for('app_routes.doctor_dashboard') }}"
+          class="text-sm text-gray-500 hover:text-gray-800 transition-colors mb-2 inline-block"
+        >
+          <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+        </a>
+        {% else %}
+        <a
+          href="{{ url_for('app_routes.my_appointments') }}"
+          class="text-sm text-gray-500 hover:text-gray-800 transition-colors mb-2 inline-block"
+        >
           <i class="fas fa-arrow-left mr-2"></i>Back to My Appointments
         </a>
-        <h1 class="text-4xl md:text-5xl font-light text-gray-900">
-          Consultation with 
-          <span class="italic font-serif font-normal text-gray-900">
-            Dr. {{ appointment.doctor.name }}
-          </span>
-        </h1>
-        <p class="text-gray-500 text-sm md:text-base mt-2">
-          Scheduled for {{ appointment.appointment_time.strftime('%A, %d %B %Y at %H:%M') }}.
-        </p>
+        {% endif %}
       </div>
 
-      <!-- Chat Room Placeholder -->
-      <div class="animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100" style="animation-delay: 0.1s;">
-        <div class="p-6 h-[500px] flex flex-col items-center justify-center text-center">
-          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-5">
-            <i class="fas fa-comments text-gray-400 text-4xl"></i>
+      <!-- Chat Room -->
+      <div
+        class="animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col h-[70vh]"
+        style="animation-delay: 0.1s"
+      >
+        <!-- Chat Header -->
+        <div
+          class="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50 rounded-t-2xl"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 bg-[#0b3925] rounded-full flex items-center justify-center text-white font-bold text-xl"
+            >
+              {{ appointment.doctor.name[0] }}
+            </div>
+            <div>
+              <h2 class="font-semibold text-gray-800">
+                Dr. {{ appointment.doctor.name }}
+              </h2>
+              <p class="text-xs text-gray-500">Online</p>
+            </div>
           </div>
-          <h2 class="text-2xl font-semibold text-gray-700">Chat Room</h2>
-          <p class="text-gray-500 mt-2 max-w-sm">
-            The real-time chat feature is under construction. This is where you will communicate with your doctor.
-          </p>
+          <button
+            id="details-btn"
+            class="text-gray-500 hover:text-gray-800 w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center transition-colors"
+          >
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
         </div>
+
+        <!-- Chat Body -->
+        <div
+          id="chat-body"
+          class="flex-1 p-6 overflow-y-auto space-y-4 scrollbar-thin"
+        >
+          <!-- System Message -->
+          <div class="text-center text-xs text-gray-400 my-2">
+            {{ appointment.appointment_time.strftime('%d %B %Y') }}
+          </div>
+          <div class="flex justify-center">
+            <div
+              class="bg-[#cedfc9] text-[#0b3925] text-xs font-semibold px-4 py-2 rounded-full"
+            >
+              Consultation started. All conversations are confidential.
+            </div>
+          </div>
+
+          <!-- Messages -->
+          {% for message in messages %} {% if message.sender_id ==
+          current_user.id %}
+          <!-- My Message (Right) -->
+          <div class="flex justify-end">
+            <div
+              class="bg-[#0b3925] text-white p-3 rounded-l-xl rounded-br-xl max-w-xs sm:max-w-md"
+            >
+              <p class="text-sm">{{ message.content }}</p>
+              <div
+                class="text-xs text-gray-300 text-right mt-1 flex items-center justify-end gap-1"
+              >
+                <span>{{ message.timestamp.strftime('%H:%M') }}</span>
+                {% if message.is_read %}
+                <i class="fas fa-check-double text-xs text-sky-400"></i>
+                <!-- Sudah dibaca -->
+                {% else %}
+                <i class="fas fa-check text-xs"></i>
+                <!-- Terkirim -->
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <!-- Doctor's Message (Left) -->
+          <div class="flex justify-start">
+            <div
+              class="bg-gray-200 text-gray-800 p-3 rounded-r-xl rounded-bl-xl max-w-xs sm:max-w-md"
+            >
+              <p class="text-sm">{{ message.content }}</p>
+              <div class="text-xs text-gray-500 text-right mt-1">
+                <span>{{ message.timestamp.strftime('%H:%M') }}</span>
+              </div>
+            </div>
+          </div>
+          {% endif %} {% endfor %}
+        </div>
+
+        <!-- Chat Footer (Input) -->
+        {% if is_chat_active %}
+        <div class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+          <form id="message-form" class="flex items-center gap-3">
+            <input
+              type="text"
+              id="message-input"
+              placeholder="Type a message..."
+              autocomplete="off"
+              class="flex-1 px-4 py-2.5 text-sm bg-white border border-gray-300 rounded-full focus:ring-2 focus:ring-[#cedfc9] focus:border-[#cedfc9] transition-all"
+            />
+            <button
+              type="submit"
+              class="w-11 h-11 bg-[#0b3925] text-white rounded-full flex items-center justify-center flex-shrink-0 hover:bg-[#1a5a3a] transition-colors shadow-md"
+            >
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <div
+          class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl text-center"
+        >
+          {% if appointment.status == 'pending' %}
+          <p class="text-sm text-yellow-700 font-medium">
+            <i class="fas fa-hourglass-half mr-2"></i>Appointment is pending
+            approval.
+          </p>
+          {% elif appointment.status in ['expired', 'completed', 'rejected'] %}
+          <p class="text-sm text-red-700 font-medium">
+            <i class="fas fa-lock mr-2"></i>This consultation session has ended.
+          </p>
+          {% else %}
+          <p class="text-sm text-[#0b3925] font-medium">
+            <i class="fas fa-clock mr-2"></i>
+            Chat will be open on {{ appointment.appointment_time.strftime('%d %b
+            %Y') }} at {{ appointment.appointment_time.strftime('%H:%M') }}.
+          </p>
+          {% endif %}
+        </div>
+        {% endif %}
       </div>
     </main>
 
+    <!-- Doctor Details Modal -->
+    <div
+      id="details-modal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 m-4 text-center animate-fade-in-up"
+        style="animation-duration: 0.3s"
+      >
+        <div
+          class="w-20 h-20 bg-[#0b3925] rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg"
+        >
+          <span class="text-4xl font-semibold text-white"
+            >{{ appointment.doctor.name[0] }}</span
+          >
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800">
+          Dr. {{ appointment.doctor.name }}
+        </h3>
+        <p class="text-gray-500 text-sm mb-4">Clinical Nutrition Specialist</p>
+        <div class="text-left space-y-3 bg-gray-50 p-4 rounded-xl border">
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-calendar-alt w-5 text-[#0b3925]"></i>
+            <strong>Appointment:</strong> {{
+            appointment.appointment_time.strftime('%A, %d %b %Y at %H:%M') }}
+          </p>
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-info-circle w-5 text-[#0b3925]"></i>
+            <strong>Status:</strong>
+            <span class="font-medium capitalize">{{ appointment.status }}</span>
+          </p>
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-comment-medical w-5 text-[#0b3925]"></i>
+            <strong>Topic:</strong> "{{ appointment.complaint }}"
+          </p>
+        </div>
+        <button
+          id="close-modal-btn"
+          type="button"
+          class="mt-6 w-full px-8 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium transition-colors text-sm"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
     {% include 'components/footer.html' %}
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chatBody = document.getElementById("chat-body");
+        const messageForm = document.getElementById("message-form");
+        const messageInput = document.getElementById("message-input");
+        const currentUserId = Number("{{ current_user.id }}");
+
+        if (chatBody) {
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        const detailsBtn = document.getElementById("details-btn");
+        const detailsModal = document.getElementById("details-modal");
+        const closeModalBtn = document.getElementById("close-modal-btn");
+
+        if (detailsBtn && detailsModal && closeModalBtn) {
+          detailsBtn.addEventListener("click", () => {
+            detailsModal.classList.remove("hidden");
+          });
+
+          closeModalBtn.addEventListener("click", () => {
+            detailsModal.classList.add("hidden");
+          });
+
+          detailsModal.addEventListener("click", (e) => {
+            if (e.target === detailsModal) {
+              detailsModal.classList.add("hidden");
+            }
+          });
+        }
+
+        function markMessagesAsRead() {
+          fetch(
+            "{{ url_for('app_routes.read_messages', appointment_id=appointment.id) }}",
+            {
+              method: "POST",
+            },
+          ).catch((err) =>
+            console.error("Error marking messages as read:", err),
+          );
+        }
+
+        window.addEventListener("focus", markMessagesAsRead);
+        markMessagesAsRead();
+
+        function appendMessage(msg) {
+          if (!chatBody) return;
+
+          const isMyMessage = Number(msg.sender_id) === currentUserId;
+
+          const wrapper = document.createElement("div");
+          wrapper.className = isMyMessage
+            ? "flex justify-end"
+            : "flex justify-start";
+
+          const bubble = document.createElement("div");
+          bubble.className = isMyMessage
+            ? "bg-[#0b3925] text-white p-3 rounded-l-xl rounded-br-xl max-w-xs sm:max-w-md"
+            : "bg-gray-200 text-gray-800 p-3 rounded-r-xl rounded-bl-xl max-w-xs sm:max-w-md";
+
+          bubble.innerHTML = `
+            <p class="text-sm"></p>
+            <div class="text-xs ${isMyMessage ? "text-gray-300" : "text-gray-500"} text-right mt-1 flex items-center justify-end gap-1">
+                <span>${msg.timestamp}</span>
+                ${isMyMessage ? '<i class="fas fa-check text-base"></i>' : ""}
+            </div>
+        `;
+          bubble.querySelector("p").textContent = msg.content;
+
+          wrapper.appendChild(bubble);
+          chatBody.appendChild(wrapper);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        if (messageForm && messageInput) {
+          messageForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const content = messageInput.value.trim();
+            if (!content) return;
+
+            const formData = new FormData();
+            formData.append("content", content);
+
+            try {
+              const response = await fetch(
+                "{{ url_for('app_routes.send_message', appointment_id=appointment.id) }}",
+                {
+                  method: "POST",
+                  body: formData,
+                },
+              );
+
+              const data = await response.json();
+
+              if (data.status === "success") {
+                appendMessage(data.message);
+                messageInput.value = "";
+              } else {
+                console.error(data.message);
+              }
+            } catch (err) {
+              console.error("Fetch error:", err);
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
