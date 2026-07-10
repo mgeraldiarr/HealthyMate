@@ -85,9 +85,140 @@
         {% endif %}
       </div>
 
+      <!-- Confirmation Screen -->
+      <div
+        id="confirmation-screen"
+        class="animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col items-center justify-center p-8 text-center h-[70vh]"
+        style="animation-delay: 0.1s"
+      >
+        <div class="max-w-md mx-auto flex flex-col items-center w-full">
+          <!-- Icon container -->
+          <div class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center text-[#0b3925] mb-6">
+            {% if is_chat_active %}
+              <i class="fas fa-comments text-4xl"></i>
+            {% else %}
+              <i class="fas fa-lock text-4xl"></i>
+            {% endif %}
+          </div>
+
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Konfirmasi Ruang Chat</h2>
+          <p class="text-sm text-gray-500 mb-6">Silakan konfirmasi detail sesi konsultasi Anda sebelum masuk ke ruang chat.</p>
+
+          <!-- Appointment Info Box -->
+          <div class="w-full bg-gray-50 rounded-2xl p-5 border border-gray-200 text-left space-y-3 mb-8">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-[#0b3925] rounded-full flex items-center justify-center text-white font-bold">
+                {% if current_user.role == 'doctor' %}
+                  {{ (appointment.patient.name or appointment.patient.username)[0] | upper }}
+                {% else %}
+                  {{ appointment.doctor.name[0] | upper }}
+                {% endif %}
+              </div>
+              <div>
+                <span class="text-xs text-gray-400 block font-medium">PARTNER KONSULTASI</span>
+                <span class="font-semibold text-gray-800">
+                  {% if current_user.role == 'doctor' %}
+                    {{ appointment.patient.name or appointment.patient.username }}
+                  {% else %}
+                    Dr. {{ appointment.doctor.name }}
+                  {% endif %}
+                </span>
+              </div>
+            </div>
+
+            <hr class="border-gray-200" />
+
+            <div class="flex items-start gap-3">
+              <div class="text-[#0b3925] mt-0.5">
+                <i class="fas fa-calendar-alt text-lg"></i>
+              </div>
+              <div>
+                <span class="text-xs text-gray-400 block font-medium">JADWAL KONSULTASI</span>
+                <span class="text-sm font-medium text-gray-700">
+                  {{ appointment.appointment_time.strftime('%A, %d %b %Y at %H:%M') }} WIB
+                </span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="text-[#0b3925] mt-0.5">
+                <i class="fas fa-info-circle text-lg"></i>
+              </div>
+              <div>
+                <span class="text-xs text-gray-400 block font-medium">STATUS</span>
+                {% if appointment.status == 'approved' %}
+                  {% if is_chat_active %}
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                      Berlangsung (Aktif)
+                    </span>
+                  {% else %}
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                      Disetujui (Belum Mulai / Selesai)
+                    </span>
+                  {% endif %}
+                {% elif appointment.status == 'pending' %}
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                    Menunggu Persetujuan
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    Selesai / Berakhir
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Alert message if disabled -->
+          {% if not is_chat_active %}
+            <div class="flex items-center gap-2 text-xs text-red-600 bg-red-50 px-4 py-3 rounded-xl border border-red-100 mb-6 text-left w-full">
+              <i class="fas fa-exclamation-triangle flex-shrink-0 mt-0.5"></i>
+              <span>
+                {% if appointment.status == 'pending' %}
+                  Konsultasi masih menunggu persetujuan admin.
+                {% elif appointment.status in ['expired', 'completed', 'rejected'] %}
+                  Sesi konsultasi ini telah berakhir atau dibatalkan.
+                {% else %}
+                  Ruang chat hanya dapat diakses sesuai jadwal konsultasi (aktif selama 1 jam sejak jadwal dimulai).
+                {% endif %}
+              </span>
+            </div>
+          {% endif %}
+
+          <!-- CTA Buttons -->
+          <div class="flex gap-4 w-full">
+            {% if current_user.role == 'doctor' %}
+              <a href="{{ url_for('app_routes.doctor_dashboard') }}" class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all text-sm">
+                Kembali
+              </a>
+            {% else %}
+              <a href="{{ url_for('app_routes.my_appointments') }}" class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all text-sm">
+                Kembali
+              </a>
+            {% endif %}
+
+            <button
+              id="start-chat-btn"
+              {% if not is_chat_active %} disabled {% endif %}
+              class="flex-1 px-6 py-3 text-white font-semibold rounded-xl transition-all text-sm flex items-center justify-center gap-2
+              {% if is_chat_active %}
+                bg-[#0b3925] hover:bg-[#154c34] hover:shadow-lg shadow-md cursor-pointer
+              {% else %}
+                bg-gray-300 text-gray-500 cursor-not-allowed
+              {% endif %}"
+            >
+              <i class="fas fa-comments text-xs"></i>
+              Lanjut ke Chat
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Chat Room -->
       <div
-        class="animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col h-[70vh]"
+        id="chat-room-screen"
+        class="hidden animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col h-[70vh]"
         style="animation-delay: 0.1s"
       >
         <!-- Chat Header -->
@@ -98,11 +229,19 @@
             <div
               class="w-12 h-12 bg-[#0b3925] rounded-full flex items-center justify-center text-white font-bold text-xl"
             >
-              {{ appointment.doctor.name[0] }}
+              {% if current_user.role == 'doctor' %}
+                {{ (appointment.patient.name or appointment.patient.username)[0] | upper }}
+              {% else %}
+                {{ appointment.doctor.name[0] | upper }}
+              {% endif %}
             </div>
             <div>
               <h2 class="font-semibold text-gray-800">
-                Dr. {{ appointment.doctor.name }}
+                {% if current_user.role == 'doctor' %}
+                  {{ appointment.patient.name or appointment.patient.username }}
+                {% else %}
+                  Dr. {{ appointment.doctor.name }}
+                {% endif %}
               </h2>
               <p class="text-xs text-gray-500">Online</p>
             </div>
@@ -214,7 +353,7 @@
       </div>
     </main>
 
-    <!-- Doctor Details Modal -->
+    <!-- Details Modal -->
     <div
       id="details-modal"
       class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
@@ -223,12 +362,50 @@
         class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 m-4 text-center animate-fade-in-up"
         style="animation-duration: 0.3s"
       >
+        {% if current_user.role == 'doctor' %}
+        <!-- Patient Details -->
         <div
-          class="w-20 h-20 bg-[#0b3925] rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg"
+          class="w-20 h-20 bg-[#0b3925] rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg text-white text-4xl font-semibold"
         >
-          <span class="text-4xl font-semibold text-white"
-            >{{ appointment.doctor.name[0] }}</span
-          >
+          {{ (appointment.patient.name or appointment.patient.username)[0] | upper }}
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800">
+          {{ appointment.patient.name or appointment.patient.username }}
+        </h3>
+        <p class="text-gray-500 text-sm mb-4">Patient Profile</p>
+        <div class="text-left space-y-3 bg-gray-50 p-4 rounded-xl border">
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-venus-mars w-5 text-[#0b3925]"></i>
+            <strong>Gender:</strong> <span class="capitalize">{{ appointment.patient.gender or '-' }}</span>
+          </p>
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-birthday-cake w-5 text-[#0b3925]"></i>
+            <strong>Age:</strong> {{ appointment.patient.age or '-' }} years old
+          </p>
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-weight w-5 text-[#0b3925]"></i>
+            <strong>Weight:</strong> {{ appointment.patient.weight or '-' }} kg
+          </p>
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-ruler-vertical w-5 text-[#0b3925]"></i>
+            <strong>Height:</strong> {{ appointment.patient.height or '-' }} cm
+          </p>
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-running w-5 text-[#0b3925]"></i>
+            <strong>Activity:</strong> <span class="capitalize">{{ appointment.patient.activity_level or '-' }}</span>
+          </p>
+          <hr class="border-gray-200" />
+          <p class="text-sm text-gray-600">
+            <i class="fas fa-comment-medical w-5 text-[#0b3925]"></i>
+            <strong>Topic/Complaint:</strong> "{{ appointment.complaint }}"
+          </p>
+        </div>
+        {% else %}
+        <!-- Doctor Details -->
+        <div
+          class="w-20 h-20 bg-[#0b3925] rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg text-white text-4xl font-semibold"
+        >
+          {{ appointment.doctor.name[0] | upper }}
         </div>
         <h3 class="text-xl font-semibold text-gray-800">
           Dr. {{ appointment.doctor.name }}
@@ -250,6 +427,7 @@
             <strong>Topic:</strong> "{{ appointment.complaint }}"
           </p>
         </div>
+        {% endif %}
         <button
           id="close-modal-btn"
           type="button"
@@ -268,6 +446,20 @@
         const messageForm = document.getElementById("message-form");
         const messageInput = document.getElementById("message-input");
         const currentUserId = Number("{{ current_user.id }}");
+
+        const startChatBtn = document.getElementById("start-chat-btn");
+        const confirmationScreen = document.getElementById("confirmation-screen");
+        const chatRoomScreen = document.getElementById("chat-room-screen");
+
+        if (startChatBtn && confirmationScreen && chatRoomScreen) {
+          startChatBtn.addEventListener("click", () => {
+            confirmationScreen.classList.add("hidden");
+            chatRoomScreen.classList.remove("hidden");
+            if (chatBody) {
+              chatBody.scrollTop = chatBody.scrollHeight;
+            }
+          });
+        }
 
         if (chatBody) {
           chatBody.scrollTop = chatBody.scrollHeight;

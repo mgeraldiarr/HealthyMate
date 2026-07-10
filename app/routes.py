@@ -208,7 +208,7 @@ def make_appointment(doctor_id):
     2: {
         'Tuesday': ['13:00', '14:00', '15:30'],
         'Thursday': ['13:00', '14:00', '15:00'],
-        'Friday': ['10:00', '11:05']
+        'Friday': ['08:53', '11:05']
     }
 }
     doctor_schedule = schedules.get(doctor.id, {})
@@ -284,9 +284,26 @@ def doctor_dashboard():
 
     now = datetime.now()
     today = now.date()
+
+    # Logika untuk mengubah status appointment yang sudah lewat menjadi 'expired'
+    expired_appointments = Appointment.query.filter(
+        Appointment.doctor_id == current_user.id,
+        Appointment.status == 'approved',
+        Appointment.appointment_time < now - timedelta(hours=1)
+    ).all()
+    if expired_appointments:
+        for appt in expired_appointments:
+            appt.status = 'expired'
+        db.session.commit()
     
-    # Ambil janji temu yang akan datang dan yang masih pending untuk dokter ini
-    upcoming_appointments_list = Appointment.query.options(joinedload(Appointment.patient)).filter(Appointment.doctor_id == current_user.id, Appointment.status == 'approved', Appointment.appointment_time >= now).order_by(Appointment.appointment_time.asc()).all()
+    # Ambil janji temu yang akan datang dan yang sedang aktif (dimulai dalam 1 jam terakhir) untuk dokter ini
+    upcoming_appointments_list = Appointment.query.options(
+        joinedload(Appointment.patient)
+    ).filter(
+        Appointment.doctor_id == current_user.id,
+        Appointment.status == 'approved',
+        Appointment.appointment_time >= now - timedelta(hours=1)
+    ).order_by(Appointment.appointment_time.asc()).all()
 
     # Kelompokkan janji temu yang akan datang berdasarkan tanggal untuk pencarian cepat
     appointments_by_date = defaultdict(list)
@@ -446,12 +463,12 @@ def history():
 def my_appointments():
     now = datetime.now()
 
-    # Logika untuk mengubah status appointment yang sudah lewat menjadi 'expired'
+    # Logika untuk mengubah status appointment yang sudah lewat menjadi 'expired' (setelah 1 jam dari jadwal)
     # Hanya periksa appointment milik user yang sedang login
     expired_appointments = Appointment.query.filter(
         Appointment.user_id == current_user.id,
         Appointment.status == 'approved',
-        Appointment.appointment_time < now
+        Appointment.appointment_time < now - timedelta(hours=1)
     ).all()
 
     if expired_appointments:
@@ -498,9 +515,10 @@ def handle_appointment(appointment_id):
 @app_routes.route('/appointment/chat/<int:appointment_id>')
 @login_required
 def chat_room(appointment_id):
-    # Gunakan joinedload untuk memuat data dokter secara efisien bersamaan dengan appointment
+    # Gunakan joinedload untuk memuat data dokter dan pasien secara efisien bersamaan dengan appointment
     appointment = Appointment.query.options(
-        joinedload(Appointment.doctor)
+        joinedload(Appointment.doctor),
+        joinedload(Appointment.patient)
     ).filter(
         Appointment.id == appointment_id,
         (Appointment.user_id == current_user.id) | (Appointment.doctor_id == current_user.id)
