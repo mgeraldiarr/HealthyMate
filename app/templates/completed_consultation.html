@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/svg+xml"
+    />
+    <title>Consultation Summary | HealthyMate</title>
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow max-w-3xl w-full mx-auto pt-10 pb-16 px-6">
+      <!-- Header -->
+      <div class="animate-fade-in-up mb-8">
+        <div
+          class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+        >
+          <div>
+            <h1 class="text-4xl md:text-5xl font-light text-gray-900">
+              Consultation
+              <span class="italic font-serif font-normal text-[#0b3925]">
+                Summary
+              </span>
+            </h1>
+            <p class="text-gray-500 text-sm md:text-base mt-2">
+              Your consultation session has been successfully completed.
+            </p>
+          </div>
+          {% if current_user.role == 'doctor' %}
+          <a
+            href="{{ url_for('app_routes.doctor_dashboard') }}"
+            class="bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 px-5 py-2.5 rounded-xl transition-all duration-300 text-sm font-medium flex items-center gap-2 shadow-sm"
+          >
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+          {% else %}
+          <a
+            href="{{ url_for('app_routes.my_appointments') }}"
+            class="bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 px-5 py-2.5 rounded-xl transition-all duration-300 text-sm font-medium flex items-center gap-2 shadow-sm"
+          >
+            <i class="fas fa-arrow-left"></i> Back to Appointments
+          </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.05s">
+        {% for category, message in messages %}
+        <div
+          class="px-4 py-3 rounded-md text-sm flex items-center gap-3 {% if category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}"
+        >
+          <i class="fas fa-check-circle"></i>
+          <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Summary Card -->
+      <div
+        class="animate-fade-in-up bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-6"
+        style="animation-delay: 0.1s"
+      >
+        <!-- Completed Banner -->
+        <div
+          class="bg-emerald-950 px-6 py-6 text-white flex items-center gap-4"
+        >
+          <div
+            class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-emerald-400"
+          >
+            <i class="fas fa-check-circle text-2xl"></i>
+          </div>
+          <div>
+            <span
+              class="text-xs uppercase tracking-wider text-emerald-400 font-bold block"
+              >Session Status</span
+            >
+            <h2 class="text-lg font-bold">Consultation Completed</h2>
+          </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-6">
+          <!-- Info Details Grid -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50/50 p-5 rounded-2xl border border-gray-100"
+          >
+            <div class="space-y-3">
+              <span
+                class="text-[10px] uppercase tracking-wider text-gray-400 font-bold block"
+                >Patient & Doctor Details</span
+              >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 bg-[#0b3925] rounded-full flex items-center justify-center text-white font-bold"
+                >
+                  {{ appointment.doctor.name[0] | upper }}
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 block"
+                    >Specialist Doctor</span
+                  >
+                  <span class="font-bold text-gray-800"
+                    >Dr. {{ appointment.doctor.name }}</span
+                  >
+                </div>
+              </div>
+              <div class="flex items-center gap-3 pt-2">
+                <div
+                  class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-[#0b3925] font-bold"
+                >
+                  {{ (appointment.patient.name or
+                  appointment.patient.username)[0] | upper }}
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 block">Patient</span>
+                  <span class="font-bold text-gray-800"
+                    >{{ appointment.patient.name or appointment.patient.username
+                    }}</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <span
+                class="text-[10px] uppercase tracking-wider text-gray-400 font-bold block"
+                >Session Time & Duration</span
+              >
+              <div class="flex items-start gap-3">
+                <div class="text-[#0b3925] mt-0.5">
+                  <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 block font-medium"
+                    >Appointment Schedule</span
+                  >
+                  <span class="text-sm font-semibold text-gray-700">
+                    {{ appointment.appointment_time.strftime('%d %B %Y - %H:%M')
+                    }} WIB
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="text-[#0b3925] mt-0.5">
+                  <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 block font-medium"
+                    >Active Consultation Duration</span
+                  >
+                  <span class="text-sm font-semibold text-gray-700">
+                    {{ duration_str }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patient Topic/Complaint -->
+          <div class="space-y-2">
+            <h3
+              class="text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Initial Patient Complaint
+            </h3>
+            <div
+              class="bg-gray-50 border border-gray-100 rounded-2xl p-4 italic text-sm text-gray-650"
+            >
+              "{{ appointment.complaint or 'No description of complaint.' }}"
+            </div>
+          </div>
+
+          <!-- Doctor's Notes -->
+          <div class="space-y-2.5">
+            <h3
+              class="text-xs font-bold text-gray-400 uppercase tracking-wider"
+            >
+              Doctor's Notes & Recommendations
+            </h3>
+            {% if appointment.doctor_notes %}
+            <div
+              class="bg-emerald-50/20 border border-emerald-100/50 rounded-2xl p-5 relative overflow-hidden"
+            >
+              <div
+                class="absolute -right-3 -bottom-5 text-emerald-100/30 text-8xl pointer-events-none"
+              >
+                <i class="fas fa-notes-medical"></i>
+              </div>
+              <p
+                class="text-sm text-gray-750 leading-relaxed relative z-10 whitespace-pre-line"
+              >
+                {{ appointment.doctor_notes }}
+              </p>
+            </div>
+            {% else %}
+            <div
+              class="bg-gray-50 border border-gray-100 rounded-2xl p-5 text-center text-sm text-gray-400"
+            >
+              <i class="fas fa-info-circle mr-1"></i> The doctor did not leave
+              any medical notes for this session.
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Footer Action -->
+        <div
+          class="bg-gray-50 px-6 py-5 border-t border-gray-100 flex flex-col sm:flex-row gap-3 justify-between items-center"
+        >
+          <div class="text-xs text-gray-400 text-center sm:text-left">
+            Completed on {{ appointment.completed_at.strftime('%d %b %Y, %H:%M')
+            if appointment.completed_at else '-' }} WIB
+          </div>
+          <a
+            href="{{ url_for('app_routes.chat_room', appointment_id=appointment.id) }}"
+            class="bg-[#0b3925] hover:bg-[#1a5a3a] text-white font-semibold py-2.5 px-6 rounded-xl text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2 w-full sm:w-auto justify-center"
+          >
+            <i class="fas fa-comments"></i> View Chat History
+          </a>
+        </div>
+      </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+  </body>
+</html>

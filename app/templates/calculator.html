@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -124,9 +124,9 @@
           <div
             class="bg-white rounded-2xl shadow-xl animate-fade-in-up animation-delay-100 border border-gray-100 overflow-hidden"
           >
-            <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-3">
-              
-            </div>
+            <div
+              class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-3"
+            ></div>
 
             <form
               method="post"
@@ -154,25 +154,25 @@
                     >
                       {% set default_gender = request.form.get('gender') or current_user.gender %}
                       <option value="">Select your gender</option>
-                      <option value="male" {% if default_gender == 'male' %}selected{% endif %}>Male</option>
-                      <option value="female" {% if default_gender == 'female' %}selected{% endif %}>Female</option>
+                      <option value="male" selected="{{ 'selected' if default_gender == 'male' else '' }}">Male</option>
+                      <option value="female" selected="{{ 'selected' if default_gender == 'female' else '' }}">Female</option>
                     </select>
                   </div>
 
                   <div class="space-y-3">
-                      <label class="block text-gray-700 font-medium text-xs"
-                        >Age (years)</label
-                      >
-                      <input
-                        type="number"
-                        name="usia"
-                        min="10"
-                        max="100"
-                        required
-                        class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
-                        placeholder="e.g. 25"
-                        value="{{ request.form.get('usia') or current_user.age or '' }}"
-                      />
+                    <label class="block text-gray-700 font-medium text-xs"
+                      >Age (years)</label
+                    >
+                    <input
+                      type="number"
+                      name="usia"
+                      min="10"
+                      max="100"
+                      required
+                      class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                      placeholder="e.g. 25"
+                      value="{{ request.form.get('usia') or current_user.age or '' }}"
+                    />
                   </div>
                 </div>
 
@@ -201,13 +201,13 @@
                     <input
                       type="number"
                       name="tinggi"
-                    min="100"
-                    max="250"
-                    step="0.1"
-                    required
-                    class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
-                    placeholder="e.g. 175"
-                    value="{{ request.form.get('tinggi') or current_user.height or '' }}"
+                      min="100"
+                      max="250"
+                      step="0.1"
+                      required
+                      class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                      placeholder="e.g. 175"
+                      value="{{ request.form.get('tinggi') or current_user.height or '' }}"
                     />
                   </div>
                 </div>
@@ -233,21 +233,11 @@
                   >
                     {% set default_act = request.form.get('aktivitas') or current_user.activity_level %}
                     <option value="">Choose activity level</option>
-                    <option value="sedentary" {% if default_act == 'sedentary' %}selected{% endif %}>
-                      Sedentary: Little or no exercise (office job)
-                    </option>
-                    <option value="light" {% if default_act == 'light' %}selected{% endif %}>
-                      Lightly Active: Light exercise 1-2 days/week
-                    </option>
-                    <option value="moderate" {% if default_act == 'moderate' %}selected{% endif %}>
-                      Moderately Active: Moderate exercise 3-5 days/week
-                    </option>
-                    <option value="high" {% if default_act == 'high' %}selected{% endif %}>
-                      Very Active: Hard exercise 6-7 days/week
-                    </option>
-                    <option value="extreme" {% if default_act == 'extreme' %}selected{% endif %}>
-                      Extremely Active: Very hard exercise 2x a day/more
-                    </option>
+                    <option value="sedentary" selected="{{ 'selected' if default_act == 'sedentary' else '' }}">Sedentary: Little or no exercise (office job)</option>
+                    <option value="light" selected="{{ 'selected' if default_act == 'light' else '' }}">Lightly Active: Light exercise 1-2 days/week</option>
+                    <option value="moderate" selected="{{ 'selected' if default_act == 'moderate' else '' }}">Moderately Active: Moderate exercise 3-5 days/week</option>
+                    <option value="high" selected="{{ 'selected' if default_act == 'high' else '' }}">Very Active: Hard exercise 6-7 days/week</option>
+                    <option value="extreme" selected="{{ 'selected' if default_act == 'extreme' else '' }}">Extremely Active: Very hard exercise 2x a day/more</option>
                   </select>
                 </div>
               </div>
@@ -272,9 +262,9 @@
                   >
                     {% set default_goal = request.form.get('tujuan') %}
                     <option value="">Select your goal</option>
-                    <option value="turun" {% if default_goal == 'turun' %}selected{% endif %}>Weight Loss (calorie deficit)</option>
-                    <option value="jaga" {% if default_goal == 'jaga' %}selected{% endif %}>Weight Maintenance</option>
-                    <option value="naik" {% if default_goal == 'naik' %}selected{% endif %}>Weight Gain (calorie surplus)</option>
+                    <option value="turun" selected="{{ 'selected' if default_goal == 'turun' else '' }}">Weight Loss (calorie deficit)</option>
+                    <option value="jaga" selected="{{ 'selected' if default_goal == 'jaga' else '' }}">Weight Maintenance</option>
+                    <option value="naik" selected="{{ 'selected' if default_goal == 'naik' else '' }}">Weight Gain (calorie surplus)</option>
                   </select>
                 </div>
               </div>
@@ -292,8 +282,12 @@
           <!-- Results Section dengan styling baru -->
           <div class="sticky top-4 animate-fade-in-up animation-delay-200">
             {% if result %}
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden min-h-[600px]">
-              <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-6 text-center">
+            <div
+              class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden min-h-[600px]"
+            >
+              <div
+                class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-6 text-center"
+              >
                 <h3 class="text-xl font-bold text-gray-100 tracking-tight">
                   {{ result }}
                 </h3>
@@ -304,86 +298,142 @@
 
               <div class="p-6 space-y-4">
                 <!-- BMR Card -->
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                <div
+                  class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100"
+                >
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#cedfc9] rounded-full flex items-center justify-center">
+                    <div
+                      class="w-10 h-10 bg-[#cedfc9] rounded-full flex items-center justify-center"
+                    >
                       <i class="fas fa-heartbeat text-[#0b3925] text-sm"></i>
                     </div>
                     <div>
-                      <span class="font-semibold text-gray-800 text-sm">Basal Metabolic Rate (BMR)</span>
-                      <p class="text-xs text-gray-400">Calories at complete rest</p>
+                      <span class="font-semibold text-gray-800 text-sm"
+                        >Basal Metabolic Rate (BMR)</span
+                      >
+                      <p class="text-xs text-gray-400">
+                        Calories at complete rest
+                      </p>
                     </div>
                   </div>
-                  <span class="font-bold text-[#0b3925] text-lg">{{ bmr|round }} kcal/day</span>
+                  <span class="font-bold text-[#0b3925] text-lg"
+                    >{{ bmr|round }} kcal/day</span
+                  >
                 </div>
 
                 <!-- TDEE Card -->
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                <div
+                  class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100"
+                >
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#cedfc9] rounded-full flex items-center justify-center">
+                    <div
+                      class="w-10 h-10 bg-[#cedfc9] rounded-full flex items-center justify-center"
+                    >
                       <i class="fas fa-fire text-[#0b3925] text-sm"></i>
                     </div>
                     <div>
-                      <span class="font-semibold text-gray-800 text-sm">Total Daily Energy Expenditure (TDEE)</span>
-                      <p class="text-xs text-gray-400">Calories with activity level</p>
+                      <span class="font-semibold text-gray-800 text-sm"
+                        >Total Daily Energy Expenditure (TDEE)</span
+                      >
+                      <p class="text-xs text-gray-400">
+                        Calories with activity level
+                      </p>
                     </div>
                   </div>
-                  <span class="font-bold text-[#0b3925] text-lg">{{ tdee|round }} kcal/day</span>
+                  <span class="font-bold text-[#0b3925] text-lg"
+                    >{{ tdee|round }} kcal/day</span
+                  >
                 </div>
               </div>
 
               {% if meal_type %}
               <div class="border-t border-gray-100 p-6">
-                <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <h4
+                  class="text-md font-semibold text-gray-800 mb-4 flex items-center gap-2"
+                >
                   <i class="fas fa-utensils text-[#0b3925]"></i>
                   Daily Meal Plan Recommendation
                 </h4>
 
                 <div class="space-y-3">
                   <!-- Breakfast -->
-                  <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-xl">
+                  <div
+                    class="flex items-center justify-between p-3 bg-yellow-50 rounded-xl"
+                  >
                     <div class="flex items-center gap-3">
                       <i class="fas fa-sun text-yellow-600 text-md"></i>
-                      <span class="font-semibold text-sm text-gray-700">Breakfast</span>
-                      <p class="text-xs text-gray-500">{{ meal_type.breakfast.name }}</p>
+                      <span class="font-semibold text-sm text-gray-700"
+                        >Breakfast</span
+                      >
+                      <p class="text-xs text-gray-500">
+                        {{ meal_type.breakfast.name }}
+                      </p>
                     </div>
-                    <span class="font-semibold text-yellow-700">{{ meal_type.breakfast.calories }} kcal</span>
+                    <span class="font-semibold text-yellow-700"
+                      >{{ meal_type.breakfast.calories }} kcal</span
+                    >
                   </div>
                   <!-- Lunch -->
-                  <div class="flex items-center justify-between p-3 bg-orange-50 rounded-xl">
+                  <div
+                    class="flex items-center justify-between p-3 bg-orange-50 rounded-xl"
+                  >
                     <div class="flex items-center gap-3">
                       <i class="fas fa-cloud-sun text-orange-600 text-md"></i>
-                      <span class="font-semibold text-sm text-gray-700">Lunch</span>
-                      <p class="text-xs text-gray-500">{{ meal_type.lunch.name }}</p>
+                      <span class="font-semibold text-sm text-gray-700"
+                        >Lunch</span
+                      >
+                      <p class="text-xs text-gray-500">
+                        {{ meal_type.lunch.name }}
+                      </p>
                     </div>
-                    <span class="font-semibold text-orange-700">{{ meal_type.lunch.calories }} kcal</span>
+                    <span class="font-semibold text-orange-700"
+                      >{{ meal_type.lunch.calories }} kcal</span
+                    >
                   </div>
                   <!-- Dinner -->
-                  <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-xl">
+                  <div
+                    class="flex items-center justify-between p-3 bg-indigo-50 rounded-xl"
+                  >
                     <div class="flex items-center gap-3">
                       <i class="fas fa-moon text-indigo-600 text-md"></i>
-                      <span class="font-semibold text-sm text-gray-700">Dinner</span>
-                      <p class="text-xs text-gray-500">{{ meal_type.dinner.name }}</p>
+                      <span class="font-semibold text-sm text-gray-700"
+                        >Dinner</span
+                      >
+                      <p class="text-xs text-gray-500">
+                        {{ meal_type.dinner.name }}
+                      </p>
                     </div>
-                    <span class="font-semibold text-indigo-700">{{ meal_type.dinner.calories }} kcal</span>
+                    <span class="font-semibold text-indigo-700"
+                      >{{ meal_type.dinner.calories }} kcal</span
+                    >
                   </div>
                 </div>
               </div>
               {% endif %}
             </div>
             {% else %}
-            <div class="bg-white rounded-2xl shadow-xl animate-fade-in-up animation-delay-100 border border-gray-100 overflow-hidden min-h-[600px] flex flex-col">
+            <div
+              class="bg-white rounded-2xl shadow-xl animate-fade-in-up animation-delay-100 border border-gray-100 overflow-hidden min-h-[600px] flex flex-col"
+            >
               <!-- Decorative gradient bar - di paling atas -->
-              <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-3"></div>
-              
-              <div class="flex-1 flex flex-col items-center justify-center p-8 md:p-10 text-center">
-                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6 shadow-md">
+              <div
+                class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-6 py-3"
+              ></div>
+
+              <div
+                class="flex-1 flex flex-col items-center justify-center p-8 md:p-10 text-center"
+              >
+                <div
+                  class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6 shadow-md"
+                >
                   <i class="fas fa-calculator text-gray-400 text-4xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold text-gray-500 mb-2">
                   Your Results Will Appear Here
                 </h3>
-                <p class="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">
+                <p
+                  class="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed"
+                >
                   Complete the form with your personal details to receive your
                   customized calorie calculation and nutrition recommendations.
                 </p>

@@ -184,16 +184,27 @@
                 >
                   View Detail
                 </button>
+                {% elif appt.status == 'expired' %}
+                <span
+                  class="text-xs font-semibold text-red-700 bg-red-100 px-3 py-1.5 rounded-full"
+                  >Expired</span
+                >
+                <button
+                  disabled
+                  class="bg-gray-300 text-gray-500 font-medium py-2 px-4 rounded-lg text-sm cursor-not-allowed"
+                >
+                  View Detail
+                </button>
                 {% elif appt.status == 'completed' %}
                 <span
-                  class="text-xs font-semibold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full"
+                  class="text-xs font-semibold text-green-700 bg-green-100 px-3 py-1.5 rounded-full"
                   >Completed</span
                 >
                 <a
-                  href="{{ url_for('app_routes.chat_room', appointment_id=appt.id) }}"
-                  class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg text-sm transition-colors"
+                  href="{{ url_for('app_routes.completed_consultation_detail', appointment_id=appt.id) }}"
+                  class="bg-[#0b3925] hover:bg-[#1a5a3a] text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors"
                 >
-                  View History
+                  View Detail
                 </a>
                 {% endif %}
               </div>

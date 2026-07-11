@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -99,51 +99,296 @@
                 class="p-4 border-b border-gray-200 bg-gray-50/50 rounded-t-2xl"
               >
                 <h3 class="font-semibold text-gray-700">
-                  {{ date.strftime('%A, %d %B %Y') }} {% if date == now().date() %}<span class="text-xs font-normal text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full ml-2">Today</span>{% endif %}
+                  {{ date.strftime('%A, %d %B %Y') }} {% if date == now().date()
+                  %}<span
+                    class="text-xs font-normal text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full ml-2"
+                    >Today</span
+                  >{% endif %}
                 </h3>
               </div>
               {% if appointments_on_day %}
-                <div class="p-4 space-y-3">
-                  {% for appt in appointments_on_day %}
-                  <div
-                    class="p-3 border rounded-xl hover:bg-gray-50 transition-colors flex justify-between items-center gap-4"
-                  >
-                    <div class="flex items-center gap-4">
-                      <div
-                        class="w-12 h-12 bg-[#cedfc9] rounded-lg flex items-center justify-center text-[#0b3925] flex-shrink-0"
-                      >
-                        <i class="fas fa-user-clock text-2xl"></i>
-                      </div>
-                      <div>
-                        <p class="font-semibold text-gray-800">
-                          {{ appt.patient.name or appt.patient.username }}
-                        </p>
-                        <p class="text-sm text-gray-500 mt-1">
-                          <i class="far fa-clock text-xs mr-1"></i>
-                          {{ appt.appointment_time.strftime('%H:%M') }} - {{ (appt.appointment_time + timedelta(hours=1)).strftime('%H:%M') }}
-                        </p>
-                      </div>
-                    </div>
-                    <a
-                      href="{{ url_for('app_routes.chat_room', appointment_id=appt.id) }}"
-                      class="w-10 h-10 bg-gray-200 hover:bg-[#0b3925] hover:text-white text-gray-600 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+              <div class="p-4 space-y-3">
+                {% for appt in appointments_on_day %}
+                <div
+                  class="p-3 border rounded-xl hover:bg-gray-50 transition-colors flex justify-between items-center gap-4"
+                >
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-12 h-12 bg-[#cedfc9] rounded-lg flex items-center justify-center text-[#0b3925] flex-shrink-0"
                     >
-                      <i class="fas fa-arrow-right"></i>
-                    </a>
+                      <i class="fas fa-user-clock text-2xl"></i>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-gray-800">
+                        {{ appt.patient.name or appt.patient.username }}
+                      </p>
+                      <p class="text-sm text-gray-500 mt-1">
+                        <i class="far fa-clock text-xs mr-1"></i>
+                        {{ appt.appointment_time.strftime('%H:%M') }} - {{
+                        (appt.appointment_time +
+                        timedelta(hours=1)).strftime('%H:%M') }}
+                      </p>
+                    </div>
                   </div>
-                  {% endfor %}
+                  <a
+                    href="{{ url_for('app_routes.chat_room', appointment_id=appt.id) }}"
+                    class="w-10 h-10 bg-gray-200 hover:bg-[#0b3925] hover:text-white text-gray-600 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+                  >
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
                 </div>
+                {% endfor %}
+              </div>
               {% else %}
-                <div class="p-6 text-center text-sm text-gray-400">
-                  <i class="fas fa-calendar-check mr-2"></i>
-                  No appointments scheduled for this day.
-                </div>
+              <div class="p-6 text-center text-sm text-gray-400">
+                <i class="fas fa-calendar-check mr-2"></i>
+                No appointments scheduled for this day.
+              </div>
               {% endif %}
             </div>
             {% endfor %}
           </div>
+
+          <!-- Consultation History (Completed Appointments) -->
+          <div class="mt-10 animate-fade-in-up" style="animation-delay: 0.12s">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+              Consultation History (Completed)
+            </h2>
+            {% if completed_appointments %}
+            <div
+              class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden divide-y divide-gray-100"
+            >
+              {% for appt in completed_appointments %}
+              <div
+                class="p-5 hover:bg-gray-50/50 transition-colors flex justify-between items-center gap-4"
+              >
+                <div class="flex items-center gap-4 overflow-hidden">
+                  <div
+                    class="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-700 flex-shrink-0"
+                  >
+                    <i class="fas fa-check-circle text-2xl"></i>
+                  </div>
+                  <div class="overflow-hidden">
+                    <p class="font-bold text-gray-800">
+                      {{ appt.patient.name or appt.patient.username }}
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                      <i class="far fa-calendar-alt mr-1"></i>
+                      {{ appt.appointment_time.strftime('%d %b %Y, %H:%M') }}
+                      WIB
+                    </p>
+                    {% if appt.doctor_notes %}
+                    <p
+                      class="text-[11px] text-emerald-800 bg-emerald-50/50 px-2 py-0.5 rounded border border-emerald-100/50 mt-1.5 inline-block font-medium max-w-xs md:max-w-md truncate"
+                      title="{{ appt.doctor_notes }}"
+                    >
+                      Notes: {{ appt.doctor_notes }}
+                    </p>
+                    {% endif %}
+                  </div>
+                </div>
+                <a
+                  href="{{ url_for('app_routes.completed_consultation_detail', appointment_id=appt.id) }}"
+                  class="bg-gray-100 hover:bg-[#0b3925] hover:text-white text-[#0b3925] font-semibold py-2 px-4 rounded-xl text-xs transition-colors flex items-center gap-1 flex-shrink-0"
+                >
+                  Details <i class="fas fa-chevron-right text-[9px]"></i>
+                </a>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div
+              class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center text-sm text-gray-400"
+            >
+              <i
+                class="fas fa-folder-open text-3xl block mb-2 text-gray-300"
+              ></i>
+              No completed consultation history yet.
+            </div>
+            {% endif %}
+          </div>
         </div>
 
+        <!-- Sidebar Jadwal Praktek (Right Column) -->
+        <div
+          class="lg:col-span-1 animate-fade-in-up space-y-6 pt-12"
+          style="animation-delay: 0.15s"
+        >
+          <!-- Schedule Change Proposal Status -->
+          <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
+          >
+            <h3
+              class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"
+            >
+              <i class="fas fa-calendar-alt text-[#0b3925]"></i>
+              Proposal Status
+            </h3>
+
+            {% if pending_proposal %}
+            <!-- Jika ada pengajuan pending -->
+            <div
+              class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4"
+            >
+              <div class="flex items-center gap-2 mb-2">
+                <span
+                  class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"
+                ></span>
+                <span
+                  class="text-xs font-bold text-amber-800 uppercase tracking-wider"
+                  >Pending Approval</span
+                >
+              </div>
+              <p class="text-xs text-amber-700 leading-relaxed">
+                Your schedule change proposal is pending review by the
+                administrator.
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <a
+                href="{{ url_for('app_routes.propose_schedule') }}"
+                class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-900 text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-edit"></i> Edit Proposal
+              </a>
+              <form
+                action="{{ url_for('app_routes.cancel_schedule_proposal') }}"
+                method="POST"
+                class="inline"
+                onsubmit="
+                  return confirm(
+                    'Are you sure you want to cancel this proposal?',
+                  );
+                "
+              >
+                <button
+                  type="submit"
+                  class="bg-red-50 hover:bg-red-100 text-red-600 p-2.5 rounded-xl border border-red-200 text-xs font-bold transition-all flex items-center justify-center hover:shadow-sm"
+                  title="Cancel Proposal"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            </div>
+            {% elif latest_proposal %} {% if latest_proposal.status ==
+            'approved' and latest_proposal.effective_date and
+            latest_proposal.effective_date > now().date() %}
+            <!-- Jika pengajuan disetujui tapi belum aktif -->
+            <div
+              class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4"
+            >
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span
+                  class="text-xs font-bold text-emerald-800 uppercase tracking-wider"
+                  >Approved (Not Active Yet)</span
+                >
+              </div>
+              <p class="text-xs text-emerald-700 leading-relaxed">
+                Schedule change proposal approved!<br />
+                <strong>New schedule takes effect on:</strong><br />
+                <span class="text-sm font-semibold block mt-1"
+                  >{{ latest_proposal.effective_date.strftime('%A, %d %B %Y')
+                  }}</span
+                >
+              </p>
+            </div>
+            <a
+              href="{{ url_for('app_routes.propose_schedule') }}"
+              class="w-full bg-[#0b3925] hover:bg-[#072417] text-white text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-sm block"
+            >
+              Submit New Change
+            </a>
+            {% elif latest_proposal.status == 'rejected' %}
+            <!-- Jika pengajuan ditolak -->
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                <span
+                  class="text-xs font-bold text-red-800 uppercase tracking-wider"
+                  >Rejected</span
+                >
+              </div>
+              <p class="text-xs text-red-700 leading-relaxed">
+                Your last proposal was rejected by the admin.
+              </p>
+              {% if latest_proposal.admin_notes %}
+              <p
+                class="text-xs text-red-900 bg-red-100/60 rounded p-2 mt-2 border border-red-200 font-medium"
+              >
+                <strong>Reason:</strong> {{ latest_proposal.admin_notes }}
+              </p>
+              {% endif %}
+            </div>
+            <a
+              href="{{ url_for('app_routes.propose_schedule') }}"
+              class="w-full bg-[#0b3925] hover:bg-[#072417] text-white text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-sm block"
+            >
+              Submit New Change
+            </a>
+            {% else %}
+            <a
+              href="{{ url_for('app_routes.propose_schedule') }}"
+              class="w-full bg-[#0b3925] hover:bg-[#072417] text-white text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-sm block"
+            >
+              Submit Schedule Proposal
+            </a>
+            {% endif %} {% else %}
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">
+              You can submit changes to your consultation practice days and
+              times here.
+            </p>
+            <a
+              href="{{ url_for('app_routes.propose_schedule') }}"
+              class="w-full bg-[#0b3925] hover:bg-[#072417] text-white text-center py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-sm block"
+            >
+              Submit Schedule Proposal
+            </a>
+            {% endif %}
+          </div>
+
+          <!-- Active Practice Schedule -->
+          <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6"
+          >
+            <h3
+              class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"
+            >
+              <i class="fas fa-clock text-[#0b3925]"></i>
+              Active Practice Schedule
+            </h3>
+
+            {% set day_map = { 'Monday': 'Monday', 'Tuesday': 'Tuesday',
+            'Wednesday': 'Wednesday', 'Thursday': 'Thursday', 'Friday':
+            'Friday', 'Saturday': 'Saturday', 'Sunday': 'Sunday' } %}
+
+            <div class="space-y-4">
+              {% set has_schedule = false %} {% for day_eng, day_label in
+              day_map.items() %} {% if day_eng in current_schedule and
+              current_schedule[day_eng] %} {% set has_schedule = true %}
+              <div class="border-b border-gray-50 pb-3 last:border-0 last:pb-0">
+                <h4 class="font-bold text-gray-800 text-sm mb-1.5">
+                  {{ day_label }}
+                </h4>
+                <div class="flex flex-wrap gap-1.5">
+                  {% for slot in current_schedule[day_eng] %}
+                  <span
+                    class="bg-[#cedfc9]/55 text-[#0b3925] text-xs font-semibold py-1 px-2.5 rounded-lg border border-[#cedfc9]/90"
+                  >
+                    {{ slot }}
+                  </span>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %} {% endfor %} {% if not has_schedule %}
+              <div class="text-center py-6 text-gray-400 text-sm">
+                <i class="far fa-calendar-times text-2xl block mb-2"></i>
+                No active practice schedule yet.
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 

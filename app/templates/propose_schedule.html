@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/svg+xml"
+    />
+    <title>Submit Practice Schedule | HealthyMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow max-w-4xl w-full mx-auto pt-8 pb-16 px-6">
+      <!-- Breadcrumb / Back Button -->
+      <div class="animate-fade-in mb-6">
+        <a
+          href="{{ url_for('app_routes.doctor_dashboard') }}"
+          class="text-[#0b3925] hover:text-[#072417] text-sm font-semibold flex items-center gap-2 transition-colors"
+        >
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+      </div>
+
+      <!-- Header -->
+      <div class="animate-fade-in mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+          Submit Practice Schedule Change
+        </h1>
+        <p class="text-gray-500 text-sm md:text-base mt-2">
+          Use the panel below to change your practice days and times. This
+          proposal requires administrator approval and will take effect on the
+          following Sunday after approval.
+        </p>
+      </div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="mb-6 animate-fade-in">
+        {% for category, message in messages %}
+        <div
+          class="px-4 py-3 rounded-xl text-sm flex items-center gap-3 {% if category == 'success' %}bg-emerald-50 text-emerald-700 border-l-4 border-emerald-500{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}"
+        >
+          <i
+            class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"
+          ></i>
+          <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Warning if editing pending proposal -->
+      {% if pending_proposal %}
+      <div
+        class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 flex items-start gap-3 animate-fade-in"
+      >
+        <i class="fas fa-info-circle text-amber-500 text-lg mt-0.5"></i>
+        <div>
+          <h4 class="font-bold text-amber-800 text-sm">
+            Active Proposal Edit Mode
+          </h4>
+          <p class="text-xs text-amber-700 mt-1 leading-relaxed">
+            You have a pending schedule proposal. Submitting this form will
+            update your current proposal.
+          </p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Schedule Builder Card -->
+      <div
+        class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-8 animate-fade-in"
+        style="animation-delay: 0.1s"
+      >
+        <form
+          id="scheduleForm"
+          action="{{ url_for('app_routes.propose_schedule') }}"
+          method="POST"
+        >
+          <input type="hidden" name="schedule_json" id="schedule_json" />
+
+          <div class="space-y-6">
+            {% set day_map = [ ('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
+            ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'), ('Friday',
+            'Friday'), ('Saturday', 'Saturday'), ('Sunday', 'Sunday') ] %} {%
+            for day_eng, day_label in day_map %}
+            <div
+              class="p-5 bg-gray-50/50 rounded-2xl border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-gray-200 transition-all"
+            >
+              <div class="md:w-1/4">
+                <h3
+                  class="font-bold text-gray-800 text-base md:text-lg flex items-center gap-2"
+                >
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                  {{ day_label }}
+                </h3>
+                <span
+                  class="text-xs text-gray-400 font-medium uppercase tracking-wider block mt-0.5"
+                  >{{ day_eng }}</span
+                >
+              </div>
+
+              <!-- Slots Container -->
+              <div class="flex-grow md:w-1/2">
+                <div id="slots-{{ day_eng }}" class="flex flex-wrap gap-2">
+                  <!-- Badges will be generated here dynamically by JS -->
+                </div>
+                <div
+                  id="no-slots-{{ day_eng }}"
+                  class="text-xs text-gray-400 italic"
+                >
+                  No sessions scheduled for this day.
+                </div>
+              </div>
+
+              <!-- Add Slot Form Helper -->
+              <div class="md:w-1/4 flex items-center gap-2 flex-shrink-0">
+                <input
+                  type="time"
+                  id="input-{{ day_eng }}"
+                  class="bg-white border border-gray-200 text-gray-800 text-sm rounded-xl px-3 py-2 focus:ring-1 focus:ring-[#0b3925] focus:border-[#0b3925] block w-full shadow-sm"
+                />
+                <button
+                  type="button"
+                  onclick="addTimeSlot('{{ day_eng }}')"
+                  class="bg-[#0b3925] hover:bg-[#072417] text-white p-2.5 rounded-xl font-medium transition-colors shadow-sm flex items-center justify-center flex-shrink-0"
+                  title="Add Session"
+                >
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Form Actions -->
+          <div
+            class="border-t border-gray-100 mt-8 pt-6 flex justify-end gap-3"
+          >
+            <a
+              href="{{ url_for('app_routes.doctor_dashboard') }}"
+              class="px-6 py-3 border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl text-sm font-semibold transition-colors"
+            >
+              Cancel
+            </a>
+            <button
+              type="submit"
+              class="px-6 py-3 bg-[#0b3925] hover:bg-[#072417] text-white rounded-xl text-sm font-semibold transition-colors shadow-md shadow-[#0b3925]/20 flex items-center gap-2"
+            >
+              <i class="fas fa-paper-plane"></i> Submit Proposal
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+
+    <script id="initial-schedule-data" type="application/json">
+      {{ initial_schedule|tojson|safe }}
+    </script>
+
+    <script>
+      // Load initial schedule from backend
+      // It is passed as python dict, rendered to JSON
+      let scheduleData = JSON.parse(
+        document.getElementById("initial-schedule-data").textContent,
+      );
+
+      // Ensure all 7 days exist in the object
+      const DAYS_OF_WEEK = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
+      DAYS_OF_WEEK.forEach((day) => {
+        if (!scheduleData[day]) {
+          scheduleData[day] = [];
+        }
+      });
+
+      // Render slots on startup
+      document.addEventListener("DOMContentLoaded", () => {
+        renderAllSlots();
+        updateHiddenInput();
+      });
+
+      // Render a single day's slot badges
+      function renderDaySlots(day) {
+        const container = document.getElementById(`slots-${day}`);
+        const noSlotsText = document.getElementById(`no-slots-${day}`);
+        container.innerHTML = "";
+
+        const slots = scheduleData[day] || [];
+
+        if (slots.length === 0) {
+          noSlotsText.classList.remove("hidden");
+        } else {
+          noSlotsText.classList.add("hidden");
+
+          // Sort slots chronologically
+          slots.sort();
+
+          slots.forEach((time) => {
+            const badge = document.createElement("div");
+            badge.className =
+              "bg-[#cedfc9]/55 border border-[#cedfc9] text-[#0b3925] text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-sm group animate-fade-in";
+            badge.innerHTML = `
+              <span>${time}</span>
+              <button type="button" onclick="removeTimeSlot('${day}', '${time}')" class="text-emerald-800 hover:text-red-600 transition-colors focus:outline-none">
+                <i class="fas fa-times text-[10px]"></i>
+              </button>
+            `;
+            container.appendChild(badge);
+          });
+        }
+      }
+
+      function renderAllSlots() {
+        DAYS_OF_WEEK.forEach((day) => {
+          renderDaySlots(day);
+        });
+      }
+
+      // Add a slot to a day
+      // Add a slot to a day
+      function addTimeSlot(day) {
+        const input = document.getElementById(`input-${day}`);
+        const timeVal = input.value;
+
+        if (!timeVal) {
+          alert("Please select a time first.");
+          return;
+        }
+
+        // Avoid duplicates
+        if (scheduleData[day].includes(timeVal)) {
+          alert("This time slot already exists for this day.");
+          return;
+        }
+
+        scheduleData[day].push(timeVal);
+        renderDaySlots(day);
+        updateHiddenInput();
+        input.value = ""; // reset input
+      }
+
+      // Remove a slot from a day
+      function removeTimeSlot(day, time) {
+        scheduleData[day] = scheduleData[day].filter((t) => t !== time);
+        renderDaySlots(day);
+        updateHiddenInput();
+      }
+
+      // Sync data object with hidden form input
+      function updateHiddenInput() {
+        // Only keep days with slots to keep DB entries clean, or send empty array
+        const cleanedData = {};
+        DAYS_OF_WEEK.forEach((day) => {
+          if (scheduleData[day] && scheduleData[day].length > 0) {
+            cleanedData[day] = scheduleData[day];
+          }
+        });
+        document.getElementById("schedule_json").value =
+          JSON.stringify(cleanedData);
+      }
+
+      // Intercept submit to make sure schedule is not empty
+      document
+        .getElementById("scheduleForm")
+        .addEventListener("submit", (e) => {
+          updateHiddenInput();
+          const jsonVal = document.getElementById("schedule_json").value;
+          const parsed = JSON.parse(jsonVal);
+
+          let totalSlots = 0;
+          Object.keys(parsed).forEach((day) => {
+            totalSlots += parsed[day].length;
+          });
+
+          if (totalSlots === 0) {
+            e.preventDefault();
+            alert(
+              "Schedule cannot be empty! You must add at least one practice session.",
+            );
+          }
+        });
+    </script>
+  </body>
+</html>

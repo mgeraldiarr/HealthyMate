@@ -68,7 +68,14 @@
     <main class="flex-grow max-w-4xl w-full mx-auto pt-10 pb-16 px-6">
       <!-- Header -->
       <div class="animate-fade-in-up mb-4">
-        {% if current_user.role == 'doctor' %}
+        {% if appointment.status == 'completed' %}
+        <a
+          href="{{ url_for('app_routes.completed_consultation_detail', appointment_id=appointment.id) }}"
+          class="text-sm text-gray-500 hover:text-gray-800 transition-colors mb-2 inline-block font-medium"
+        >
+          <i class="fas fa-arrow-left mr-2"></i>Back to Consultation Summary
+        </a>
+        {% else %} {% if current_user.role == 'doctor' %}
         <a
           href="{{ url_for('app_routes.doctor_dashboard') }}"
           class="text-sm text-gray-500 hover:text-gray-800 transition-colors mb-2 inline-block"
@@ -82,7 +89,7 @@
         >
           <i class="fas fa-arrow-left mr-2"></i>Back to My Appointments
         </a>
-        {% endif %}
+        {% endif %} {% endif %}
       </div>
 
       <!-- Confirmation Screen -->
@@ -93,35 +100,45 @@
       >
         <div class="max-w-md mx-auto flex flex-col items-center w-full">
           <!-- Icon container -->
-          <div class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center text-[#0b3925] mb-6">
+          <div
+            class="w-20 h-20 bg-[#cedfc9] rounded-full flex items-center justify-center text-[#0b3925] mb-6"
+          >
             {% if is_chat_active %}
-              <i class="fas fa-comments text-4xl"></i>
+            <i class="fas fa-comments text-4xl"></i>
             {% else %}
-              <i class="fas fa-lock text-4xl"></i>
+            <i class="fas fa-lock text-4xl"></i>
             {% endif %}
           </div>
 
-          <h2 class="text-2xl font-bold text-gray-800 mb-2">Konfirmasi Ruang Chat</h2>
-          <p class="text-sm text-gray-500 mb-6">Silakan konfirmasi detail sesi konsultasi Anda sebelum masuk ke ruang chat.</p>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">
+            Confirm Chat Room
+          </h2>
+          <p class="text-sm text-gray-500 mb-6">
+            Please confirm your consultation session details before entering the
+            chat room.
+          </p>
 
           <!-- Appointment Info Box -->
-          <div class="w-full bg-gray-50 rounded-2xl p-5 border border-gray-200 text-left space-y-3 mb-8">
+          <div
+            class="w-full bg-gray-50 rounded-2xl p-5 border border-gray-200 text-left space-y-3 mb-8"
+          >
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-[#0b3925] rounded-full flex items-center justify-center text-white font-bold">
-                {% if current_user.role == 'doctor' %}
-                  {{ (appointment.patient.name or appointment.patient.username)[0] | upper }}
-                {% else %}
-                  {{ appointment.doctor.name[0] | upper }}
-                {% endif %}
+              <div
+                class="w-10 h-10 bg-[#0b3925] rounded-full flex items-center justify-center text-white font-bold"
+              >
+                {% if current_user.role == 'doctor' %} {{
+                (appointment.patient.name or appointment.patient.username)[0] |
+                upper }} {% else %} {{ appointment.doctor.name[0] | upper }} {%
+                endif %}
               </div>
               <div>
-                <span class="text-xs text-gray-400 block font-medium">PARTNER KONSULTASI</span>
+                <span class="text-xs text-gray-400 block font-medium"
+                  >CONSULTATION PARTNER</span
+                >
                 <span class="font-semibold text-gray-800">
-                  {% if current_user.role == 'doctor' %}
-                    {{ appointment.patient.name or appointment.patient.username }}
-                  {% else %}
-                    Dr. {{ appointment.doctor.name }}
-                  {% endif %}
+                  {% if current_user.role == 'doctor' %} {{
+                  appointment.patient.name or appointment.patient.username }} {%
+                  else %} Dr. {{ appointment.doctor.name }} {% endif %}
                 </span>
               </div>
             </div>
@@ -133,9 +150,12 @@
                 <i class="fas fa-calendar-alt text-lg"></i>
               </div>
               <div>
-                <span class="text-xs text-gray-400 block font-medium">JADWAL KONSULTASI</span>
+                <span class="text-xs text-gray-400 block font-medium"
+                  >CONSULTATION SCHEDULE</span
+                >
                 <span class="text-sm font-medium text-gray-700">
-                  {{ appointment.appointment_time.strftime('%A, %d %b %Y at %H:%M') }} WIB
+                  {{ appointment.appointment_time.strftime('%A, %d %b %Y at
+                  %H:%M') }} WIB
                 </span>
               </div>
             </div>
@@ -145,26 +165,37 @@
                 <i class="fas fa-info-circle text-lg"></i>
               </div>
               <div>
-                <span class="text-xs text-gray-400 block font-medium">STATUS</span>
-                {% if appointment.status == 'approved' %}
-                  {% if is_chat_active %}
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-                      Berlangsung (Aktif)
-                    </span>
-                  {% else %}
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-                      Disetujui (Belum Mulai / Selesai)
-                    </span>
-                  {% endif %}
-                {% elif appointment.status == 'pending' %}
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
-                    Menunggu Persetujuan
-                  </span>
+                <span class="text-xs text-gray-400 block font-medium"
+                  >STATUS</span
+                >
+                {% if appointment.status == 'approved' %} {% if is_chat_active
+                %}
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800"
+                >
+                  <span
+                    class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"
+                  ></span>
+                  In Progress (Active)
+                </span>
                 {% else %}
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
-                    Selesai / Berakhir
-                  </span>
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"
+                >
+                  Approved (Not Started / Completed)
+                </span>
+                {% endif %} {% elif appointment.status == 'pending' %}
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800"
+                >
+                  Waiting for Approval
+                </span>
+                {% else %}
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
+                >
+                  Completed / Ended
+                </span>
                 {% endif %}
               </div>
             </div>
@@ -172,44 +203,54 @@
 
           <!-- Alert message if disabled -->
           {% if not is_chat_active %}
-            <div class="flex items-center gap-2 text-xs text-red-600 bg-red-50 px-4 py-3 rounded-xl border border-red-100 mb-6 text-left w-full">
-              <i class="fas fa-exclamation-triangle flex-shrink-0 mt-0.5"></i>
-              <span>
-                {% if appointment.status == 'pending' %}
-                  Konsultasi masih menunggu persetujuan admin.
-                {% elif appointment.status in ['expired', 'completed', 'rejected'] %}
-                  Sesi konsultasi ini telah berakhir atau dibatalkan.
-                {% else %}
-                  Ruang chat hanya dapat diakses sesuai jadwal konsultasi (aktif selama 1 jam sejak jadwal dimulai).
-                {% endif %}
-              </span>
-            </div>
+          <div
+            class="flex items-center gap-2 text-xs text-red-600 bg-red-50 px-4 py-3 rounded-xl border border-red-100 mb-6 text-left w-full"
+          >
+            <i class="fas fa-exclamation-triangle flex-shrink-0 mt-0.5"></i>
+            <span>
+              {% if appointment.status == 'pending' %} Consultation is still
+              waiting for admin approval. {% elif appointment.status in
+              ['expired', 'completed', 'rejected'] %} This consultation session
+              has ended or been cancelled. {% else %} The chat room is only
+              accessible according to the schedule (active for 1 hour from
+              start). {% endif %}
+            </span>
+          </div>
           {% endif %}
 
           <!-- CTA Buttons -->
           <div class="flex gap-4 w-full">
             {% if current_user.role == 'doctor' %}
-              <a href="{{ url_for('app_routes.doctor_dashboard') }}" class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all text-sm">
-                Kembali
-              </a>
+            <a
+              href="{{ url_for('app_routes.doctor_dashboard') }}"
+              class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all text-sm animate-fade-in-up"
+            >
+              Back
+            </a>
             {% else %}
-              <a href="{{ url_for('app_routes.my_appointments') }}" class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all text-sm">
-                Kembali
-              </a>
+            <a
+              href="{{ url_for('app_routes.my_appointments') }}"
+              class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all text-sm animate-fade-in-up"
+            >
+              Back
+            </a>
             {% endif %}
 
             <button
               id="start-chat-btn"
-              {% if not is_chat_active %} disabled {% endif %}
-              class="flex-1 px-6 py-3 text-white font-semibold rounded-xl transition-all text-sm flex items-center justify-center gap-2
-              {% if is_chat_active %}
-                bg-[#0b3925] hover:bg-[#154c34] hover:shadow-lg shadow-md cursor-pointer
-              {% else %}
-                bg-gray-300 text-gray-500 cursor-not-allowed
-              {% endif %}"
+              {%
+              if
+              not
+              is_chat_active
+              %}
+              disabled
+              {%
+              endif
+              %}
+              class="flex-1 px-6 py-3 text-white font-semibold rounded-xl transition-all text-sm flex items-center justify-center gap-2 {% if is_chat_active %} bg-[#0b3925] hover:bg-[#154c34] hover:shadow-lg shadow-md cursor-pointer {% else %} bg-gray-300 text-gray-500 cursor-not-allowed {% endif %}"
             >
               <i class="fas fa-comments text-xs"></i>
-              Lanjut ke Chat
+              Continue to Chat
             </button>
           </div>
         </div>
@@ -229,19 +270,16 @@
             <div
               class="w-12 h-12 bg-[#0b3925] rounded-full flex items-center justify-center text-white font-bold text-xl"
             >
-              {% if current_user.role == 'doctor' %}
-                {{ (appointment.patient.name or appointment.patient.username)[0] | upper }}
-              {% else %}
-                {{ appointment.doctor.name[0] | upper }}
-              {% endif %}
+              {% if current_user.role == 'doctor' %} {{
+              (appointment.patient.name or appointment.patient.username)[0] |
+              upper }} {% else %} {{ appointment.doctor.name[0] | upper }} {%
+              endif %}
             </div>
             <div>
               <h2 class="font-semibold text-gray-800">
-                {% if current_user.role == 'doctor' %}
-                  {{ appointment.patient.name or appointment.patient.username }}
-                {% else %}
-                  Dr. {{ appointment.doctor.name }}
-                {% endif %}
+                {% if current_user.role == 'doctor' %} {{
+                appointment.patient.name or appointment.patient.username }} {%
+                else %} Dr. {{ appointment.doctor.name }} {% endif %}
               </h2>
               <p class="text-xs text-gray-500">Online</p>
             </div>
@@ -286,10 +324,10 @@
                 <span>{{ message.timestamp.strftime('%H:%M') }}</span>
                 {% if message.is_read %}
                 <i class="fas fa-check-double text-xs text-sky-400"></i>
-                <!-- Sudah dibaca -->
+                <!-- Read -->
                 {% else %}
                 <i class="fas fa-check text-xs"></i>
-                <!-- Terkirim -->
+                <!-- Sent -->
                 {% endif %}
               </div>
             </div>
@@ -363,44 +401,119 @@
         style="animation-duration: 0.3s"
       >
         {% if current_user.role == 'doctor' %}
-        <!-- Patient Details -->
+        <!-- Patient Details Wrapper -->
+        <div id="patient-profile-wrapper">
+          <div
+            class="w-20 h-20 bg-[#0b3925] rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg text-white text-4xl font-semibold"
+          >
+            {{ (appointment.patient.name or appointment.patient.username)[0] |
+            upper }}
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800">
+            {{ appointment.patient.name or appointment.patient.username }}
+          </h3>
+          <p class="text-gray-500 text-sm mb-4">Patient Profile</p>
+          <div
+            class="text-left space-y-3 bg-gray-50 p-4 rounded-xl border mb-4"
+          >
+            <p class="text-sm text-gray-600">
+              <i class="fas fa-venus-mars w-5 text-[#0b3925]"></i>
+              <strong>Gender:</strong>
+              <span class="capitalize"
+                >{{ appointment.patient.gender or '-' }}</span
+              >
+            </p>
+            <p class="text-sm text-gray-600">
+              <i class="fas fa-birthday-cake w-5 text-[#0b3925]"></i>
+              <strong>Age:</strong> {{ appointment.patient.age or '-' }} years
+              old
+            </p>
+            <p class="text-sm text-gray-600">
+              <i class="fas fa-weight w-5 text-[#0b3925]"></i>
+              <strong>Weight:</strong> {{ appointment.patient.weight or '-' }}
+              kg
+            </p>
+            <p class="text-sm text-gray-600">
+              <i class="fas fa-ruler-vertical w-5 text-[#0b3925]"></i>
+              <strong>Height:</strong> {{ appointment.patient.height or '-' }}
+              cm
+            </p>
+            <p class="text-sm text-gray-600">
+              <i class="fas fa-running w-5 text-[#0b3925]"></i>
+              <strong>Activity:</strong>
+              <span class="capitalize"
+                >{{ appointment.patient.activity_level or '-' }}</span
+              >
+            </p>
+            <hr class="border-gray-200" />
+            <p class="text-sm text-gray-600">
+              <i class="fas fa-comment-medical w-5 text-[#0b3925]"></i>
+              <strong>Topic/Complaint:</strong> "{{ appointment.complaint }}"
+            </p>
+          </div>
+          {% if is_chat_active %}
+          <button
+            id="show-complete-form-btn"
+            type="button"
+            class="w-full px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium transition-colors text-sm shadow-sm flex items-center justify-center gap-1.5"
+          >
+            <i class="fas fa-check-circle"></i> Mark Consultation as Completed
+          </button>
+          {% endif %}
+        </div>
+
+        {% if is_chat_active %}
+        <!-- Complete Consultation Form (Hidden by default) -->
         <div
-          class="w-20 h-20 bg-[#0b3925] rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg text-white text-4xl font-semibold"
+          id="complete-consultation-section"
+          class="hidden text-left space-y-3"
         >
-          {{ (appointment.patient.name or appointment.patient.username)[0] | upper }}
+          <div
+            class="flex items-center gap-2 text-emerald-800 bg-emerald-50 px-3 py-2.5 rounded-xl border border-emerald-100 mb-3"
+          >
+            <i class="fas fa-info-circle flex-shrink-0 text-sm"></i>
+            <span class="text-[11px] font-medium leading-relaxed"
+              >The chat session will be closed permanently once completed.</span
+            >
+          </div>
+          <h3 class="text-lg font-bold text-gray-800">
+            End Consultation Session
+          </h3>
+          <form
+            action="{{ url_for('app_routes.complete_consultation', appointment_id=appointment.id) }}"
+            method="POST"
+            class="space-y-4"
+          >
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2"
+                >Doctor's Notes (Optional)</label
+              >
+              <textarea
+                name="doctor_notes"
+                placeholder="Write dietary suggestions, nutrition tips, prescription or other medical advice here..."
+                rows="4"
+                class="w-full text-xs border border-gray-300 focus:border-emerald-500 rounded-xl px-3 py-2.5 outline-none transition-colors bg-white resize-none"
+              ></textarea>
+            </div>
+            <div class="flex gap-3">
+              <button
+                id="cancel-complete-btn"
+                type="button"
+                class="flex-1 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition-colors border"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shadow-sm"
+              >
+                Complete
+              </button>
+            </div>
+          </form>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800">
-          {{ appointment.patient.name or appointment.patient.username }}
-        </h3>
-        <p class="text-gray-500 text-sm mb-4">Patient Profile</p>
-        <div class="text-left space-y-3 bg-gray-50 p-4 rounded-xl border">
-          <p class="text-sm text-gray-600">
-            <i class="fas fa-venus-mars w-5 text-[#0b3925]"></i>
-            <strong>Gender:</strong> <span class="capitalize">{{ appointment.patient.gender or '-' }}</span>
-          </p>
-          <p class="text-sm text-gray-600">
-            <i class="fas fa-birthday-cake w-5 text-[#0b3925]"></i>
-            <strong>Age:</strong> {{ appointment.patient.age or '-' }} years old
-          </p>
-          <p class="text-sm text-gray-600">
-            <i class="fas fa-weight w-5 text-[#0b3925]"></i>
-            <strong>Weight:</strong> {{ appointment.patient.weight or '-' }} kg
-          </p>
-          <p class="text-sm text-gray-600">
-            <i class="fas fa-ruler-vertical w-5 text-[#0b3925]"></i>
-            <strong>Height:</strong> {{ appointment.patient.height or '-' }} cm
-          </p>
-          <p class="text-sm text-gray-600">
-            <i class="fas fa-running w-5 text-[#0b3925]"></i>
-            <strong>Activity:</strong> <span class="capitalize">{{ appointment.patient.activity_level or '-' }}</span>
-          </p>
-          <hr class="border-gray-200" />
-          <p class="text-sm text-gray-600">
-            <i class="fas fa-comment-medical w-5 text-[#0b3925]"></i>
-            <strong>Topic/Complaint:</strong> "{{ appointment.complaint }}"
-          </p>
-        </div>
-        {% else %}
+        {% endif %} {% else %}
         <!-- Doctor Details -->
         <div
           class="w-20 h-20 bg-[#0b3925] rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg text-white text-4xl font-semibold"
@@ -448,7 +561,9 @@
         const currentUserId = Number("{{ current_user.id }}");
 
         const startChatBtn = document.getElementById("start-chat-btn");
-        const confirmationScreen = document.getElementById("confirmation-screen");
+        const confirmationScreen = document.getElementById(
+          "confirmation-screen",
+        );
         const chatRoomScreen = document.getElementById("chat-room-screen");
 
         if (startChatBtn && confirmationScreen && chatRoomScreen) {
@@ -476,13 +591,64 @@
 
           closeModalBtn.addEventListener("click", () => {
             detailsModal.classList.add("hidden");
+            const completeSection = document.getElementById(
+              "complete-consultation-section",
+            );
+            const patientProfileWrapper = document.getElementById(
+              "patient-profile-wrapper",
+            );
+            if (completeSection && patientProfileWrapper) {
+              completeSection.classList.add("hidden");
+              patientProfileWrapper.classList.remove("hidden");
+            }
           });
 
           detailsModal.addEventListener("click", (e) => {
             if (e.target === detailsModal) {
               detailsModal.classList.add("hidden");
+              const completeSection = document.getElementById(
+                "complete-consultation-section",
+              );
+              const patientProfileWrapper = document.getElementById(
+                "patient-profile-wrapper",
+              );
+              if (completeSection && patientProfileWrapper) {
+                completeSection.classList.add("hidden");
+                patientProfileWrapper.classList.remove("hidden");
+              }
             }
           });
+
+          // Toggling complete consultation form
+          const showCompleteFormBtn = document.getElementById(
+            "show-complete-form-btn",
+          );
+          const completeSection = document.getElementById(
+            "complete-consultation-section",
+          );
+          const cancelCompleteBtn = document.getElementById(
+            "cancel-complete-btn",
+          );
+          const patientProfileWrapper = document.getElementById(
+            "patient-profile-wrapper",
+          );
+
+          if (
+            showCompleteFormBtn &&
+            completeSection &&
+            cancelCompleteBtn &&
+            patientProfileWrapper
+          ) {
+            showCompleteFormBtn.addEventListener("click", () => {
+              patientProfileWrapper.classList.add("hidden");
+              completeSection.classList.remove("hidden");
+            });
+
+            cancelCompleteBtn.addEventListener("click", () => {
+              completeSection.classList.add("hidden");
+              patientProfileWrapper.classList.remove("hidden");
+            });
+          }
         }
 
         function markMessagesAsRead() {
