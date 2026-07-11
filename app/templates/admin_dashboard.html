@@ -8,7 +8,7 @@
       href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
       type="image/svg+xml"
     />
-    <title>Admin Dashboard | HealthyMate</title>
+    <title>Admin Panel | HealthyMate</title>
     <meta name="view-transition" content="same-origin" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,96 +26,1503 @@
         theme: {
           extend: {
             fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+            colors: {
+              adminGreen: {
+                50: "#f0fdf4",
+                100: "#dcfce7",
+                800: "#166534",
+                900: "#14532d",
+                950: "#052e16",
+              },
+            },
           },
         },
       };
     </script>
     <style>
       @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
-      .animate-fade-in-up {
-        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      .animate-fade-in {
+        animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
     </style>
   </head>
-  <body class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased">
-    {% include 'components/navbar.html' %}
+  <body
+    class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans flex overflow-hidden"
+  >
+    <!-- SIDEBAR FOR DESKTOP & MOBILE MOBILE DRAWER -->
+    <aside
+      id="sidebar"
+      class="fixed inset-y-0 left-0 z-40 w-64 bg-adminGreen-950 text-slate-100 flex flex-col justify-between transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-adminGreen-900 shadow-xl"
+    >
+      <div class="flex flex-col flex-grow">
+        <!-- Logo / Brand -->
+        <div
+          class="h-20 flex items-center px-6 border-b border-adminGreen-900/60 bg-adminGreen-950/80 flex-shrink-0"
+        >
+          <a
+            href="{{ url_for('app_routes.admin_dashboard') }}"
+            class="flex items-center gap-3"
+          >
+            <img
+              src="{{ url_for('static', filename='images/logo-hm3.svg') }}"
+              alt="HealthyMate"
+              class="w-9 h-9 object-contain"
+            />
+            <div>
+              <h1 class="text-lg font-bold tracking-wider text-white">
+                HealthyMate
+              </h1>
+              <span
+                class="text-[10px] uppercase font-bold text-emerald-400 tracking-widest"
+                >Admin Control</span
+              >
+            </div>
+          </a>
+        </div>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto pt-10 pb-16 px-6">
-      <!-- Header -->
-      <div class="animate-fade-in-up mb-8">
-        <h1 class="text-4xl md:text-5xl font-light text-gray-900">
-          Admin Dashboard
-        </h1>
-        <p class="text-gray-500 text-sm md:text-base mt-2">
-          Manage pending appointment requests.
-        </p>
+        <!-- Navigation Menu -->
+        <nav class="mt-6 px-4 space-y-1.5 flex-grow">
+          <a
+            href="{{ url_for('app_routes.admin_dashboard', tab='overview') }}"
+            class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium {% if tab == 'overview' %} bg-emerald-700/60 text-white shadow-md shadow-emerald-950/30 {% else %} text-slate-400 hover:bg-adminGreen-900/30 hover:text-slate-100 {% endif %}"
+          >
+            <i class="fas fa-th-large text-base"></i>
+            <span>Overview</span>
+          </a>
+
+          <a
+            href="{{ url_for('app_routes.admin_dashboard', tab='appointments') }}"
+            class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium {% if tab == 'appointments' %} bg-emerald-700/60 text-white shadow-md shadow-emerald-950/30 {% else %} text-slate-400 hover:bg-adminGreen-900/30 hover:text-slate-100 {% endif %}"
+          >
+            <i class="fas fa-calendar-check text-base"></i>
+            <span>Appointments</span>
+            {% if pending_appointments_count > 0 %}
+            <span
+              class="ml-auto bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded-full"
+              >{{ pending_appointments_count }}</span
+            >
+            {% endif %}
+          </a>
+
+          <a
+            href="{{ url_for('app_routes.admin_dashboard', tab='users') }}"
+            class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium {% if tab == 'users' %} bg-emerald-700/60 text-white shadow-md shadow-emerald-950/30 {% else %} text-slate-400 hover:bg-adminGreen-900/30 hover:text-slate-100 {% endif %}"
+          >
+            <i class="fas fa-users text-base"></i>
+            <span>Manage Users</span>
+          </a>
+
+          <a
+            href="{{ url_for('app_routes.admin_dashboard', tab='schedules') }}"
+            class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium {% if tab == 'schedules' %} bg-emerald-700/60 text-white shadow-md shadow-emerald-950/30 {% else %} text-slate-400 hover:bg-adminGreen-900/30 hover:text-slate-100 {% endif %}"
+          >
+            <i class="fas fa-calendar-alt text-base"></i>
+            <span>Schedule Approvals</span>
+            {% if pending_schedules_count > 0 %}
+            <span
+              class="ml-auto bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded-full"
+              >{{ pending_schedules_count }}</span
+            >
+            {% endif %}
+          </a>
+
+          <a
+            href="{{ url_for('app_routes.admin_dashboard', tab='notifications') }}"
+            class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium {% if tab == 'notifications' %} bg-emerald-700/60 text-white shadow-md shadow-emerald-950/30 {% else %} text-slate-400 hover:bg-adminGreen-900/30 hover:text-slate-100 {% endif %}"
+          >
+            <i class="fas fa-bullhorn text-base"></i>
+            <span>Notifications Center</span>
+          </a>
+        </nav>
       </div>
 
-      <!-- Flash Messages -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.05s;">
-            {% for category, message in messages %}
-              <div class="px-4 py-3 rounded-md text-sm flex items-center gap-3 {% if category == 'info' %}bg-blue-50 text-blue-700 border-l-4 border-blue-500{% elif category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}">
-                <i class="fas {% if category == 'info' %}fa-info-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
-                <span>{{ message }}</span>
-              </div>
-            {% endfor %}
+      <!-- User Profile & Action Footer -->
+      <div
+        class="border-t border-adminGreen-900/60 p-4 space-y-3 bg-adminGreen-950/60 flex-shrink-0"
+      >
+        <div class="flex items-center gap-3 px-2">
+          <div
+            class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-sm uppercase shadow-inner"
+          >
+            {{ current_user.username[0] if current_user.username else 'A' }}
           </div>
-        {% endif %}
-      {% endwith %}
+          <div class="overflow-hidden">
+            <p class="text-sm font-semibold text-white truncate">
+              {{ current_user.name or current_user.username }}
+            </p>
+            <p class="text-xs text-slate-400 truncate">Administrator</p>
+          </div>
+        </div>
 
-      <!-- Pending Appointments Table -->
-      <div class="animate-fade-in-up bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden" style="animation-delay: 0.1s;">
-        <div class="p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">Pending Requests</h2>
-          {% if pending_appointments %}
-            <div class="overflow-x-auto">
-              <table class="w-full text-sm">
-                <thead>
-                  <tr class="border-b">
-                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Patient</th>
-                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Doctor</th>
-                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Requested Time</th>
-                    <th class="text-left py-3 px-4 text-gray-500 font-medium text-xs uppercase">Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                  {% for appt in pending_appointments %}
-                    <tr class="hover:bg-gray-50">
-                      <td class="py-4 px-4 font-medium">{{ appt.patient.name or appt.patient.username }}</td>
-                      <td class="py-4 px-4 text-gray-600">Dr. {{ appt.doctor.name }}</td>
-                      <td class="py-4 px-4 text-gray-600">{{ appt.appointment_time.strftime('%d %b %Y, %H:%M') }}</td>
-                      <td class="py-4 px-4">
-                        <div class="flex gap-2">
-                          <form action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}" method="POST">
-                            <input type="hidden" name="action" value="approve">
-                            <button type="submit" class="text-xs bg-green-100 text-green-700 hover:bg-green-200 font-bold py-1.5 px-3 rounded-md transition-colors">Approve</button>
+        <div class="grid grid-cols-1 gap-2 pt-2">
+          <!-- <a
+            href="{{ url_for('app_routes.home') }}"
+            class="flex items-center justify-center gap-1.5 py-2 px-3 bg-adminGreen-900/40 hover:bg-adminGreen-900/70 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors"
+          >
+            <i class="fas fa-home"></i>
+            <span>Portal</span>
+          </a> -->
+          <a
+            href="{{ url_for('app_routes.logout') }}"
+            class="flex items-center justify-center gap-1.5 py-2 px-3 bg-red-900/30 hover:bg-red-800/50 text-red-300 hover:text-red-100 rounded-lg text-xs font-medium transition-colors"
+          >
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- BACKDROP FOR MOBILE SIDEBAR -->
+    <div
+      id="sidebarBackdrop"
+      class="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm hidden md:hidden"
+    ></div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="flex-grow md:ml-64 flex flex-col h-screen overflow-y-auto">
+      <!-- TOPBAR -->
+      <header
+        class="h-20 bg-white border-b border-slate-200 px-6 md:px-8 flex items-center justify-between flex-shrink-0"
+      >
+        <div class="flex items-center gap-4">
+          <!-- Toggle Button for Mobile -->
+          <button
+            id="toggleSidebar"
+            class="md:hidden text-slate-600 hover:text-slate-900 focus:outline-none"
+          >
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+
+          <h2 class="text-xl font-bold text-slate-800">
+            {% if tab == 'overview' %} Overview Dashboard {% elif tab ==
+            'appointments' %} Manage Appointments {% elif tab == 'users' %}
+            Manage Users {% elif tab == 'notifications' %} Notification Center
+            (Broadcast) {% elif tab == 'schedules' %} Doctor Schedule Approvals
+            {% endif %}
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span
+            class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-3 py-1 rounded-full border border-emerald-200"
+          >
+            Online
+          </span>
+          <div class="h-6 w-px bg-slate-200"></div>
+          <span class="text-xs text-slate-500 hidden sm:inline-block">
+            Local Time: {{ datetime_now.strftime('%d %b %Y') if datetime_now
+            else 'Today' }}
+          </span>
+        </div>
+      </header>
+
+      <!-- VIEW CONTENT -->
+      <main class="flex-grow p-6 md:p-8 max-w-7xl w-full mx-auto">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <div class="mb-6 space-y-2.5 animate-fade-in">
+          {% for category, message in messages %}
+          <div
+            class="p-4 rounded-xl text-sm flex items-center justify-between {% if category == 'success' %} bg-emerald-50 text-emerald-950 border border-emerald-200/60 {% elif category == 'danger' %} bg-rose-50 text-rose-950 border border-rose-200/60 {% else %} bg-sky-50 text-sky-950 border border-sky-200/60 {% endif %}"
+          >
+            <div class="flex items-center gap-3">
+              <i
+                class="fas {% if category == 'success' %}fa-check-circle text-emerald-600{% elif category == 'danger' %}fa-exclamation-circle text-rose-600{% else %}fa-info-circle text-sky-600{% endif %} text-lg"
+              ></i>
+              <span class="font-medium">{{ message }}</span>
+            </div>
+            <button
+              onclick="this.parentElement.remove()"
+              class="text-slate-400 hover:text-slate-700"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %} {% endwith %}
+
+        <!-- TAB OVERVIEW -->
+        {% if tab == 'overview' %}
+        <div class="space-y-8 animate-fade-in">
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card Users -->
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl"
+              >
+                <i class="fas fa-user-injured"></i>
+              </div>
+              <div>
+                <p
+                  class="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                >
+                  Total Patients
+                </p>
+                <p class="text-2xl font-bold text-slate-900 mt-1">
+                  {{ total_users }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card Doctors -->
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl"
+              >
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div>
+                <p
+                  class="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                >
+                  Total Doctors
+                </p>
+                <p class="text-2xl font-bold text-slate-900 mt-1">
+                  {{ total_doctors }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card Appointments -->
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl"
+              >
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div>
+                <p
+                  class="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                >
+                  Total Appointments
+                </p>
+                <p class="text-2xl font-bold text-slate-900 mt-1">
+                  {{ total_appointments }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Card Pending -->
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow relative overflow-hidden"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl"
+              >
+                <i class="fas fa-clock"></i>
+              </div>
+              <div>
+                <p
+                  class="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                >
+                  Needs Approval
+                </p>
+                <p class="text-2xl font-bold text-slate-900 mt-1">
+                  {{ pending_appointments_count }}
+                </p>
+              </div>
+              {% if pending_appointments_count > 0 %}
+              <div
+                class="absolute top-0 right-0 h-1.5 w-full bg-amber-500"
+              ></div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Pending Request Section -->
+          <div
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+          >
+            <div
+              class="p-6 border-b border-slate-100 flex items-center justify-between"
+            >
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">
+                  Recent Appointment Requests
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">
+                  List of patient appointment requests requiring your immediate
+                  approval.
+                </p>
+              </div>
+              <a
+                href="{{ url_for('app_routes.admin_dashboard', tab='appointments') }}"
+                class="text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+                >View All</a
+              >
+            </div>
+
+            <div class="p-0">
+              {% if pending_appointments %}
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead
+                    class="bg-slate-50 text-xs font-semibold uppercase text-slate-500 border-b border-slate-200"
+                  >
+                    <tr>
+                      <th class="py-3.5 px-6">Patient</th>
+                      <th class="py-3.5 px-6">Specialist Doctor</th>
+                      <th class="py-3.5 px-6">Schedule Time</th>
+                      <th class="py-3.5 px-6">Phone No. & Complaint</th>
+                      <th class="py-3.5 px-6 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    {% for appt in pending_appointments %}
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                      <td class="py-4 px-6 font-semibold text-slate-800">
+                        {{ appt.patient.name or appt.patient.username }}
+                        <span
+                          class="block text-xs font-normal text-slate-400 mt-0.5"
+                          >ID: #{{ appt.user_id }}</span
+                        >
+                      </td>
+                      <td class="py-4 px-6 text-slate-600">
+                        <span class="font-medium text-slate-800"
+                          >Dr. {{ appt.doctor.name or appt.doctor.username
+                          }}</span
+                        >
+                      </td>
+                      <td class="py-4 px-6 text-slate-600 font-medium">
+                        {{ appt.appointment_time.strftime('%d %b %Y') }}
+                        <span class="block text-xs text-slate-400 mt-0.5"
+                          >{{ appt.appointment_time.strftime('%H:%M WIB')
+                          }}</span
+                        >
+                      </td>
+                      <td class="py-4 px-6 max-w-xs">
+                        <span
+                          class="text-xs font-mono bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded"
+                          >{{ appt.phone_number }}</span
+                        >
+                        <p
+                          class="text-xs text-slate-500 mt-1.5 italic truncate"
+                          title="{{ appt.complaint }}"
+                        >
+                          {{ appt.complaint or 'No written complaint.' }}
+                        </p>
+                      </td>
+                      <td class="py-4 px-6 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                          <form
+                            action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}"
+                            method="POST"
+                          >
+                            <input
+                              type="hidden"
+                              name="action"
+                              value="approve"
+                            />
+                            <button
+                              type="submit"
+                              class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg shadow-sm transition-all flex items-center gap-1"
+                            >
+                              <i class="fas fa-check"></i> Approve
+                            </button>
                           </form>
-                          <form action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}" method="POST">
-                            <input type="hidden" name="action" value="reject">
-                            <button type="submit" class="text-xs bg-red-100 text-red-700 hover:bg-red-200 font-bold py-1.5 px-3 rounded-md transition-colors">Reject</button>
+                          <form
+                            action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}"
+                            method="POST"
+                          >
+                            <input type="hidden" name="action" value="reject" />
+                            <button
+                              type="submit"
+                              class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold py-1.5 px-3 rounded-lg border border-rose-200 transition-all flex items-center gap-1"
+                            >
+                              <i class="fas fa-times"></i> Reject
+                            </button>
                           </form>
                         </div>
                       </td>
                     </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-16 px-4">
+                <div
+                  class="w-16 h-16 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100"
+                >
+                  <i class="fas fa-inbox text-2xl"></i>
+                </div>
+                <h4 class="text-slate-800 font-bold">All Clean!</h4>
+                <p class="text-xs text-slate-500 mt-1">
+                  No pending appointment requests at the moment.
+                </p>
+              </div>
+              {% endif %}
             </div>
-          {% else %}
-            <div class="text-center py-16">
-              <i class="fas fa-inbox text-gray-300 text-4xl mb-3"></i>
-              <p class="text-gray-500">No pending appointment requests.</p>
-            </div>
-          {% endif %}
+          </div>
         </div>
-      </div>
-    </main>
+        {% endif %}
 
-    {% include 'components/footer.html' %}
+        <!-- TAB APPOINTMENTS -->
+        {% if tab == 'appointments' %}
+        <div class="space-y-6 animate-fade-in">
+          <div
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+          >
+            <div
+              class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+            >
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">
+                  All Appointment Data
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">
+                  Complete history of all appointments between patients and
+                  specialist doctors.
+                </p>
+              </div>
+
+              <!-- Quick Status Filter (via JS) -->
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  onclick="filterAppointments('all')"
+                  class="apt-filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 transition-colors"
+                >
+                  All
+                </button>
+                <button
+                  onclick="filterAppointments('pending')"
+                  class="apt-filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                >
+                  Pending
+                </button>
+                <button
+                  onclick="filterAppointments('approved')"
+                  class="apt-filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                >
+                  Approved
+                </button>
+                <button
+                  onclick="filterAppointments('rejected')"
+                  class="apt-filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                >
+                  Rejected
+                </button>
+                <button
+                  onclick="filterAppointments('expired')"
+                  class="apt-filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                >
+                  Expired
+                </button>
+              </div>
+            </div>
+
+            <div class="p-0">
+              {% if all_appointments %}
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left" id="appointmentsTable">
+                  <thead
+                    class="bg-slate-50 text-xs font-semibold uppercase text-slate-500 border-b border-slate-200"
+                  >
+                    <tr>
+                      <th class="py-3.5 px-6">ID</th>
+                      <th class="py-3.5 px-6">Patient</th>
+                      <th class="py-3.5 px-6">Doctor</th>
+                      <th class="py-3.5 px-6">Schedule Time</th>
+                      <th class="py-3.5 px-6">Status</th>
+                      <th class="py-3.5 px-6">Complaint Detail</th>
+                      <th class="py-3.5 px-6 text-right">Approval Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    {% for appt in all_appointments %}
+                    <tr
+                      class="hover:bg-slate-50/50 transition-colors appointment-row"
+                      data-status="{{ appt.status }}"
+                    >
+                      <td class="py-4 px-6 font-mono text-xs text-slate-400">
+                        #{{ appt.id }}
+                      </td>
+                      <td class="py-4 px-6 font-semibold text-slate-800">
+                        {{ appt.patient.name or appt.patient.username }}
+                      </td>
+                      <td class="py-4 px-6 text-slate-600 font-medium">
+                        Dr. {{ appt.doctor.name or appt.doctor.username }}
+                      </td>
+                      <td class="py-4 px-6 text-slate-600 font-medium">
+                        {{ appt.appointment_time.strftime('%d %b %Y') }}
+                        <span class="block text-xs text-slate-400 mt-0.5"
+                          >{{ appt.appointment_time.strftime('%H:%M WIB')
+                          }}</span
+                        >
+                      </td>
+                      <td class="py-4 px-6">
+                        {% if appt.status == 'pending' %}
+                        <span
+                          class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold bg-amber-50 text-amber-800 rounded-full border border-amber-200"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 bg-amber-500 rounded-full"
+                          ></span>
+                          Pending
+                        </span>
+                        {% elif appt.status == 'approved' %}
+                        <span
+                          class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-800 rounded-full border border-emerald-200"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 bg-emerald-500 rounded-full"
+                          ></span>
+                          Approved
+                        </span>
+                        {% elif appt.status == 'rejected' %}
+                        <span
+                          class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold bg-rose-50 text-rose-800 rounded-full border border-rose-200"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 bg-rose-500 rounded-full"
+                          ></span>
+                          Rejected
+                        </span>
+                        {% else %}
+                        <span
+                          class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold bg-slate-100 text-slate-700 rounded-full border border-slate-200"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 bg-slate-500 rounded-full"
+                          ></span>
+                          {{ appt.status }}
+                        </span>
+                        {% endif %}
+                      </td>
+                      <td class="py-4 px-6 max-w-xs text-xs text-slate-500">
+                        {% if appt.phone_number %}
+                        <span class="font-semibold block text-slate-700 mb-0.5"
+                          >Phone: {{ appt.phone_number }}</span
+                        >
+                        {% endif %}
+                        <p class="italic truncate" title="{{ appt.complaint }}">
+                          {{ appt.complaint or '-' }}
+                        </p>
+                      </td>
+                      <td class="py-4 px-6 text-right">
+                        {% if appt.status == 'pending' %}
+                        <div class="flex items-center justify-end gap-1.5">
+                          <form
+                            action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}"
+                            method="POST"
+                            class="inline"
+                          >
+                            <input
+                              type="hidden"
+                              name="action"
+                              value="approve"
+                            />
+                            <button
+                              type="submit"
+                              class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold py-1.5 px-2.5 rounded shadow-sm transition-all"
+                              title="Approve"
+                            >
+                              Approve
+                            </button>
+                          </form>
+                          <form
+                            action="{{ url_for('app_routes.handle_appointment', appointment_id=appt.id) }}"
+                            method="POST"
+                            class="inline"
+                          >
+                            <input type="hidden" name="action" value="reject" />
+                            <button
+                              type="submit"
+                              class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-[10px] font-bold py-1.5 px-2.5 rounded border border-rose-200 transition-all"
+                              title="Reject"
+                            >
+                              Reject
+                            </button>
+                          </form>
+                        </div>
+                        {% else %}
+                        <span class="text-xs text-slate-400 italic"
+                          >Processed</span
+                        >
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-16 px-4">
+                <div
+                  class="w-16 h-16 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100"
+                >
+                  <i class="fas fa-calendar text-2xl"></i>
+                </div>
+                <h4 class="text-slate-800 font-bold">No Appointments Yet</h4>
+                <p class="text-xs text-slate-500 mt-1">
+                  Appointment data will appear here once patients submit
+                  requests.
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- TAB USERS -->
+        {% if tab == 'users' %}
+        <div class="space-y-6 animate-fade-in">
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h3 class="text-lg font-bold text-slate-900">
+                User & Medical Staff Database
+              </h3>
+              <p class="text-xs text-slate-500 mt-1">
+                Manage user permissions, register specialist doctors, or delete
+                user accounts.
+              </p>
+            </div>
+            <button
+              onclick="openModal()"
+              class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold py-2.5 px-5 rounded-xl shadow-md shadow-emerald-700/10 flex items-center gap-2 transition-all"
+            >
+              <i class="fas fa-plus"></i> Add Doctor
+            </button>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+          >
+            <div
+              class="p-6 border-b border-slate-100 flex items-center justify-between"
+            >
+              <span class="text-sm font-semibold text-slate-800"
+                >Total Registered: {{ all_users|length }} Users</span
+              >
+            </div>
+
+            <div class="p-0">
+              {% if all_users %}
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead
+                    class="bg-slate-50 text-xs font-semibold uppercase text-slate-500 border-b border-slate-200"
+                  >
+                    <tr>
+                      <th class="py-3.5 px-6">Profile Name</th>
+                      <th class="py-3.5 px-6">Username & Email</th>
+                      <th class="py-3.5 px-6">Role</th>
+                      <th class="py-3.5 px-6">Physical Details</th>
+                      <th class="py-3.5 px-6 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    {% for user in all_users %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                      <td class="py-4 px-6 font-medium text-slate-900">
+                        {{ user.name or '-' }}
+                        <span
+                          class="block text-xs font-normal text-slate-400 mt-0.5"
+                          >UID: #{{ user.id }}</span
+                        >
+                      </td>
+                      <td class="py-4 px-6">
+                        <span class="font-semibold text-slate-800"
+                          >{{ user.username }}</span
+                        >
+                        <span class="block text-xs text-slate-400 mt-0.5"
+                          >{{ user.email }}</span
+                        >
+                      </td>
+                      <td class="py-4 px-6">
+                        {% if user.role == 'admin' %}
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-rose-50 text-rose-700 rounded-full border border-rose-200"
+                        >
+                          <i class="fas fa-shield-alt text-[10px]"></i> Admin
+                        </span>
+                        {% elif user.role == 'doctor' %}
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200"
+                        >
+                          <i class="fas fa-user-md text-[10px]"></i> Doctor
+                        </span>
+                        {% else %}
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200"
+                        >
+                          <i class="fas fa-user text-[10px]"></i> Patient
+                        </span>
+                        {% endif %}
+                      </td>
+                      <td class="py-4 px-6 text-xs text-slate-500">
+                        {% if user.role == 'user' %} {% if user.weight or
+                        user.height or user.age %}
+                        <span
+                          >{{ user.age or '?' }} yrs / {{ user.weight or '?' }}
+                          kg / {{ user.height or '?' }} cm</span
+                        >
+                        <span
+                          class="block text-[10px] text-slate-400 mt-0.5 uppercase"
+                          >{{ user.activity_level or 'sedentary' }}</span
+                        >
+                        {% else %}
+                        <span class="text-slate-400 italic"
+                          >Profile not set</span
+                        >
+                        {% endif %} {% else %}
+                        <span class="text-slate-400 italic"
+                          >N/A (Not Patient)</span
+                        >
+                        {% endif %}
+                      </td>
+                      <td class="py-4 px-6 text-right">
+                        {% if user.id != current_user.id %}
+                        <form
+                          action="{{ url_for('app_routes.admin_delete_user', user_id=user.id) }}"
+                          method="POST"
+                          onsubmit="return confirm('Are you sure you want to delete user {{ user.username }}? This action will permanently delete all progress history, consultations, chat messages, and related progress.');"
+                          class="inline"
+                        >
+                          <button
+                            type="submit"
+                            class="text-slate-400 hover:text-rose-600 p-2 rounded-lg hover:bg-rose-50 transition-colors"
+                            title="Delete User"
+                          >
+                            <i class="fas fa-trash-alt text-base"></i>
+                          </button>
+                        </form>
+                        {% else %}
+                        <span class="text-xs text-slate-400 italic"
+                          >Your Account</span
+                        >
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-16 px-4">
+                <p class="text-slate-500">No users found.</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- TAB NOTIFICATIONS -->
+        {% if tab == 'notifications' %}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
+          <!-- Form Kirim Notifikasi -->
+          <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit"
+          >
+            <h3 class="text-lg font-bold text-slate-900 mb-2">
+              Send Manual Notification
+            </h3>
+            <p class="text-xs text-slate-500 mb-6">
+              Send broadcast or direct messages to HealthyMate users.
+            </p>
+
+            <form
+              action="{{ url_for('app_routes.admin_send_notification') }}"
+              method="POST"
+              class="space-y-4"
+            >
+              <div>
+                <label
+                  class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+                  >Recipient (Target)</label
+                >
+                <select
+                  name="recipient_type"
+                  id="recipientTypeSelect"
+                  onchange="toggleRecipientSelect()"
+                  class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors bg-white"
+                >
+                  <option value="all">All Users (Patients + Doctors)</option>
+                  <option value="users">All Patients</option>
+                  <option value="doctors">All Doctors</option>
+                  <option value="specific">Specific User</option>
+                </select>
+              </div>
+
+              <!-- Specific User Dropdown (Shown only when specific is selected) -->
+              <div id="specificUserWrapper" class="hidden">
+                <label
+                  class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+                  >Select User</label
+                >
+                <select
+                  name="specific_user_id"
+                  class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors bg-white"
+                >
+                  {% for user in all_users if user.role != 'admin' %}
+                  <option value="{{ user.id }}">
+                    {{ user.name or user.username }} ({{ user.role|upper }} - {{
+                    user.email }})
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+                  >Notification Title</label
+                >
+                <input
+                  type="text"
+                  name="title"
+                  required
+                  placeholder="Example: System Maintenance Tonight"
+                  class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+                  >Message Content</label
+                >
+                <textarea
+                  name="message"
+                  required
+                  rows="4"
+                  placeholder="Write the complete message content here..."
+                  class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold py-3 px-5 rounded-xl shadow-md shadow-emerald-700/10 flex items-center justify-center gap-2 transition-all"
+              >
+                <i class="fas fa-paper-plane"></i> Send Notification
+              </button>
+            </form>
+          </div>
+
+          <!-- Riwayat Pengiriman -->
+          <div
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden lg:col-span-2"
+          >
+            <div class="p-6 border-b border-slate-100">
+              <h3 class="text-lg font-bold text-slate-900">
+                Manual Delivery History
+              </h3>
+              <p class="text-xs text-slate-500 mt-1">
+                List of manual notifications previously sent by admin.
+              </p>
+            </div>
+
+            <div class="p-0">
+              {% if manual_notifications %}
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead
+                    class="bg-slate-50 text-xs font-semibold uppercase text-slate-500 border-b border-slate-200"
+                  >
+                    <tr>
+                      <th class="py-3.5 px-6">Notification</th>
+                      <th class="py-3.5 px-6">Sent Time</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    {% for notif in manual_notifications %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                      <td class="py-4 px-6 max-w-md">
+                        <h4 class="font-bold text-slate-900">
+                          {{ notif.title }}
+                        </h4>
+                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                          {{ notif.message }}
+                        </p>
+                      </td>
+                      <td
+                        class="py-4 px-6 text-slate-500 text-xs whitespace-nowrap"
+                      >
+                        {{ notif.created_at.strftime('%d %b %Y, %H:%M') }} WIB
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-16 px-4">
+                <div
+                  class="w-12 h-12 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-100"
+                >
+                  <i class="fas fa-history text-lg"></i>
+                </div>
+                <h4 class="text-slate-800 font-bold text-sm">No History Yet</h4>
+                <p class="text-xs text-slate-500 mt-1">
+                  No manual broadcast notifications sent yet.
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- TAB SCHEDULES (Persetujuan Jadwal) -->
+        {% if tab == 'schedules' %}
+        <div class="space-y-8 animate-fade-in">
+          <!-- Pending Proposals list -->
+          <div
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+          >
+            <div class="p-6 border-b border-slate-100">
+              <h3 class="text-lg font-bold text-slate-900">
+                Schedule Change Proposals
+              </h3>
+              <p class="text-xs text-slate-500 mt-1">
+                List of doctor practice schedule proposals requiring approval.
+              </p>
+            </div>
+
+            <div class="p-6">
+              {% if pending_proposals %}
+              <div class="grid grid-cols-1 gap-6">
+                {% for proposal in pending_proposals %}
+                <div
+                  class="border border-slate-200 rounded-2xl p-5 hover:shadow-md transition-all bg-slate-50/20 animate-fade-in"
+                >
+                  <!-- Doctor info header -->
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 mb-4 gap-3"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center font-bold uppercase"
+                      >
+                        {{ proposal.doctor.username[0] if
+                        proposal.doctor.username else 'D' }}
+                      </div>
+                      <div>
+                        <h4
+                          class="font-bold text-slate-900 text-sm sm:text-base"
+                        >
+                          {{ proposal.doctor.name or proposal.doctor.username }}
+                        </h4>
+                        <p class="text-xs text-slate-500">
+                          {{ proposal.doctor.email }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="text-left">
+                      <span
+                        class="text-[10px] text-slate-400 font-semibold block uppercase"
+                        >SUBMISSION TIME</span
+                      >
+                      <span class="text-xs text-slate-600 font-medium"
+                        >{{ proposal.created_at.strftime('%d %b %Y, %H:%M') }}
+                        WIB</span
+                      >
+                    </div>
+                  </div>
+
+                  <!-- Diff comparison body -->
+                  <div class="mb-6">
+                    <h5
+                      class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3"
+                    >
+                      Schedule Change Details:
+                    </h5>
+
+                    {% set current_sched =
+                    get_doctor_schedule_for_date(proposal.doctor_id,
+                    datetime_now.date()) %} {% set proposed_sched =
+                    json_loads(proposal.proposed_schedule) %} {% set day_map = [
+                    ('Monday', 'Monday'), ('Tuesday', 'Tuesday'), ('Wednesday',
+                    'Wednesday'), ('Thursday', 'Thursday'), ('Friday',
+                    'Friday'), ('Saturday', 'Saturday'), ('Sunday', 'Sunday') ]
+                    %}
+
+                    <div
+                      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    >
+                      {% for day_eng, day_indo in day_map %} {% set cur_slots =
+                      current_sched.get(day_eng, []) %} {% set prop_slots =
+                      proposed_sched.get(day_eng, []) %} {% if cur_slots or
+                      prop_slots %}
+                      <div
+                        class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm"
+                      >
+                        <h6
+                          class="font-bold text-slate-700 text-xs mb-2 border-b border-slate-50 pb-1 flex items-center justify-between"
+                        >
+                          <span>{{ day_indo }}</span>
+                          <span
+                            class="text-[10px] text-slate-400 font-medium uppercase tracking-wider"
+                            >{{ day_eng }}</span
+                          >
+                        </h6>
+                        <div class="flex flex-wrap gap-1.5">
+                          <!-- Loop for removed and unchanged slots -->
+                          {% for slot in cur_slots %} {% if slot not in
+                          prop_slots %}
+                          <!-- Slot removed -->
+                          <span
+                            class="bg-rose-50 text-rose-700 border border-rose-100 text-[10px] font-semibold py-0.5 px-2 rounded line-through cursor-help"
+                            title="Removed from schedule"
+                          >
+                            {{ slot }}
+                          </span>
+                          {% else %}
+                          <!-- Slot unchanged -->
+                          <span
+                            class="bg-slate-50 text-slate-600 border border-slate-100 text-[10px] font-semibold py-0.5 px-2 rounded"
+                          >
+                            {{ slot }}
+                          </span>
+                          {% endif %} {% endfor %}
+
+                          <!-- Loop for newly added slots -->
+                          {% for slot in prop_slots %} {% if slot not in
+                          cur_slots %}
+                          <!-- Slot added -->
+                          <span
+                            class="bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-semibold py-0.5 px-2 rounded flex items-center gap-1 cursor-help"
+                            title="New session added"
+                          >
+                            <i class="fas fa-plus text-[8px]"></i>{{ slot }}
+                          </span>
+                          {% endif %} {% endfor %}
+                        </div>
+                      </div>
+                      {% endif %} {% endfor %}
+                    </div>
+                  </div>
+
+                  <!-- Action panel -->
+                  <div
+                    class="flex flex-col gap-3 border-t border-slate-100 pt-4"
+                  >
+                    <div class="flex justify-end gap-2">
+                      <!-- Approve form -->
+                      <form
+                        action="{{ url_for('app_routes.admin_approve_schedule', proposal_id=proposal.id) }}"
+                        method="POST"
+                        onsubmit="
+                          return confirm(
+                            'Are you sure you want to approve this new schedule? The new schedule will take effect on the following Sunday.',
+                          );
+                        "
+                      >
+                        <button
+                          type="submit"
+                          class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5"
+                        >
+                          <i class="fas fa-check-circle"></i> Approve
+                        </button>
+                      </form>
+
+                      <!-- Reject toggle button -->
+                      <button
+                        type="button"
+                        onclick="toggleRejectForm('{{ proposal.id }}')"
+                        class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold py-2.5 px-4 rounded-xl transition-all flex items-center gap-1.5"
+                      >
+                        <i class="fas fa-times-circle"></i> Reject...
+                      </button>
+                    </div>
+
+                    <!-- Expandable reject form container -->
+                    <div
+                      id="reject-container-{{ proposal.id }}"
+                      class="hidden bg-rose-50/30 border border-rose-100 rounded-xl p-4 mt-2"
+                    >
+                      <form
+                        action="{{ url_for('app_routes.admin_reject_schedule', proposal_id=proposal.id) }}"
+                        method="POST"
+                        class="space-y-3"
+                      >
+                        <div>
+                          <label
+                            class="block text-xs font-bold text-rose-950 uppercase tracking-wider mb-1"
+                            >Reason for Rejection</label
+                          >
+                          <textarea
+                            name="admin_notes"
+                            required
+                            placeholder="Enter the reason why the schedule proposal is rejected..."
+                            rows="2"
+                            class="w-full text-xs border border-slate-200 focus:border-rose-500 rounded-xl px-3 py-2 outline-none transition-colors bg-white"
+                          ></textarea>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                          <button
+                            type="button"
+                            onclick="toggleRejectForm('{{ proposal.id }}')"
+                            class="px-3 py-1.5 bg-slate-100 text-slate-700 text-[10px] font-semibold rounded-lg"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-semibold rounded-lg"
+                          >
+                            Submit Rejection
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="text-center py-16 px-4">
+                <div
+                  class="w-12 h-12 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-100"
+                >
+                  <i class="fas fa-calendar-check text-lg"></i>
+                </div>
+                <h4 class="text-slate-800 font-bold text-sm">
+                  No Pending Proposals
+                </h4>
+                <p class="text-xs text-slate-500 mt-1">
+                  All doctor practice schedule proposals have been processed.
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- History proposals table -->
+          <div
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+          >
+            <div class="p-6 border-b border-slate-100">
+              <h3 class="text-lg font-bold text-slate-900">Proposal History</h3>
+              <p class="text-xs text-slate-500 mt-1">
+                List of practice schedule proposals approved or rejected
+                previously.
+              </p>
+            </div>
+
+            <div class="p-0">
+              {% if history_proposals %}
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead
+                    class="bg-slate-50 text-xs font-semibold uppercase text-slate-500 border-b border-slate-200"
+                  >
+                    <tr>
+                      <th class="py-3.5 px-6">Doctor</th>
+                      <th class="py-3.5 px-6">Status</th>
+                      <th class="py-3.5 px-6">Submitted On</th>
+                      <th class="py-3.5 px-6">Processed On</th>
+                      <th class="py-3.5 px-6">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    {% for proposal in history_proposals %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                      <td class="py-4 px-6">
+                        <h4 class="font-bold text-slate-900 text-xs sm:text-sm">
+                          {{ proposal.doctor.name or proposal.doctor.username }}
+                        </h4>
+                        <p class="text-[10px] text-slate-500">
+                          {{ proposal.doctor.email }}
+                        </p>
+                      </td>
+                      <td class="py-4 px-6 whitespace-nowrap">
+                        {% if proposal.status == 'approved' %}
+                        <span
+                          class="bg-emerald-50 text-emerald-700 border border-emerald-200/50 text-[10px] font-bold py-1 px-2.5 rounded-full inline-flex items-center gap-1 uppercase tracking-wide"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 rounded-full bg-emerald-500"
+                          ></span>
+                          Approved
+                        </span>
+                        {% else %}
+                        <span
+                          class="bg-rose-50 text-rose-700 border border-rose-200/50 text-[10px] font-bold py-1 px-2.5 rounded-full inline-flex items-center gap-1 uppercase tracking-wide"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 rounded-full bg-rose-500"
+                          ></span>
+                          Rejected
+                        </span>
+                        {% endif %}
+                      </td>
+                      <td
+                        class="py-4 px-6 text-slate-600 text-xs whitespace-nowrap"
+                      >
+                        {{ proposal.created_at.strftime('%d %b %Y, %H:%M') }}
+                        WIB
+                      </td>
+                      <td
+                        class="py-4 px-6 text-slate-600 text-xs whitespace-nowrap"
+                      >
+                        {{ proposal.updated_at.strftime('%d %b %Y, %H:%M') }}
+                        WIB
+                      </td>
+                      <td class="py-4 px-6 max-w-xs leading-relaxed text-xs">
+                        {% if proposal.status == 'approved' %}
+                        <span class="text-slate-700 font-medium"
+                          >Effective starting:</span
+                        ><br />
+                        <span class="text-slate-900 font-semibold"
+                          >{{ format_indo_date(proposal.effective_date) }}</span
+                        >
+                        {% else %}
+                        <span class="text-rose-950 font-medium">Reason:</span>
+                        {{ proposal.admin_notes }} {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-16 px-4">
+                <div
+                  class="w-12 h-12 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-100"
+                >
+                  <i class="fas fa-history text-lg"></i>
+                </div>
+                <h4 class="text-slate-800 font-bold text-sm">No History Yet</h4>
+                <p class="text-xs text-slate-500 mt-1">
+                  No schedule approval or rejection activity recorded yet.
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </main>
+    </div>
+
+    <!-- MODAL REGISTER DOCTOR -->
+    <div
+      id="addDoctorModal"
+      class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4"
+    >
+      <!-- Backdrop -->
+      <div
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+        onclick="closeModal()"
+      ></div>
+
+      <!-- Modal Content -->
+      <div
+        class="relative bg-white rounded-2xl w-full max-w-md shadow-2xl transform overflow-hidden animate-fade-in"
+      >
+        <!-- Header -->
+        <div
+          class="bg-emerald-950 p-6 text-white flex items-center justify-between"
+        >
+          <div>
+            <h3 class="text-lg font-bold">Register New Doctor</h3>
+            <p class="text-xs text-emerald-400/80 mt-1">
+              Register a HealthyMate specialist doctor account.
+            </p>
+          </div>
+          <button
+            onclick="closeModal()"
+            class="text-white/60 hover:text-white bg-white/10 hover:bg-white/20 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Form -->
+        <form
+          action="{{ url_for('app_routes.admin_create_doctor') }}"
+          method="POST"
+          class="p-6 space-y-4"
+        >
+          <div>
+            <label
+              class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+              >Full Name & Title</label
+            >
+            <input
+              type="text"
+              name="name"
+              required
+              placeholder="Example: Dr. John Doe, Specialist"
+              class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+              >Username</label
+            >
+            <input
+              type="text"
+              name="username"
+              required
+              placeholder="Example: drjohn"
+              class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+              >Email</label
+            >
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Example: dr.john@healthymate.com"
+              class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2"
+              >Account Password</label
+            >
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="Minimum 6 characters"
+              class="w-full text-sm border border-slate-200 focus:border-emerald-700 rounded-xl px-4 py-3 outline-none transition-colors"
+            />
+          </div>
+
+          <div
+            class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100"
+          >
+            <button
+              type="button"
+              onclick="closeModal()"
+              class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold rounded-xl shadow-md shadow-emerald-700/10 transition-colors"
+            >
+              Save & Register
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+      // Toggle sidebar on mobile
+      const toggleSidebarBtn = document.getElementById("toggleSidebar");
+      const sidebar = document.getElementById("sidebar");
+      const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+
+      if (toggleSidebarBtn) {
+        toggleSidebarBtn.addEventListener("click", () => {
+          sidebar.classList.remove("-translate-x-full");
+          sidebarBackdrop.classList.remove("hidden");
+        });
+      }
+
+      if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          sidebarBackdrop.classList.add("hidden");
+        });
+      }
+
+      // Modal Open/Close
+      function openModal() {
+        const modal = document.getElementById("addDoctorModal");
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      // Pre-fill fields on modal close or escape
+      function closeModal() {
+        const modal = document.getElementById("addDoctorModal");
+        modal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+
+      // Client-side filter for Appointments tab
+      function filterAppointments(status) {
+        const rows = document.querySelectorAll(".appointment-row");
+        const buttons = document.querySelectorAll(".apt-filter-btn");
+
+        // Update filter button styling
+        buttons.forEach((btn) => {
+          if (
+            btn.innerText.toLowerCase().includes(status) ||
+            (status === "all" && btn.innerText.toLowerCase() === "all")
+          ) {
+            btn.className =
+              "apt-filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 transition-colors";
+          } else {
+            btn.className =
+              "apt-filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg hover:bg-slate-100 text-slate-600 transition-colors";
+          }
+        });
+
+        // Hide/Show rows
+        rows.forEach((row) => {
+          if (status === "all") {
+            row.style.display = "";
+          } else {
+            const rowStatus = row.getAttribute("data-status");
+            if (rowStatus === status) {
+              row.style.display = "";
+            } else {
+              row.style.display = "none";
+            }
+          }
+        });
+      }
+
+      function toggleRecipientSelect() {
+        const select = document.getElementById("recipientTypeSelect");
+        const wrapper = document.getElementById("specificUserWrapper");
+        if (select && wrapper) {
+          if (select.value === "specific") {
+            wrapper.classList.remove("hidden");
+          } else {
+            wrapper.classList.add("hidden");
+          }
+        }
+      }
+
+      function toggleRejectForm(proposalId) {
+        const container = document.getElementById(
+          `reject-container-${proposalId}`,
+        );
+        if (container) {
+          container.classList.toggle("hidden");
+        }
+      }
+    </script>
   </body>
 </html>

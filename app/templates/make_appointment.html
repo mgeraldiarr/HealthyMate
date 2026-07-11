@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,13 +32,21 @@
     </script>
     <style>
       @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .animate-fade-in-up {
         animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
-      input:focus, select:focus, textarea:focus {
+      input:focus,
+      select:focus,
+      textarea:focus {
         outline: none;
         border-color: #cedfc9 !important;
         box-shadow: 0 0 0 2px #cedfc9 !important;
@@ -59,46 +67,70 @@
       }
     </style>
   </head>
-  <body class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased">
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
     {% include 'components/navbar.html' ignore missing %}
-    
+
     <main class="flex-grow max-w-4xl w-full mx-auto pt-10 pb-16 px-6">
       <!-- Header -->
       <div class="text-center mb-8 animate-fade-in-up">
         <h1 class="text-4xl md:text-5xl font-light text-gray-900 mb-4">
-          Make an 
+          Make an
           <span class="italic font-serif font-normal text-gray-900">
             Appointment
           </span>
         </h1>
-        <p class="text-gray-500 max-w-2xl mx-auto mt-2 font-medium text-sm md:text-base leading-relaxed">
-          Fill out the form below to schedule a consultation with <strong>Dr. {{ doctor.name }}</strong>.
+        <p
+          class="text-gray-500 max-w-2xl mx-auto mt-2 font-medium text-sm md:text-base leading-relaxed"
+        >
+          Fill out the form below to schedule a consultation with
+          <strong>Dr. {{ doctor.name }}</strong>.
         </p>
       </div>
 
       <!-- Form Card -->
-      <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s">
-        <div class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-8 py-4"></div>
+      <div
+        class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up"
+        style="animation-delay: 0.1s"
+      >
+        <div
+          class="bg-gradient-to-r from-[#0b3925] to-[#1a5a3a] px-8 py-4"
+        ></div>
 
         <div class="p-8 md:p-10">
           {% if existing_pending_appointment %}
           <!-- Pesan untuk Appointment yang Sedang Pending -->
           <div class="text-center py-8 px-4">
-            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <div
+              class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4 mx-auto"
+            >
               <i class="fas fa-hourglass-half text-yellow-600 text-2xl"></i>
             </div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Request in Progress</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+              Request in Progress
+            </h3>
             <p class="text-gray-600 max-w-md mx-auto mb-6">
-              You already have a pending appointment request for <strong>Dr. {{ doctor.name }}</strong> on 
-              <strong>{{ existing_pending_appointment.appointment_time.strftime('%A, %d %B %Y at %H:%M') }}</strong>. 
-              Please wait until your request is approved or rejected before making a new one.
+              You already have a pending appointment request for
+              <strong>Dr. {{ doctor.name }}</strong> on
+              <strong
+                >{{ existing_pending_appointment.appointment_time.strftime('%A,
+                %d %B %Y at %H:%M') }}</strong
+              >. Please wait until your request is approved or rejected before
+              making a new one.
             </p>
             <div class="flex justify-center gap-4">
-              <a href="{{ url_for('app_routes.consultation') }}" class="w-full sm:w-auto text-center px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium transition-colors text-sm">
+              <a
+                href="{{ url_for('app_routes.consultation') }}"
+                class="w-full sm:w-auto text-center px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium transition-colors text-sm"
+              >
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Consultation
               </a>
-              <a href="{{ url_for('app_routes.dashboard') }}" class="w-full sm:w-auto text-center px-6 py-3 rounded-xl bg-[#0b3925] hover:bg-[#1a5a3a] text-white font-medium transition-colors text-sm">
+              <a
+                href="{{ url_for('app_routes.dashboard') }}"
+                class="w-full sm:w-auto text-center px-6 py-3 rounded-xl bg-[#0b3925] hover:bg-[#1a5a3a] text-white font-medium transition-colors text-sm"
+              >
                 Go to Dashboard
                 <i class="fas fa-arrow-right ml-2"></i>
               </a>
@@ -106,39 +138,55 @@
           </div>
 
           {% else %}
-          <form action="{{ url_for('app_routes.make_appointment', doctor_id=doctor.id) }}" method="POST" class="space-y-6">
-            
+          <form
+            action="{{ url_for('app_routes.make_appointment', doctor_id=doctor.id) }}"
+            method="POST"
+            class="space-y-6"
+          >
             <!-- Flash Messages Specific to this Form -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                  <div class="px-4 py-2 rounded-md text-sm flex items-center gap-3 {% if category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}">
-                    <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
-                    <span>{{ message }}</span>
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-            
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %} {% for category, message in messages %}
+            <div
+              class="px-4 py-2 rounded-md text-sm flex items-center gap-3 {% if category == 'success' %}bg-[#cedfc9]/40 text-[#0b3925] border-l-4 border-[#0b3925]{% else %}bg-red-50 text-red-700 border-l-4 border-red-500{% endif %}"
+            >
+              <i
+                class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"
+              ></i>
+              <span>{{ message }}</span>
+            </div>
+            {% endfor %} {% endif %} {% endwith %}
+
             <!-- Patient Name (Read-only) -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 <i class="fas fa-user-circle text-[#0b3925] mr-2 text-sm"></i>
                 Patient Name
               </label>
-              <input type="text" value="{{ current_user.name or current_user.username }}" disabled
-                class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed">
+              <input
+                type="text"
+                value="{{ current_user.name or current_user.username }}"
+                disabled
+                class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed"
+              />
             </div>
 
             <!-- Contact Number -->
             <div>
-              <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="phone_number"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 <i class="fas fa-phone text-[#0b3925] mr-2 text-sm"></i>
                 Contact Number (WhatsApp)
               </label>
-              <input type="tel" id="phone_number" name="phone_number" required
+              <input
+                type="tel"
+                id="phone_number"
+                name="phone_number"
+                required
                 class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 transition-all duration-200"
-                placeholder="e.g., 081234567890">
+                placeholder="e.g., 081234567890"
+              />
             </div>
 
             <!-- Appointment Schedule -->
@@ -147,47 +195,91 @@
                 <i class="fas fa-calendar-alt text-[#0b3925] mr-2 text-sm"></i>
                 Choose Appointment Schedule
               </label>
-              <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-4">
-                {% if available_slots %}
-                  {% for day, slots in available_slots.items() %}
-                    <div>
-                      <h4 class="font-semibold text-gray-800 text-sm mb-2">{{ day }}</h4>
-                      <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                        {% for slot in slots %}
-                          <label class="radio-label border border-gray-300 rounded-lg p-2 text-center cursor-pointer transition-all duration-200 hover:border-[#0b3925]">
-                            <input type="radio" name="appointment_slot" value="{{ slot.iso_format }}" class="sr-only" required {% if not slot.available %}disabled{% endif %}>
-                            <span class="time-slot font-medium text-sm">{{ slot.time }}</span>
-                            <span class="block text-xs mt-0.5">{{ 'Available' if slot.available else 'Booked' }}</span>
-                          </label>
-                        {% endfor %}
-                      </div>
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  <p class="text-center text-gray-500 text-sm py-4">No available schedules for this doctor at the moment.</p>
+              <div
+                class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-4"
+              >
+                {% if available_slots %} {% for day, slots in
+                available_slots.items() %}
+                <div>
+                  <h4 class="font-semibold text-gray-800 text-sm mb-2">
+                    {{ day }}
+                  </h4>
+                  <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {% for slot in slots %}
+                    <label
+                      class="radio-label border border-gray-300 rounded-lg p-2 text-center cursor-pointer transition-all duration-200 hover:border-[#0b3925]"
+                    >
+                      <input
+                        type="radio"
+                        name="appointment_slot"
+                        value="{{ slot.iso_format }}"
+                        class="sr-only"
+                        required
+                        {%
+                        if
+                        not
+                        slot.available
+                        %}disabled{%
+                        endif
+                        %}
+                      />
+                      <span class="time-slot font-medium text-sm"
+                        >{{ slot.time }}</span
+                      >
+                      <span class="block text-xs mt-0.5"
+                        >{{ 'Available' if slot.available else 'Booked' }}</span
+                      >
+                    </label>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endfor %} {% else %}
+                <p class="text-center text-gray-500 text-sm py-4">
+                  No available schedules for this doctor at the moment.
+                </p>
                 {% endif %}
               </div>
             </div>
 
             <!-- Complaint -->
             <div>
-              <label for="complaint" class="block text-sm font-medium text-gray-700 mb-2">
-                <i class="fas fa-comment-medical text-[#0b3925] mr-2 text-sm"></i>
+              <label
+                for="complaint"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                <i
+                  class="fas fa-comment-medical text-[#0b3925] mr-2 text-sm"
+                ></i>
                 Brief Complaint or Consultation Topic
               </label>
-              <textarea id="complaint" name="complaint" rows="4"
+              <textarea
+                id="complaint"
+                name="complaint"
+                rows="4"
                 class="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 transition-all duration-200"
-                placeholder="Describe what you want to consult about, e.g., 'I want to consult about a diet for weight loss.'"></textarea>
+                placeholder="Describe what you want to consult about, e.g., 'I want to consult about a diet for weight loss.'"
+              ></textarea>
             </div>
-            
+
             <!-- Submit Button -->
             <div class="pt-4 flex flex-col sm:flex-row gap-4">
-              <a href="{{ url_for('app_routes.consultation') }}" class="w-full sm:w-auto text-center px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium transition-colors text-sm">
+              <a
+                href="{{ url_for('app_routes.consultation') }}"
+                class="w-full sm:w-auto text-center px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium transition-colors text-sm"
+              >
                 Cancel
               </a>
-              <button type="submit" 
+              <button
+                type="submit"
                 class="w-full sm:flex-1 bg-[#0b3925] hover:bg-[#1a5a3a] text-sm text-gray-100 font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-                {% if not available_slots %}disabled{% endif %}>
+                {%
+                if
+                not
+                available_slots
+                %}disabled{%
+                endif
+                %}
+              >
                 <i class="fas fa-calendar-check"></i>
                 Make Appointment
               </button>
@@ -197,7 +289,7 @@
         </div>
       </div>
     </main>
-    
+
     {% include 'components/footer.html' ignore missing %}
   </body>
 </html>

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
+      type="image/svg+xml"
+    />
+    <title>My Notifications | HealthyMate</title>
+    <meta name="view-transition" content="same-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col font-sans bg-[#f2f7f4] text-gray-800 antialiased"
+  >
+    {% include 'components/navbar.html' %}
+
+    <main class="flex-grow max-w-4xl w-full mx-auto pt-8 pb-16 px-6">
+      <!-- Header -->
+      <div
+        class="animate-fade-in mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
+        <div>
+          <h1 class="text-4xl md:text-5xl font-light text-gray-900">
+            My
+            <span class="italic font-serif font-normal text-gray-900">
+              Notifications
+            </span>
+          </h1>
+          <p class="text-gray-500 text-sm mt-1.5">
+            Center for updates regarding appointments, consultations, and admin
+            announcements.
+          </p>
+        </div>
+
+        {% if notifications %}
+        <form
+          action="{{ url_for('app_routes.read_all_notifications') }}"
+          method="POST"
+        >
+          <button
+            type="submit"
+            class="w-full sm:w-auto text-xs bg-white hover:bg-gray-50 text-gray-700 font-bold py-2.5 px-4 rounded-xl border border-gray-200 shadow-sm transition-all flex items-center justify-center gap-2"
+          >
+            <i class="fas fa-check-double text-emerald-600"></i> Mark All as
+            Read
+          </button>
+        </form>
+        {% endif %}
+      </div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div
+        class="mb-6 space-y-2.5 animate-fade-in"
+        style="animation-delay: 0.05s"
+      >
+        {% for category, message in messages %}
+        <div
+          class="px-4 py-3.5 rounded-xl text-sm flex items-center justify-between {% if category == 'success' %}bg-emerald-50 text-emerald-950 border border-emerald-200/60{% else %}bg-blue-50 text-blue-950 border border-blue-200/60{% endif %}"
+        >
+          <div class="flex items-center gap-3">
+            <i
+              class="fas {% if category == 'success' %}fa-check-circle text-emerald-600{% else %}fa-info-circle text-blue-600{% endif %}"
+            ></i>
+            <span class="font-medium">{{ message }}</span>
+          </div>
+          <button
+            onclick="this.parentElement.remove()"
+            class="text-gray-400 hover:text-gray-700"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Notification List -->
+      <div class="animate-fade-in space-y-4" style="animation-delay: 0.1s">
+        {% if notifications %} {% for notif in notifications %}
+        <form
+          action="{{ url_for('app_routes.read_notification', notification_id=notif.id) }}"
+          method="POST"
+          class="block transition-transform duration-200 hover:-translate-y-0.5"
+        >
+          <button
+            type="submit"
+            class="w-full text-left focus:outline-none block bg-white rounded-2xl border {% if not notif.is_read %} border-emerald-200 bg-emerald-50/10 shadow-sm {% else %} border-gray-100 shadow-sm {% endif %} p-5 hover:shadow-md transition-shadow relative overflow-hidden"
+          >
+            <!-- Unread left indicator line -->
+            {% if not notif.is_read %}
+            <div class="absolute left-0 top-0 h-full w-1 bg-emerald-600"></div>
+            {% endif %}
+
+            <div class="flex items-start gap-4">
+              <!-- Icon Section based on Type -->
+              <div
+                class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-base {% if notif.type == 'appointment' %} bg-emerald-50 text-emerald-600 {% elif notif.type == 'schedule' %} bg-amber-50 text-amber-600 {% else %} bg-blue-50 text-blue-600 {% endif %}"
+              >
+                {% if notif.type == 'appointment' %}
+                <i class="fas fa-calendar-alt"></i>
+                {% elif notif.type == 'schedule' %}
+                <i class="fas fa-comments"></i>
+                {% else %}
+                <i class="fas fa-bullhorn"></i>
+                {% endif %}
+              </div>
+
+              <!-- Text Details -->
+              <div class="flex-grow min-w-0 pr-4">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h4
+                    class="font-bold text-gray-900 text-sm sm:text-base leading-tight"
+                  >
+                    {{ notif.title }}
+                  </h4>
+                  {% if not notif.is_read %}
+                  <span
+                    class="bg-emerald-600 text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded tracking-wide"
+                    >New</span
+                  >
+                  {% endif %}
+                </div>
+                <p
+                  class="text-xs sm:text-sm text-gray-600 mt-1.5 leading-relaxed"
+                >
+                  {{ notif.message }}
+                </p>
+                <span class="block text-[10px] text-gray-400 mt-2 font-medium">
+                  <i class="far fa-clock mr-1"></i> {{
+                  notif.created_at.strftime('%d %b %Y, %H:%M') }} WIB
+                </span>
+              </div>
+
+              <!-- Action Arrow -->
+              {% if notif.link %}
+              <div
+                class="self-center text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0 pl-2"
+              >
+                <i class="fas fa-chevron-right text-sm"></i>
+              </div>
+              {% endif %}
+            </div>
+          </button>
+        </form>
+        {% endfor %} {% else %}
+        <div
+          class="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 text-center"
+        >
+          <div
+            class="w-16 h-16 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100"
+          >
+            <i class="far fa-bell text-2xl"></i>
+          </div>
+          <h3 class="text-gray-900 font-bold text-lg">All quiet here...</h3>
+          <p class="text-xs sm:text-sm text-gray-500 mt-1 max-w-sm mx-auto">
+            You have no notifications at the moment. Any schedule updates or
+            admin info will appear here.
+          </p>
+        </div>
+        {% endif %}
+      </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+  </body>
+</html>

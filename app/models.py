@@ -103,6 +103,9 @@ class Appointment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     phone_number = db.Column(db.String(20), nullable=True)
     complaint = db.Column(db.Text, nullable=True)
+    doctor_notes = db.Column(db.Text, nullable=True)
+    started_at = db.Column(db.DateTime, nullable=True)
+    completed_at = db.Column(db.DateTime, nullable=True)
 
     doctor = db.relationship('User', foreign_keys=[doctor_id])
 
@@ -115,6 +118,48 @@ class Message(db.Model):
     content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     is_whatsapp_button = db.Column(db.Boolean, default=False) # Flag untuk pesan khusus tombol WA
+    is_read = db.Column(db.Boolean, default=False, nullable=False)
 
     sender = db.relationship('User', foreign_keys=[sender_id])
     appointment = db.relationship('Appointment', backref='messages', lazy=True)
+
+
+# Tabel untuk menyimpan notifikasi pengguna
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    type = db.Column(db.String(30), nullable=False, default='general') # 'appointment', 'admin_manual', 'schedule'
+    is_read = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    link = db.Column(db.String(255), nullable=True)
+
+    user = db.relationship('User', backref=db.backref('notifications', lazy=True, cascade="all, delete-orphan"))
+
+
+class DoctorSchedule(db.Model):
+    __tablename__ = 'doctor_schedules'
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    day_of_week = db.Column(db.String(20), nullable=False) # 'Monday', 'Tuesday', etc.
+    time_slot = db.Column(db.String(5), nullable=False) # '09:00', '15:30', etc.
+    effective_from = db.Column(db.Date, nullable=True)
+    effective_to = db.Column(db.Date, nullable=True)
+
+    doctor = db.relationship('User', foreign_keys=[doctor_id], backref=db.backref('schedules', lazy=True, cascade="all, delete-orphan"))
+
+
+class ScheduleProposal(db.Model):
+    __tablename__ = 'schedule_proposals'
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending') # 'pending', 'approved', 'rejected'
+    proposed_schedule = db.Column(db.Text, nullable=False) # JSON string
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    admin_notes = db.Column(db.Text, nullable=True)
+    effective_date = db.Column(db.Date, nullable=True)
+
+    doctor = db.relationship('User', foreign_keys=[doctor_id], backref=db.backref('schedule_proposals', lazy=True, cascade="all, delete-orphan"))
