@@ -8,10 +8,10 @@
       href="{{ url_for('static', filename='images/logo-hm2.webp') }}"
       type="image/svg+xml"
     />
-    <title>About | HealthyMate</title>
+    <title>About HealthyMate | Nutrition Companion</title>
     <meta
       name="description"
-      content="Learn about HealthyMate and our mission to improve nutrition awareness"
+      content="Learn more about HealthyMate, your personal nutrition companion, our background, mission, and service pillars."
     />
     <meta name="view-transition" content="same-origin" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -61,32 +61,18 @@
         animation-delay: 0.25s;
       }
 
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid #e2e8f0;
-        border-top: 3px solid #0b3925;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      ::view-transition-old(root),
-      ::view-transition-new(root) {
-        animation-duration: 0.4s;
+      .hero-gradient {
+        background: linear-gradient(135deg, #f2f7f4 0%, #e2eee7 100%);
       }
 
-      .team-member {
-        transition: all 0.3s ease;
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
       }
-      .team-member:hover {
-        transform: translateY(-4px);
+
+      .icon-box {
+        background: linear-gradient(135deg, #cedfc9 0%, #b9cca5 100%);
       }
     </style>
   </head>
@@ -96,711 +82,474 @@
     {% include 'components/navbar.html' %}
 
     <!-- Hero Section -->
-    <section class="hero-gradient-bg">
-      <div class="max-w-7xl mx-auto px-6 py-20 md:py-28 text-center">
+    <section
+      class="hero-gradient relative overflow-hidden py-20 md:py-28 border-b border-gray-100"
+    >
+      <div
+        class="absolute inset-0 bg-[radial-gradient(#cedfc9_1px,transparent_1px)] [background-size:16px_16px] opacity-30"
+      ></div>
+      <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
         <div class="max-w-4xl mx-auto">
+          <span
+            class="inline-block px-4 py-1.5 bg-[#cedfc9] text-[#0b3925] text-xs font-semibold rounded-full mb-6 uppercase tracking-wider animate-fade-in-up"
+          >
+            About Us Platform
+          </span>
           <h1
             class="text-4xl md:text-5xl lg:text-6xl font-light text-gray-900 leading-tight mb-6 animate-fade-in-up"
           >
-            Our
+            Getting to Know <br />
             <span class="italic font-serif font-normal text-gray-900">
-              Journey
+              HealthyMate
             </span>
-            in Creating HealthyMate
           </h1>
           <p
-            class="text-gray-500 max-w-2xl mx-auto mt-6 font-medium text-sm md:text-base leading-relaxed"
+            class="text-gray-600 max-w-2xl mx-auto font-medium text-sm md:text-base leading-relaxed animate-fade-in-up animation-delay-100"
           >
-            A project developed by students of Universitas Esa Unggul Bekasi as
-            the final project for the Software Project Management course.
+            A smart personal health and nutrition partner that helps you
+            understand your body's nutritional needs to achieve a more balanced,
+            productive, and happy lifestyle.
           </p>
           <div
             class="flex flex-wrap items-center justify-center gap-4 mt-8 animate-fade-in-up animation-delay-200"
           >
             <a
-              href="#story"
-              class="bg-[#cedfc9] hover:bg-[#b9cca5] text-gray-900 font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
+              href="#about-details"
+              class="bg-[#0b3925] hover:bg-[#134e35] text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
             >
-              Our Story <i class="fas fa-arrow-down"></i>
+              Learn More <i class="fas fa-arrow-down"></i>
             </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Our Story Section -->
-    <section id="story" class="py-16 bg-white rounded-t-[3rem] scroll-mt-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row items-center gap-12 mb-16">
-          <!--Text Content-->
-          <div class="md:w-1/2 animate-fade-in-up">
-            <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-6">
-              Our
-              <span class="italic font-serif font-normal text-gray-900">
-                Story
-              </span>
+    <!-- What is HealthyMate Section -->
+    <section
+      id="about-details"
+      class="py-20 bg-white rounded-t-[3rem] scroll-mt-20"
+    >
+      <div class="max-w-7xl mx-auto px-6 md:px-8">
+        <div class="flex flex-col lg:flex-row items-center gap-12">
+          <!-- Text Content -->
+          <div class="lg:w-1/2 animate-fade-in-up">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-8 h-[2px] bg-[#0b3925]"></div>
+              <span
+                class="text-[#0b3925] font-semibold text-sm uppercase tracking-wider"
+                >Definition</span
+              >
+            </div>
+            <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-6">
+              What is
+              <span class="italic font-serif font-normal text-[#0b3925]"
+                >HealthyMate?</span
+              >
             </h2>
             <p
-              class="text-gray-500 max-w-2xl mt-6 font-medium text-sm md:text-base leading-relaxed"
+              class="text-gray-600 font-medium text-sm md:text-base leading-relaxed mb-4"
             >
-              HealthyMate was developed as the final project for the Software
-              Project Management course at Universitas Esa Unggul Bekasi. This
-              project was created to apply software project management
-              principles throughout the entire development lifecycle, from
-              project planning and system analysis to design, implementation,
-              testing, and deployment.
+              HealthyMate is a smart web-based application designed as your
+              daily personal nutrition companion. We combine calorie need
+              calculation technology with direct consultation access to health
+              experts to democratize healthy living for everyone.
             </p>
-
             <p
-              class="text-gray-500 max-w-2xl mt-3 mb-6 font-medium text-sm md:text-base leading-relaxed"
+              class="text-gray-600 font-medium text-sm md:text-base leading-relaxed mb-6"
             >
-              Designed as a web-based health application, HealthyMate helps
-              users calculate their daily calorie requirements based on age,
-              weight, height, gender, and activity level while providing
-              personalized nutrition recommendations. Beyond fulfilling academic
-              requirements, this project demonstrates our commitment to
-              developing a practical, user-friendly, and impactful solution that
-              promotes healthier lifestyle choices through technology.
+              We realize that every individual has different physical
+              conditions, activity levels, and body metabolisms. Therefore,
+              HealthyMate rejects a one-size-fits-all nutrition approach and
+              focuses on a personalized method tailored specifically for you.
             </p>
 
-            <!--stats-->
-            <div class="flex flex-wrap gap-4">
-              <div class="flex items-center bg-gray-50 rounded-lg p-3">
-                <div
-                  class="bg-[#cedfc9] w-10 h-10 rounded-full mr-3 flex items-center justify-center"
+            <!-- Stats & Quick Facts -->
+            <div class="grid grid-cols-2 gap-4 mt-8">
+              <div class="p-4 rounded-2xl bg-[#f2f7f4] border border-gray-100">
+                <span class="block text-3xl font-bold text-[#0b3925] mb-1"
+                  >Personalized</span
                 >
-                  <i class="fas fa-users text-[#0b3925]"></i>
-                </div>
-                <div>
-                  <p class="font-bold text-gray-900">ESA Unggul</p>
-                  <p class="text-sm text-gray-500">University Project</p>
-                </div>
+                <span class="text-xs text-gray-500 font-medium"
+                  >Nutritional Plan</span
+                >
               </div>
-              <div class="flex items-center bg-gray-50 rounded-lg p-3">
-                <div
-                  class="bg-[#cedfc9] w-10 h-10 rounded-full mr-3 flex items-center justify-center"
+              <div class="p-4 rounded-2xl bg-[#f2f7f4] border border-gray-100">
+                <span class="block text-3xl font-bold text-[#0b3925] mb-1"
+                  >Direct Chat</span
                 >
-                  <i class="fas fa-code text-[#0b3925]"></i>
-                </div>
-                <div>
-                  <p class="font-bold text-gray-900">1000+</p>
-                  <p class="text-sm text-gray-500">Lines of Code</p>
-                </div>
-              </div>
-              <div class="flex items-center bg-gray-50 rounded-lg p-3">
-                <div
-                  class="bg-[#cedfc9] w-10 h-10 rounded-full mr-3 flex items-center justify-center"
+                <span class="text-xs text-gray-500 font-medium"
+                  >With Certified Doctors</span
                 >
-                  <i class="fas fa-clock text-[#0b3925]"></i>
-                </div>
-                <div>
-                  <p class="font-bold text-gray-900">3+ Bulan</p>
-                  <p class="text-sm text-gray-500">Development</p>
-                </div>
               </div>
             </div>
           </div>
 
-          <!--image content-->
-          <div class="md:w-1/2">
+          <!-- Image content / Vector representation -->
+          <div class="lg:w-1/2 w-full">
             <div
-              class="relative rounded-2xl overflow-hidden shadow-xl group hover:shadow-2xl transition-all duration-500"
+              class="relative rounded-3xl overflow-hidden shadow-2xl group hover:shadow-3xl transition-all duration-500"
             >
-              <div class="overflow-hidden h-[300px] md:h-[400px]">
-                <img
-                  src="{{ url_for('static', filename='images/team_working.jpg') }}"
-                  alt="Our Team Working"
-                  class="w-full h-full object-cover transform transition-all duration-700 group-hover:scale-110 group-hover:brightness-105"
-                />
+              <div
+                class="bg-gradient-to-tr from-[#0b3925] to-[#cedfc9] p-8 md:p-12 flex flex-col justify-between min-h-[350px] md:min-h-[400px] text-white"
+              >
+                <div class="flex justify-between items-start">
+                  <div class="text-4xl font-bold opacity-80">
+                    <i class="fas fa-heartbeat"></i>
+                  </div>
+                  <div
+                    class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold uppercase tracking-wider"
+                  >
+                    Smart Companion
+                  </div>
+                </div>
+                <div class="my-6">
+                  <h3 class="text-2xl md:text-3xl font-light leading-snug mb-3">
+                    "Health is the best investment for your future."
+                  </h3>
+                  <p class="text-sm text-white/80">
+                    Start with small steps today with HealthyMate for
+                    long-lasting great results.
+                  </p>
+                </div>
+                <div
+                  class="flex justify-between items-center text-xs border-t border-white/20 pt-4"
+                >
+                  <span>HEALTHYMATE V2.0</span>
+                  <span>Esa Unggul Project</span>
+                </div>
               </div>
               <div
-                class="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-gray-900/30 to-transparent opacity-100 group-hover:from-gray-900/80 group-hover:via-gray-900/40 transition-all duration-500"
+                class="absolute inset-0 bg-[#0b3925]/10 mix-blend-overlay"
               ></div>
-              <div class="absolute bottom-0 left-0 p-6 text-white w-full">
-                <p
-                  class="text-sm font-medium opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100"
-                >
-                  Esa Unggul University, Bekasi
-                </p>
-                <div
-                  class="w-0 group-hover:w-16 h-0.5 bg-[#cedfc9] mt-2 transition-all duration-500 delay-200"
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Timeline -->
-      <div class="max-w-3xl mx-auto pt-10 px-4">
-        <h2
-          class="text-3xl md:text-4xl font-light text-gray-900 mb-8 text-center"
-        >
-          Our Development
-          <span class="italic font-serif font-normal text-gray-900">
-            Journey
-          </span>
-        </h2>
-
-        <div class="relative pl-8 border-l-2 border-gray-200 space-y-8">
-          <!-- Timeline Item 1 -->
-          <div class="relative timeline-item mb-10">
-            <div
-              class="absolute -left-[24px] top-6 w-4 h-4 rounded-full bg-[#cedfc9] border-4 border-white"
-            ></div>
-            <div
-              class="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
-            >
-              <div class="flex items-center mb-2">
-                <span
-                  class="bg-[#cedfc9] text-[#0b3925] text-xs font-semibold px-2.5 py-0.5 rounded"
-                  >2025</span
-                >
-              </div>
-              <h4 class="text-lg font-bold text-gray-900 mb-2">
-                HealthyMate Foundation
-              </h4>
-
-              <p class="text-gray-600 text-sm">
-                HealthyMate was originally introduced in 2025 by a previous
-                student team as a web-based nutrition platform. The initial
-                version established the core concept of helping users better
-                understand their nutritional needs through simple and accessible
-                technology.
-              </p>
-            </div>
-          </div>
-
-          <!-- Timeline Item 2 -->
-          <div class="relative timeline-item mb-10">
-            <div
-              class="absolute -left-[24px] top-6 w-4 h-4 rounded-full bg-[#cedfc9] border-4 border-white"
-            ></div>
-            <div
-              class="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
-            >
-              <div class="flex items-center mb-2">
-                <span
-                  class="bg-[#cedfc9] text-[#0b3925] text-xs font-semibold px-2.5 py-0.5 rounded"
-                  >2026</span
-                >
-              </div>
-              <h4 class="text-lg font-bold text-gray-900 mb-2">
-                Project Continuation
-              </h4>
-
-              <p class="text-gray-600 text-sm">
-                In 2026, our team continued the HealthyMate project as the final
-                project for the Software Project Management course. We reviewed
-                the previous system, evaluated its strengths and limitations,
-                and identified opportunities for improvement.
-              </p>
-            </div>
-          </div>
-
-          <!-- Timeline Item 3 -->
-          <div class="relative timeline-item mb-10">
-            <div
-              class="absolute -left-[24px] top-6 w-4 h-4 rounded-full bg-[#cedfc9] border-4 border-white"
-            ></div>
-            <div
-              class="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
-            >
-              <div class="flex items-center mb-2">
-                <span
-                  class="bg-[#cedfc9] text-[#0b3925] text-xs font-semibold px-2.5 py-0.5 rounded"
-                  >2026</span
-                >
-              </div>
-              <h4 class="text-lg font-bold text-gray-900 mb-2">
-                Redesign & Feature Enhancement
-              </h4>
-
-              <p class="text-gray-600 text-sm">
-                We redesigned the entire user interface with a cleaner, more
-                modern, and professional appearance while improving the overall
-                user experience. Additional features such as an enhanced
-                dashboard, user profile management, nutrition calculator
-                improvements, and system optimizations were implemented to
-                provide greater functionality and usability.
-              </p>
-            </div>
-          </div>
-
-          <!-- Timeline Item 4 -->
-          <div class="relative timeline-item">
-            <div
-              class="absolute -left-[24px] top-6 w-4 h-4 rounded-full bg-[#0b3925] border-4 border-white"
-            ></div>
-            <div
-              class="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
-            >
-              <div class="flex items-center mb-2">
-                <span
-                  class="bg-[#cedfc9] text-[#0b3925] text-xs font-semibold px-2.5 py-0.5 rounded"
-                  >2026</span
-                >
-              </div>
-              <h4 class="text-lg font-bold text-gray-900 mb-2">
-                HealthyMate 2026 Release
-              </h4>
-
-              <p class="text-gray-600 text-sm">
-                The renewed version of HealthyMate was successfully completed
-                with improved performance, enhanced functionality, and a
-                refreshed visual identity. Developed using modern web
-                technologies and software project management practices,
-                HealthyMate is now better equipped to deliver a more intuitive
-                and engaging experience for its users.
-              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Mission Section -->
-    <section class="py-16 bg-[#f2f7f4] rounded-t-[3rem]">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-16">
-          <h2
-            class="text-3xl md:text-5xl font-light tracking-tight text-gray-900 mb-4"
-          >
-            Project
-            <span class="italic font-serif font-normal text-gray-900">
-              Goals
-            </span>
+    <!-- Background Section -->
+    <section class="py-20 bg-[#f2f7f4] border-t border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-6 md:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-[#0b3925]"></div>
+            <span
+              class="text-[#0b3925] font-semibold text-sm uppercase tracking-wider"
+              >Background</span
+            >
+            <div class="w-8 h-[2px] bg-[#0b3925]"></div>
+          </div>
+          <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-6">
+            Why
+            <span class="italic font-serif font-normal text-[#0b3925]"
+              >HealthyMate</span
+            >
+            was Created?
           </h2>
           <p
-            class="text-gray-500 max-w-2xl mt-6 mx-auto font-medium text-sm md:text-base leading-relaxed"
+            class="text-gray-500 font-medium text-sm md:text-base leading-relaxed"
           >
-            The objectives that guided our development process
+            Faced with the complexities of modern health issues and nutrition
+            misinformation, we are committed to delivering simple, reliable, and
+            science-based solutions.
           </p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
+          <!-- Card 1: Modern Health Challenges -->
           <div
-            class="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 animate-fade-in-up"
+            class="glass-card p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300"
           >
             <div
-              class="w-14 h-14 bg-[#cedfc9] rounded-lg flex items-center justify-center mb-6"
+              class="w-14 h-14 icon-box rounded-2xl flex items-center justify-center mb-6 text-[#0b3925]"
             >
-              <i class="fas fa-bullseye text-[#0b3925] text-2xl"></i>
+              <i class="fas fa-hamburger text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-3">
-              Academic Excellence
+            <h3 class="text-xl font-bold text-gray-900 mb-3">
+              Modern Health Challenges
             </h3>
-            <p class="text-gray-600 text-sm">
-              This project represents the application of software engineering
-              principles we learned at Esa Unggul University.
+            <p class="text-gray-600 text-sm leading-relaxed">
+              The rising consumption of high-calorie instant processed foods
+              combined with a sedentary lifestyle triggers a spike in obesity
+              rates and various metabolic diseases in society.
             </p>
           </div>
 
+          <!-- Card 2: Nutrition Misinformation -->
           <div
-            class="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 animate-fade-in-up animation-delay-100"
+            class="glass-card p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300"
           >
             <div
-              class="w-14 h-14 bg-[#cedfc9] rounded-lg flex items-center justify-center mb-6"
+              class="w-14 h-14 icon-box rounded-2xl flex items-center justify-center mb-6 text-[#0b3925]"
             >
-              <i class="fas fa-flask text-[#0b3925] text-2xl"></i>
+              <i class="fas fa-search-plus text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-3">Health Impact</h3>
-            <p class="text-gray-600 text-sm">
-              Developing a website to help users make informed nutrition choices
-              and understand their dietary needs.
+            <h3 class="text-xl font-bold text-gray-900 mb-3">
+              Nutrition Misinformation
+            </h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              The abundance of extreme diet guides on the internet often
+              confuses the public. Without personalized metabolic calculations,
+              such diet patterns risk harming the body's health.
             </p>
           </div>
 
+          <!-- Card 3: Medical Access Barriers -->
           <div
-            class="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 animate-fade-in-up animation-delay-200"
+            class="glass-card p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300"
           >
             <div
-              class="w-14 h-14 bg-[#cedfc9] rounded-lg flex items-center justify-center mb-6"
+              class="w-14 h-14 icon-box rounded-2xl flex items-center justify-center mb-6 text-[#0b3925]"
             >
-              <i class="fas fa-heart text-[#0b3925] text-2xl"></i>
+              <i class="fas fa-user-md text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-3">
-              User-Friendly Design
+            <h3 class="text-xl font-bold text-gray-900 mb-3">
+              Medical Access Barriers
             </h3>
-            <p class="text-gray-600 text-sm">
-              Ensuring our application is accessible to all users, regardless of
-              their technical or nutritional knowledge.
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Direct consultation with nutritionists or medical specialists
+              often requires high costs and long queue times, preventing people
+              from getting formal health advice.
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Team Section -->
-    <section class="py-16 bg-white rounded-t-[3rem]">
-      <div class="mx-auto px-4 sm:px-6 lg:px-32">
-        <div class="text-center mb-16">
-          <h2
-            class="text-3xl md:text-5xl font-light text-gray-900 mb-4 animate-fade-in-up"
-          >
-            Our
-            <span class="italic font-serif font-normal text-gray-900">
-              Team
-            </span>
+    <!-- Core Pillars of HealthyMate Section -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-6 md:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-[#0b3925]"></div>
+            <span
+              class="text-[#0b3925] font-semibold text-sm uppercase tracking-wider"
+              >Service Pillars</span
+            >
+            <div class="w-8 h-[2px] bg-[#0b3925]"></div>
+          </div>
+          <h2 class="text-3xl md:text-5xl font-light text-gray-900 mb-6">
+            Core Features of
+            <span class="italic font-serif font-normal text-[#0b3925]"
+              >HealthyMate</span
+            >
           </h2>
           <p
-            class="text-gray-500 max-w-2xl mt-6 mx-auto font-medium text-sm md:text-base leading-relaxed animate-fade-in-up animation-delay-100"
+            class="text-gray-500 font-medium text-sm md:text-base leading-relaxed"
           >
-            The dedicated students behind HealthyMate
+            Providing a comprehensive health support ecosystem ranging from
+            nutrition calculators to direct medical consultations.
           </p>
         </div>
 
-        <!-- Desktop Grid 5 columns -->
-        <div
-          class="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
-        >
-          <!-- Team Member 1 -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Pillar 1 -->
           <div
-            class="text-center team-member animate-fade-in-up animation-delay-100 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+            class="bg-gray-50 p-6 rounded-2xl border border-gray-100 hover:border-[#cedfc9] hover:bg-white transition-all duration-300"
           >
             <div
-              class="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg border-4 border-white relative group"
+              class="w-12 h-12 rounded-xl bg-[#cedfc9] flex items-center justify-center text-[#0b3925] mb-5"
             >
-              <img
-                src="{{ url_for('static', filename='images/foto_gege.jpg') }}"
-                alt="Muhammad Geraldi Arisyi"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4"
-              >
-                <div class="flex space-x-4">
-                  <a
-                    href="#"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-linkedin-in text-lg"></i>
-                  </a>
-                  <a
-                    href="https://github.com/mgeraldiar"
-                    target="_blank"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-github text-lg"></i>
-                  </a>
-                </div>
-              </div>
+              <i class="fas fa-calculator text-xl"></i>
             </div>
-            <h3 class="text-base font-bold text-gray-800 mb-1">
-              Muhammad Geraldi Arisyi
-            </h3>
-            <p class="text-gray-500 text-xs mb-2">NIM 20240801054</p>
-            <p class="text-[#0b3925] font-semibold text-sm mb-2">
-              Project Manager
-            </p>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              Responsible for overall project coordination, team leadership, and
-              managing the development lifecycle.
+            <h4 class="text-lg font-bold text-gray-900 mb-2">
+              Smart Calorie Calculator
+            </h4>
+            <p class="text-gray-500 text-xs leading-relaxed">
+              Helps calculate total daily energy expenditure (TDEE) and BMR
+              accurately based on your body metrics and daily physical activity
+              level.
             </p>
           </div>
 
-          <!-- Team Member 2 -->
+          <!-- Pillar 2 -->
           <div
-            class="text-center team-member animate-fade-in-up animation-delay-150 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+            class="bg-gray-50 p-6 rounded-2xl border border-gray-100 hover:border-[#cedfc9] hover:bg-white transition-all duration-300"
           >
             <div
-              class="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg border-4 border-white relative group"
+              class="w-12 h-12 rounded-xl bg-[#cedfc9] flex items-center justify-center text-[#0b3925] mb-5"
             >
-              <img
-                src="{{ url_for('static', filename='images/Dr_maul.jpg') }}"
-                alt="Muhammad Maulana"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4"
-              >
-                <div class="flex space-x-4">
-                  <a
-                    href="#"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-linkedin-in text-lg"></i>
-                  </a>
-                  <a
-                    href="#"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-github text-lg"></i>
-                  </a>
-                </div>
-              </div>
+              <i class="fas fa-utensils text-xl"></i>
             </div>
-            <h3 class="text-base font-bold text-gray-800 mb-1">
-              Rafi Maulana Saputra
-            </h3>
-            <p class="text-gray-500 text-xs mb-2">NIM 20240801195</p>
-            <p class="text-[#0b3925] font-semibold text-sm mb-2">
-              Frontend Developer
-            </p>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              Builds and maintains the user interface using HTML, CSS,
-              JavaScript, and Tailwind CSS.
+            <h4 class="text-lg font-bold text-gray-900 mb-2">
+              Nutritional Meal Recommendations
+            </h4>
+            <p class="text-gray-500 text-xs leading-relaxed">
+              Formulates a daily meal plan with balanced macronutrient details
+              (carbs, protein, fat) tailored to your weight goals.
             </p>
           </div>
 
-          <!-- Team Member 3 -->
+          <!-- Pillar 3 -->
           <div
-            class="text-center team-member animate-fade-in-up animation-delay-200 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+            class="bg-gray-50 p-6 rounded-2xl border border-gray-100 hover:border-[#cedfc9] hover:bg-white transition-all duration-300"
           >
             <div
-              class="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg border-4 border-white relative group"
+              class="w-12 h-12 rounded-xl bg-[#cedfc9] flex items-center justify-center text-[#0b3925] mb-5"
             >
-              <img
-                src="{{ url_for('static', filename='images/kevin-linkedin.png') }}"
-                alt="Kevin Yulian Pamungkas"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4"
-              >
-                <div class="flex space-x-4">
-                  <a
-                    href="https://linkedin.com/in/kevin-pamungkas"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-linkedin-in text-lg"></i>
-                  </a>
-                  <a
-                    href="https://github.com/kvinn-dev"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-github text-lg"></i>
-                  </a>
-                </div>
-              </div>
+              <i class="fas fa-comments text-xl"></i>
             </div>
-            <h3 class="text-base font-bold text-gray-800 mb-1">
-              Kevin Yulian Pamungkas
-            </h3>
-            <p class="text-gray-500 text-xs mb-2">NIM 20240801273</p>
-            <p class="text-[#0b3925] font-semibold text-sm mb-2">
-              Backend & UI/UX Designer
-            </p>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              Manages backend API, database, and designs intuitive user
-              interfaces bridging functionality and experience.
+            <h4 class="text-lg font-bold text-gray-900 mb-2">
+              Direct Doctor Consultation
+            </h4>
+            <p class="text-gray-500 text-xs leading-relaxed">
+              Allows you to book and consult privately in a chat room with
+              certified doctors regarding your nutritional health concerns.
             </p>
           </div>
 
-          <!-- Team Member 4 -->
+          <!-- Pillar 4 -->
           <div
-            class="text-center team-member animate-fade-in-up animation-delay-250 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+            class="bg-gray-50 p-6 rounded-2xl border border-gray-100 hover:border-[#cedfc9] hover:bg-white transition-all duration-300"
           >
             <div
-              class="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg border-4 border-white relative group"
+              class="w-12 h-12 rounded-xl bg-[#cedfc9] flex items-center justify-center text-[#0b3925] mb-5"
             >
-              <img
-                src="{{ url_for('static', filename='images/foto_hakim.jpg') }}"
-                alt="Farizi Rafli Hakim"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4"
-              >
-                <div class="flex space-x-4">
-                  <a
-                    href="#"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-linkedin-in text-lg"></i>
-                  </a>
-                  <a
-                    href="#"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-github text-lg"></i>
-                  </a>
-                </div>
-              </div>
+              <i class="fas fa-chart-line text-xl"></i>
             </div>
-            <h3 class="text-base font-bold text-gray-800 mb-1">
-              Farizzi Rafli Hakim
-            </h3>
-            <p class="text-gray-500 text-xs mb-2">NIM 20240801248</p>
-            <p class="text-[#0b3925] font-semibold text-sm mb-2">
-              Backend Developer
-            </p>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              Handles server-side logic, API development, database integration,
-              and system performance.
-            </p>
-          </div>
-
-          <!-- Team Member 5 -->
-          <div
-            class="text-center team-member animate-fade-in-up animation-delay-300 bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
-          >
-            <div
-              class="mb-6 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg border-4 border-white relative group"
-            >
-              <img
-                src="{{ url_for('static', filename='images/foto_diaz.jpg') }}"
-                alt="Diazpasha"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4"
-              >
-                <div class="flex space-x-4">
-                  <a
-                    href="#"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-linkedin-in text-lg"></i>
-                  </a>
-                  <a
-                    href="#"
-                    class="text-white hover:text-blue-300 transition transform hover:-translate-y-1"
-                  >
-                    <i class="fab fa-github text-lg"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <h3 class="text-base font-bold text-gray-800 mb-1">Diazpasha</h3>
-            <p class="text-gray-500 text-xs mb-2">NIM 20210801034</p>
-            <p class="text-[#0b3925] font-semibold text-sm mb-2">
-              System Analyst
-            </p>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              Analyzes system requirements, designs architecture, and ensures
-              application meets specifications.
+            <h4 class="text-lg font-bold text-gray-900 mb-2">
+              Progress Tracking
+            </h4>
+            <p class="text-gray-500 text-xs leading-relaxed">
+              Monitors your weight, height, and nutrition history periodically
+              through easy-to-understand visual statistics on the dashboard.
             </p>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Mobile Slider (swipeable) -->
-        <div class="md:hidden relative overflow-hidden">
-          <div
-            class="flex overflow-x-auto pb-6 -mx-4 px-4 scrollbar-hide gap-4"
-          >
-            <!-- Team Member 1 - Geraldi -->
+    <!-- Vision & Mission Section -->
+    <section class="py-20 bg-[#f2f7f4] rounded-t-[3rem]">
+      <div class="max-w-7xl mx-auto px-6 md:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-8 h-[2px] bg-[#0b3925]"></div>
+              <span
+                class="text-[#0b3925] font-semibold text-sm uppercase tracking-wider"
+                >Vision & Mission</span
+              >
+            </div>
+            <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-6">
+              Vision & Mission of
+              <span class="italic font-serif font-normal text-[#0b3925]"
+                >HealthyMate</span
+              >
+            </h2>
+            <p
+              class="text-gray-600 font-medium text-sm md:text-base leading-relaxed mb-6"
+            >
+              We move forward with a long-term commitment to create a
+              nutrition-conscious society that has the independence to manage
+              their physical health preventatively.
+            </p>
+
             <div
-              class="text-center team-member min-w-[240px] bg-white rounded-2xl p-4 shadow-md"
+              class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"
+            >
+              <h4
+                class="text-md font-bold text-gray-900 mb-2 flex items-center gap-2"
+              >
+                <i class="fas fa-eye text-[#0b3925]"></i> Our Vision
+              </h4>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                To be the most trusted digital health companion platform in
+                Indonesia that democratizes personalized nutrition management
+                and connects medical care inclusively.
+              </p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h4
+              class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"
+            >
+              <i class="fas fa-bullseye text-[#0b3925]"></i> Our Mission
+            </h4>
+
+            <div
+              class="flex gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"
             >
               <div
-                class="mb-4 overflow-hidden rounded-full w-28 h-28 mx-auto shadow-lg border-4 border-white relative group"
+                class="w-8 h-8 rounded-full bg-[#cedfc9] flex-shrink-0 flex items-center justify-center text-[#0b3925] text-xs font-bold"
               >
-                <img
-                  src="{{ url_for('static', filename='images/foto_gege.jpg') }}"
-                  alt="Muhammad Geraldi Arisyi"
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                1
               </div>
-              <h3 class="text-sm font-bold text-gray-800 mb-1">
-                Muhammad Geraldi Arisyi
-              </h3>
-              <p class="text-gray-500 text-xs mb-1">NIM 20240801054</p>
-              <p class="text-[#0b3925] font-semibold text-xs mb-2">
-                Project Manager
-              </p>
-              <p class="text-gray-600 text-xs leading-relaxed">
-                Coordinates project and leads the development lifecycle.
+              <p class="text-gray-600 text-sm leading-relaxed">
+                To provide smart nutrition calculators that are accurate,
+                user-friendly, and adjusted to the user's actual physical
+                activity.
               </p>
             </div>
 
-            <!-- Team Member 2 -->
             <div
-              class="text-center team-member min-w-[240px] bg-white rounded-2xl p-4 shadow-md"
+              class="flex gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"
             >
               <div
-                class="mb-4 overflow-hidden rounded-full w-28 h-28 mx-auto shadow-lg border-4 border-white relative group"
+                class="w-8 h-8 rounded-full bg-[#cedfc9] flex-shrink-0 flex items-center justify-center text-[#0b3925] text-xs font-bold"
               >
-                <img
-                  src="{{ url_for('static', filename='images/Dr_maul.jpg') }}"
-                  alt="Muhammad Maulana"
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                2
               </div>
-              <h3 class="text-sm font-bold text-gray-800 mb-1">
-                Rafi Maulana Saputra
-              </h3>
-              <p class="text-gray-500 text-xs mb-1">NIM 20240801195</p>
-              <p class="text-[#0b3925] font-semibold text-xs mb-2">
-                Frontend Developer
-              </p>
-              <p class="text-gray-600 text-xs leading-relaxed">
-                Builds UI with HTML, CSS, JavaScript & Tailwind.
+              <p class="text-gray-600 text-sm leading-relaxed">
+                To present science-based, balanced nutritional meal
+                recommendations that are easy to practice daily.
               </p>
             </div>
 
-            <!-- Team Member 3 -->
             <div
-              class="text-center team-member min-w-[240px] bg-white rounded-2xl p-4 shadow-md"
+              class="flex gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"
             >
               <div
-                class="mb-4 overflow-hidden rounded-full w-28 h-28 mx-auto shadow-lg border-4 border-white relative group"
+                class="w-8 h-8 rounded-full bg-[#cedfc9] flex-shrink-0 flex items-center justify-center text-[#0b3925] text-xs font-bold"
               >
-                <img
-                  src="{{ url_for('static', filename='images/kevin-linkedin.png') }}"
-                  alt="Kevin Yulian Pamungkas"
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                3
               </div>
-              <h3 class="text-sm font-bold text-gray-800 mb-1">
-                Kevin Yulian Pamungkas
-              </h3>
-              <p class="text-gray-500 text-xs mb-1">NIM 20240801273</p>
-              <p class="text-[#0b3925] font-semibold text-xs mb-2">
-                Backend & UI/UX Designer
-              </p>
-              <p class="text-gray-600 text-xs leading-relaxed">
-                Manages backend API, database, and UI/UX design.
+              <p class="text-gray-600 text-sm leading-relaxed">
+                To open gates of instant and secure communication between
+                patients and certified healthcare practitioners for valid
+                medical nutrition guidance.
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <!-- Team Member 4 -->
-            <div
-              class="text-center team-member min-w-[240px] bg-white rounded-2xl p-4 shadow-md"
-            >
-              <div
-                class="mb-4 overflow-hidden rounded-full w-28 h-28 mx-auto shadow-lg border-4 border-white relative group"
-              >
-                <img
-                  src="{{ url_for('static', filename='images/foto_hakim.jpg') }}"
-                  alt="Farizi Rafli Hakim"
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-sm font-bold text-gray-800 mb-1">
-                Farizzi Rafli Hakim
-              </h3>
-              <p class="text-gray-500 text-xs mb-1">NIM 20240801248</p>
-              <p class="text-[#0b3925] font-semibold text-xs mb-2">
-                Backend Developer
-              </p>
-              <p class="text-gray-600 text-xs leading-relaxed">
-                Handles server logic, API, and database integration.
-              </p>
-            </div>
-
-            <!-- Team Member 5 -->
-            <div
-              class="text-center team-member min-w-[240px] bg-white rounded-2xl p-4 shadow-md"
-            >
-              <div
-                class="mb-4 overflow-hidden rounded-full w-28 h-28 mx-auto shadow-lg border-4 border-white relative group"
-              >
-                <img
-                  src="{{ url_for('static', filename='images/foto_diaz.jpg') }}"
-                  alt="Diazpasha"
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-sm font-bold text-gray-800 mb-1">Diazpasha</h3>
-              <p class="text-gray-500 text-xs mb-1">NIM 20210801034</p>
-              <p class="text-[#0b3925] font-semibold text-xs mb-2">
-                System Analyst
-              </p>
-              <p class="text-gray-600 text-xs leading-relaxed">
-                Analyzes requirements and designs system architecture.
-              </p>
-            </div>
+    <!-- Minimalist Developer Team Section -->
+    <section class="py-16 bg-white border-t border-gray-100 text-center">
+      <div class="max-w-4xl mx-auto px-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+          Development Team
+        </h3>
+        <p class="text-sm text-gray-500 max-w-xl mx-auto mb-6">
+          HealthyMate was developed with full commitment by students of the
+          Informatics Engineering Study Program, Universitas Esa Unggul Bekasi
+          Campus, as a real implementation of Software Project Management
+          principles.
+        </p>
+        <div
+          class="flex flex-wrap justify-center gap-6 md:gap-10 text-xs text-gray-400 font-medium"
+        >
+          <div class="flex flex-col items-center">
+            <span class="text-gray-700 font-semibold">M. Geraldi Arisyi</span>
+            <span>Project Manager</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span class="text-gray-700 font-semibold">Rafi Maulana S.</span>
+            <span>Frontend Developer</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span class="text-gray-700 font-semibold">Kevin Yulian P.</span>
+            <span>Backend & UI/UX</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span class="text-gray-700 font-semibold">Farizzi Rafli H.</span>
+            <span>Backend Developer</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span class="text-gray-700 font-semibold">Diazpasha</span>
+            <span>System Analyst</span>
           </div>
         </div>
       </div>
